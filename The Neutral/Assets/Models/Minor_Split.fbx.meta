@@ -1,0 +1,461 @@
+fileFormatVersion: 2
+guid: 09d8aa46bf5d24165b900799b1f3f351
+timeCreated: 1441645093
+licenseType: Free
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: Armature
+    100002: Camera
+    100004: Foot_L
+    100006: Foot_L_end
+    100008: Foot_R
+    100010: Foot_R_end
+    100012: Gaze
+    100014: Gaze_end
+    100016: Head
+    100018: Lamp
+    100020: Lamp.001
+    100022: Minor
+    100024: Minor_DI
+    100026: //RootNode
+    100028: Neck
+    100030: Root
+    100032: Spine
+    100034: Top_Back
+    100036: Top_Front
+    100038: Top_Front_end
+    400000: Armature
+    400002: Camera
+    400004: Foot_L
+    400006: Foot_L_end
+    400008: Foot_R
+    400010: Foot_R_end
+    400012: Gaze
+    400014: Gaze_end
+    400016: Head
+    400018: Lamp
+    400020: Lamp.001
+    400022: Minor
+    400024: Minor_DI
+    400026: //RootNode
+    400028: Neck
+    400030: Root
+    400032: Spine
+    400034: Top_Back
+    400036: Top_Front
+    400038: Top_Front_end
+    4300000: Minor_DI
+    4300002: Minor
+    7400000: Armature|0
+    7400002: Armature|1
+    7400004: Idle
+    7400006: Armature|Untitled
+    7400008: Minor_DI|0
+    7400010: Minor_DI|1
+    7400012: Minor_DI|MinorAnimations
+    7400014: Minor_DI|Untitled
+    7400016: Minor|0
+    7400018: Minor|1
+    7400020: Minor|MinorAnimations
+    7400022: Minor|Untitled
+    7400024: Run
+    7400026: Death
+    7400028: Merge
+    7400030: Respawn
+    9500000: //RootNode
+    11100000: //RootNode
+    13700000: Minor
+    13700002: Minor_DI
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Idle
+      takeName: Armature|MinorAnimations
+      firstFrame: 10
+      lastFrame: 180
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/Root
+        weight: 1
+      - path: Armature/Root/Foot_L
+        weight: 1
+      - path: Armature/Root/Foot_L/Foot_L_end
+        weight: 1
+      - path: Armature/Root/Foot_R
+        weight: 1
+      - path: Armature/Root/Foot_R/Foot_R_end
+        weight: 1
+      - path: Armature/Root/Spine
+        weight: 1
+      - path: Armature/Root/Spine/Neck
+        weight: 1
+      - path: Armature/Root/Spine/Neck/Head
+        weight: 1
+      - path: Armature/Root/Spine/Neck/Head/Gaze
+        weight: 1
+      - path: Armature/Root/Spine/Neck/Head/Gaze/Gaze_end
+        weight: 1
+      - path: Armature/Root/Spine/Neck/Head/Top_Back
+        weight: 1
+      - path: Armature/Root/Spine/Neck/Head/Top_Back/Top_Front
+        weight: 1
+      - path: Armature/Root/Spine/Neck/Head/Top_Back/Top_Front/Top_Front_end
+        weight: 1
+      - path: Camera
+        weight: 1
+      - path: Lamp
+        weight: 1
+      - path: Lamp.001
+        weight: 1
+      - path: Minor
+        weight: 1
+      - path: Minor_DI
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Run
+      takeName: Armature|MinorAnimations
+      firstFrame: 190
+      lastFrame: 240
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/Root
+        weight: 1
+      - path: Armature/Root/Foot_L
+        weight: 1
+      - path: Armature/Root/Foot_L/Foot_L_end
+        weight: 1
+      - path: Armature/Root/Foot_R
+        weight: 1
+      - path: Armature/Root/Foot_R/Foot_R_end
+        weight: 1
+      - path: Armature/Root/Spine
+        weight: 1
+      - path: Armature/Root/Spine/Neck
+        weight: 1
+      - path: Armature/Root/Spine/Neck/Head
+        weight: 1
+      - path: Armature/Root/Spine/Neck/Head/Gaze
+        weight: 1
+      - path: Armature/Root/Spine/Neck/Head/Gaze/Gaze_end
+        weight: 1
+      - path: Armature/Root/Spine/Neck/Head/Top_Back
+        weight: 1
+      - path: Armature/Root/Spine/Neck/Head/Top_Back/Top_Front
+        weight: 1
+      - path: Armature/Root/Spine/Neck/Head/Top_Back/Top_Front/Top_Front_end
+        weight: 1
+      - path: Camera
+        weight: 1
+      - path: Lamp
+        weight: 1
+      - path: Lamp.001
+        weight: 1
+      - path: Minor
+        weight: 1
+      - path: Minor_DI
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Death
+      takeName: Armature|MinorAnimations
+      firstFrame: 250
+      lastFrame: 290
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/Root
+        weight: 1
+      - path: Armature/Root/Foot_L
+        weight: 1
+      - path: Armature/Root/Foot_L/Foot_L_end
+        weight: 1
+      - path: Armature/Root/Foot_R
+        weight: 1
+      - path: Armature/Root/Foot_R/Foot_R_end
+        weight: 1
+      - path: Armature/Root/Spine
+        weight: 1
+      - path: Armature/Root/Spine/Neck
+        weight: 1
+      - path: Armature/Root/Spine/Neck/Head
+        weight: 1
+      - path: Armature/Root/Spine/Neck/Head/Gaze
+        weight: 1
+      - path: Armature/Root/Spine/Neck/Head/Gaze/Gaze_end
+        weight: 1
+      - path: Armature/Root/Spine/Neck/Head/Top_Back
+        weight: 1
+      - path: Armature/Root/Spine/Neck/Head/Top_Back/Top_Front
+        weight: 1
+      - path: Armature/Root/Spine/Neck/Head/Top_Back/Top_Front/Top_Front_end
+        weight: 1
+      - path: Camera
+        weight: 1
+      - path: Lamp
+        weight: 1
+      - path: Lamp.001
+        weight: 1
+      - path: Minor
+        weight: 1
+      - path: Minor_DI
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Merge
+      takeName: Armature|MinorAnimations
+      firstFrame: 300
+      lastFrame: 440
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/Root
+        weight: 1
+      - path: Armature/Root/Foot_L
+        weight: 1
+      - path: Armature/Root/Foot_L/Foot_L_end
+        weight: 1
+      - path: Armature/Root/Foot_R
+        weight: 1
+      - path: Armature/Root/Foot_R/Foot_R_end
+        weight: 1
+      - path: Armature/Root/Spine
+        weight: 1
+      - path: Armature/Root/Spine/Neck
+        weight: 1
+      - path: Armature/Root/Spine/Neck/Head
+        weight: 1
+      - path: Armature/Root/Spine/Neck/Head/Gaze
+        weight: 1
+      - path: Armature/Root/Spine/Neck/Head/Gaze/Gaze_end
+        weight: 1
+      - path: Armature/Root/Spine/Neck/Head/Top_Back
+        weight: 1
+      - path: Armature/Root/Spine/Neck/Head/Top_Back/Top_Front
+        weight: 1
+      - path: Armature/Root/Spine/Neck/Head/Top_Back/Top_Front/Top_Front_end
+        weight: 1
+      - path: Camera
+        weight: 1
+      - path: Lamp
+        weight: 1
+      - path: Lamp.001
+        weight: 1
+      - path: Minor
+        weight: 1
+      - path: Minor_DI
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Respawn
+      takeName: Armature|MinorAnimations
+      firstFrame: 450
+      lastFrame: 480
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/Root
+        weight: 1
+      - path: Armature/Root/Foot_L
+        weight: 1
+      - path: Armature/Root/Foot_L/Foot_L_end
+        weight: 1
+      - path: Armature/Root/Foot_R
+        weight: 1
+      - path: Armature/Root/Foot_R/Foot_R_end
+        weight: 1
+      - path: Armature/Root/Spine
+        weight: 1
+      - path: Armature/Root/Spine/Neck
+        weight: 1
+      - path: Armature/Root/Spine/Neck/Head
+        weight: 1
+      - path: Armature/Root/Spine/Neck/Head/Gaze
+        weight: 1
+      - path: Armature/Root/Spine/Neck/Head/Gaze/Gaze_end
+        weight: 1
+      - path: Armature/Root/Spine/Neck/Head/Top_Back
+        weight: 1
+      - path: Armature/Root/Spine/Neck/Head/Top_Back/Top_Front
+        weight: 1
+      - path: Armature/Root/Spine/Neck/Head/Top_Back/Top_Front/Top_Front_end
+        weight: 1
+      - path: Camera
+        weight: 1
+      - path: Lamp
+        weight: 1
+      - path: Lamp.001
+        weight: 1
+      - path: Minor
+        weight: 1
+      - path: Minor_DI
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 2
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
