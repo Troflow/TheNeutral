@@ -27,7 +27,7 @@ public class MinorAnimations : MonoBehaviour {
 		moveDirection = new Vector3(0, 0, Input.GetAxis("Vertical"));
 		moveDirection = transform.TransformDirection(moveDirection);
         anim.SetFloat(speed, Input.GetAxis("Vertical"));
-        if (Mathf.Abs(moveDirection.z) > 0)
+        if (Mathf.Abs(cont.velocity.z) > 0)
         {
             anim.Play("Run");
         }
@@ -36,12 +36,13 @@ public class MinorAnimations : MonoBehaviour {
             anim.Play("Idle");
         }
 
+		/*
         if (stateInfo.IsName("Run"))
         {
             cont.Move(moveDirection * Time.deltaTime * speed_const);
-            transform.Rotate(new Vector3(0, Input.GetAxis("Horizontal"), 0));
+            //transform.Rotate(new Vector3(0, Input.GetAxis("Horizontal"), 0));
         }
-
+*/
 		if (Input.GetKey ("z")) {
 			anim.SetBool(isDead, true);
 			anim.Play ("Death");
