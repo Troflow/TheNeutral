@@ -46,7 +46,6 @@ public class AIPath : MonoBehaviour {
 	 * The AI will try to follow/move towards this target.
 	 * It can be a point on the ground where the player has clicked in an RTS for example, or it can be the player object in a zombie game.
 	 */
-	public Transform target;
 
 	/** Enables or disables searching for paths.
 	 * Setting this to false does not stop any active path requests from being calculated or stop it from continuing to follow the current path.
@@ -220,8 +219,9 @@ public class AIPath : MonoBehaviour {
 	 * \returns The time to wait until calling this function again (based on #repathRate)
 	 */
 	public float TrySearchPath () {
-		if (Time.time - lastRepath >= repathRate && canSearchAgain && canSearch && target != null) {
+		if (Time.time - lastRepath >= repathRate && canSearchAgain && canSearch) {
 			SearchPath ();
+			Debug.Log("Search path is being called");
 			return repathRate;
 		} else {
 			//StartCoroutine (WaitForRepath ());
@@ -233,11 +233,35 @@ public class AIPath : MonoBehaviour {
 	/** Requests a path to the target */
 	public virtual void SearchPath () {
 
-		if (target == null) throw new System.InvalidOperationException ("Target is null");
+		//set layer mask to layer 8 (ground)
+		int layerMask = 1 << 8;
+		//this variable checks if a ray has hit the ground layer
+		bool checkHit = false;
+		//get rays at the current mouse position
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		//store clicked data
+		RaycastHit hit = new RaycastHit();
 
+		//checks if clicked
+		if (Input.GetButton("Fire1")) {
+			//we know that we've clicked so now we want function to compute a path
+			checkHit = true;
+			//set click data to hit
+			if (Physics.Raycast(ray, out hit, layerMask)) {
+				Debug.Log (hit.point);
+			}
+		}
+
+		//if we haven't clicked, don't run this function otherwise it will compute a path to (0,0,0).
+		if (!checkHit) {
+			Debug.Log ("Nothing has been clicked, exiting function");
+			return;
+		}
+
+		//sets a minimum time that we can call this function again.
 		lastRepath = Time.time;
-		//This is where we should search to
-		Vector3 targetPosition = target.position;
+		//set target to point we clicked
+		Vector3 targetPosition = hit.point;
 
 		canSearchAgain = false;
 
@@ -247,6 +271,7 @@ public class AIPath : MonoBehaviour {
 
 		//We should search from the current position
 		seeker.StartPath (GetFeetPosition(), targetPosition);
+		Debug.Log("Seeker has been called to: " + targetPosition);
 	}
 
 	public virtual void OnTargetReached () {

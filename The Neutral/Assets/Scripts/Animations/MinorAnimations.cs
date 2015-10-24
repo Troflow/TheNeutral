@@ -26,8 +26,8 @@ public class MinorAnimations : MonoBehaviour {
 		AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
 		moveDirection = new Vector3(0, 0, Input.GetAxis("Vertical"));
 		moveDirection = transform.TransformDirection(moveDirection);
-        anim.SetFloat(speed, Input.GetAxis("Vertical"));
-        if (Mathf.Abs(cont.velocity.z) > 0)
+		anim.SetFloat(speed, Mathf.Abs (cont.velocity.magnitude));
+		if (Mathf.Abs(cont.velocity.z) > 0 || Mathf.Abs(cont.velocity.x) > 0)
         {
             anim.Play("Run");
         }
@@ -61,6 +61,7 @@ public class MinorAnimations : MonoBehaviour {
 			anim.SetBool (isMerge, false);
 			anim.SetBool (isRespawn, false);
 		}
+
 
 	}
 }
