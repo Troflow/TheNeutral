@@ -14,11 +14,11 @@ Details about the game itself are as follows:
 
 4. Theme focuses on vision, colours and the beauty of movement.
 
-5. Instead of ‘combat’, action within the game unfolds in the form of a dance. With ‘attacks’ being stylized motions choreographed motions.
+5. Instead of ‘combat’, action within the game unfolds in the form of a dance. With ‘attacks’ being stylized, choreographed motions.
 
-6. There is no health bar, but instead, when Remy takes ‘damage’, her model becomes coloured similar to the enemy doing damage. Likewise, when Remy damages an enemy, that enemy becomes coloured similar to Remy. In this way, action takes place all in real-time, without need of an underlying UI. This helps free screen space and prevent colour.
+6. There is no health bar, but instead, when Remy takes ‘damage’, her model becomes coloured similar to the enemy doing damage. Likewise, when Remy damages an enemy, that enemy becomes coloured similar to Remy. In this way, action takes place all in real-time, without need of an underlying UI. This helps free screen space and prevent clutter.
 
-7. There is also a Stamina system, that, is shown in the saturation of the screen. As Stamina is lost, the camera view slowly becomes faded, until eventually having no colour - and only black and white. This is to bring in the sense of helplessness and confusion for players as they learn to adapt to an unfamiliar world - as well as a new perspective of that novelty.
+7. There is also a Stamina system, that, is represented via saturation of the screen. As Stamina is lost, the camera view slowly becomes faded, until eventually having no colour - and only black and white. This is to bring in the sense of helplessness and confusion for players as they learn to adapt to an unfamiliar world - as well as a new perspective of that novelty.
 
 Premise:
 The Neutral centres around a young woman named Remy, who is a completely colour blind dancer with synesthesia. The game takes place inside of Remy’s mind, as she comes to terms with the fact that she is slowly turning blind.
