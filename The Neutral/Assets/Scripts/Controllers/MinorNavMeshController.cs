@@ -44,16 +44,13 @@ namespace Neutral
 
             AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
 
-            Debug.Log(Mathf.Abs(navMeshAgent.velocity.magnitude));
             anim.SetFloat(speed, Mathf.Abs(navMeshAgent.velocity.magnitude));
-            Debug.Log("Anim speed : " + anim.GetFloat(speed));
             if (Mathf.Abs(navMeshAgent.velocity.magnitude) > 0.5)
             {
                 anim.Play("Run", 0);
             }
             else if (stateInfo.IsName("Run"))
             {
-                Debug.Log("Setting animation to idle");
                 anim.Play("Idle", 0);
             }
 
@@ -88,11 +85,17 @@ namespace Neutral
             }
             if (stateInfo.IsName("Merge"))
             {
-                if (AnimHelper.AnimationFinished(stateInfo))
+                if (AnimHelper.AnimationFinished(stateInfo,stateInfo.length-3.8f))
                 {
                     anim.SetBool(isMerge, false);
                 }
             }
+
+			if (Input.GetKeyDown ("p")) {
+				Vector3 centerPosition = new Vector3(this.transform.position.x - 0.5f, 0, this.transform.position.z-28f);
+				//navMeshAgent.SetDestination(centerPosition);
+				StartCoroutine("ForceMove");
+			}
 
             //uncomment if you want to test respawn animation alone with a key, otherwise it is played after death animation automatically
             /*
@@ -105,5 +108,6 @@ namespace Neutral
 
 
         }
+
     }
 }

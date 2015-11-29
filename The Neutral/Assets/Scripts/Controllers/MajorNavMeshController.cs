@@ -35,16 +35,13 @@ namespace Neutral
 
 
             AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
-            Debug.Log(Mathf.Abs(navMeshAgent.velocity.magnitude));
             anim.SetFloat(speed, Mathf.Abs(navMeshAgent.velocity.magnitude));
-            Debug.Log("Anim speed : " + anim.GetFloat(speed));
             if (Mathf.Abs(navMeshAgent.velocity.magnitude) > 0.5)
             {
                 anim.Play("Run", 0);
             }
             else if (stateInfo.IsName("Run"))
             {
-                Debug.Log("Setting animation to idle");
                 anim.Play("Idle", 0);
             }
 
@@ -55,10 +52,8 @@ namespace Neutral
             }
             if (stateInfo.IsName("Spawn"))
             {
-                Debug.Log("Normalized Time/Length: " + stateInfo.normalizedTime + "/" + stateInfo.length);
-                Debug.Log("Normalized Time % length: " + stateInfo.normalizedTime % stateInfo.length);
-
-                if (AnimHelper.AnimationFinished(stateInfo))
+				//currently hard coding a value that lowers the time that the animation plays
+                if (AnimHelper.AnimationFinished(stateInfo, stateInfo.length-0.9f))
                 {
                     anim.SetBool(isSpawn, false);
                 }
