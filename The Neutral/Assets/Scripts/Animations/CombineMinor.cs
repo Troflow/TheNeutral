@@ -83,17 +83,23 @@ namespace Neutral {
 						minorContainer[z].GetComponent<NavMeshAgent>().Move((location - minorContainer[z].transform.position).normalized/distancePerIntervalDivisor);
 					}
 					minorContainer[z].transform.localScale = minorContainer[z].transform.localScale - minorContainer[z].transform.localScale/80;
+					minorContainer[z].transform.position.Set(minorContainer[z].transform.position.x, 
+					                                         minorContainer[z].transform.position.y+minorContainer[z].transform.position.y/5, 
+					                                         minorContainer[z].transform.position.z);
 					if (x==intervals-1) {
 						minorContainer[z].SetActive(false);
 					}
 				}
 				yield return new WaitForSeconds(timePerInterval);
 			}
+			majorSpawnPoint.y = minor_spawn.transform.position.y;
 			GameObject major_final = (GameObject)Instantiate(major_spawn,majorSpawnPoint,major_spawn.transform.rotation);
 			major_final.SetActive(true);
-			MajorNavMeshController realMajor = (MajorNavMeshController)major_final.GetComponent("MajorNavMeshController");
-			Animator tmpanim = realMajor.GetComponent<Animator> ();
-			tmpanim.SetBool(Animator.StringToHash("isSpawn"),true);
+			//MajorNavMeshController realMajor = (MajorNavMeshController)major_final.GetComponent("MajorNavMeshController");
+			//Animator tmpanim = realMajor.GetComponent<Animator> ();
+			//tmpanim.SetBool(Animator.StringToHash("isSpawn"),true);
+			Animator anim = major_final.GetComponent<Animator> ();
+			anim.SetBool("isSpawn",true);
 		}
 	}
 }
