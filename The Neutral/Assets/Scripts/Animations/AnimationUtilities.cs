@@ -17,6 +17,8 @@ namespace Neutral
         }
 		public bool AnimationFinished(AnimatorStateInfo animState, float length)
 		{
+			Debug.Log("Normalized Time/Length (MODIFIED): " + animState.normalizedTime + "/" + length);
+			Debug.Log("Normalized Time % length (MODIFIED): " + animState.normalizedTime % length);
 			if (animState.normalizedTime % length > 0 && animState.normalizedTime >= length)
 			{
 				return true;

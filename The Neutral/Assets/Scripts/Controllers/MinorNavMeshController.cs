@@ -83,10 +83,12 @@ namespace Neutral
                 anim.SetBool(isMerge, true);
                 anim.Play("Merge");
             }
-            if (stateInfo.IsName("Merge"))
+            if (stateInfo.IsName("Merge")) 	
             {
-                if (AnimHelper.AnimationFinished(stateInfo,stateInfo.length-3.8f))
+				Debug.Log("Modified merge time: " + (stateInfo.length-2.5f));
+                if (AnimHelper.AnimationFinished(stateInfo,stateInfo.length-2.5f))
                 {
+					Debug.Log ("SETTING MERGE TO FALSE");
                     anim.SetBool(isMerge, false);
                 }
             }

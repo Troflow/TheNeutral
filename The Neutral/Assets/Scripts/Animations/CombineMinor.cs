@@ -12,15 +12,40 @@ namespace Neutral {
 
 		bool finishedForceMove=false;
 
+
+		//THESE SET OF VALUES ARE FOR THE MERGE MOVEMENT, AND CLONE SPAWNS, ETC.
+		public float animationTime;
+		public int intervals;
+		//calculated by animationTime/intervals so no need to instantiate
+		private float timePerInterval;
+
+		//we assume that the minors are split into 3 groups, one in the centre, other 2 += some X distance away
+		//with this assumption, we can normalize the distance and apply the same amount of distance per interval
+		public int groupDistance;
+		//this gives it slight variation, BE CAREFUL THOUGH! higher variation = less towards the centre at the end
+		//default is the radius of the minor ~1.8
+		public int tolerance;
+		//done with internal calculations
+		private float distancePerIntervalDivisor;
+
+
+
 		// Use this for initialization
 		void Start () {
 			minorContainer = new GameObject[50];
+			distancePerIntervalDivisor = 1/((float)groupDistance/(float)intervals);
+			timePerInterval = animationTime/intervals;
+			Debug.Log ("DPIV: "+ distancePerIntervalDivisor);
 		}
 
 
 		void Update () {
 			if (Input.GetKeyDown("l")) {
-				minorContainer[MinorCount]=(GameObject)Instantiate(minor_spawn,new Vector3(minor_spawn.transform.position.x+Random.Range(-15,15),minor_spawn.transform.position.y,minor_spawn.transform.position.z+Random.Range(-15,15)),minor_spawn.transform.rotation);
+				minorContainer[MinorCount]=(GameObject)Instantiate(minor_spawn,
+				                                                   new Vector3(minor_spawn.transform.position.x+(((-1)^(MinorCount%2)*groupDistance)+Random.Range(-tolerance,tolerance)),
+				                                                               minor_spawn.transform.position.y,
+				           				 									   minor_spawn.transform.position.z+(((-1)^(MinorCount%2)*groupDistance)+Random.Range(-tolerance,tolerance))),
+				                                                   minor_spawn.transform.rotation);
 				MinorCount+=1;
 				Debug.Log("Minors in game: " + MinorCount);
 			}
@@ -30,7 +55,7 @@ namespace Neutral {
 				for (int x=0; x<MinorCount; x++)
 				{
 					majorSpawnPoint.x+=minorContainer[x].transform.position.x;
-					majorSpawnPoint.y=major_spawn.transform.position.y;;
+					majorSpawnPoint.y=major_spawn.transform.position.y;
 					majorSpawnPoint.z+=minorContainer[x].transform.position.z;
 				}
 				majorSpawnPoint.x = majorSpawnPoint.x/MinorCount;
@@ -43,20 +68,26 @@ namespace Neutral {
 
 		IEnumerator ForceMove(Vector3 location) {
 			Debug.Log (location);
-			for (int x=0; x<80; x++)
+			for (int x=0; x<intervals; x++)
 			{
 				for (int z=0; z<MinorCount; z++) {
+					if (x==0){
+						minorContainer[z].GetComponent<NavMeshAgent>().radius = 0.01f;
+						minor_spawn.SetActive(false);
+					}
 
 					if (minorContainer[z].transform.position == location) {
 						Debug.Log("MINONS HAVE REACHED");
 					}
-					else minorContainer[z].GetComponent<NavMeshAgent>().Move((location - minorContainer[z].transform.position).normalized/5);
-					minorContainer[z].transform.localScale = minorContainer[z].transform.localScale - minorContainer[z].transform.localScale/50;
-					if (x==79) {
+					else {
+						minorContainer[z].GetComponent<NavMeshAgent>().Move((location - minorContainer[z].transform.position).normalized/distancePerIntervalDivisor);
+					}
+					minorContainer[z].transform.localScale = minorContainer[z].transform.localScale - minorContainer[z].transform.localScale/80;
+					if (x==intervals-1) {
 						minorContainer[z].SetActive(false);
 					}
 				}
-				yield return new WaitForSeconds(0.05f);
+				yield return new WaitForSeconds(timePerInterval);
 			}
 			GameObject major_final = (GameObject)Instantiate(major_spawn,majorSpawnPoint,major_spawn.transform.rotation);
 			major_final.SetActive(true);

@@ -1,14 +1,14 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Animations/CombineMinor.cs">
     <Files>
       <File FileName="Assets/AstarPathfindingProject/Core/AI/AIPath.cs" Line="1" Column="1" />
       <File FileName="Assets/AstarPathfindingProject/Core/AstarPath.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Controllers/MajorNavMeshController.cs" Line="50" Column="19" />
-      <File FileName="Assets/Scripts/Controllers/MinorNavMeshController.cs" Line="111" Column="3" />
-      <File FileName="Assets/Scripts/Animations/AnimationUtilities.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Animations/CombineMinor.cs" Line="55" Column="18" />
-      <File FileName="Assets/Scripts/Background/Blink.cs" Line="34" Column="2" />
+      <File FileName="Assets/Scripts/Controllers/MajorNavMeshController.cs" Line="14" Column="21" />
+      <File FileName="Assets/Scripts/Controllers/MinorNavMeshController.cs" Line="99" Column="13" />
+      <File FileName="Assets/Scripts/Animations/AnimationUtilities.cs" Line="22" Column="45" />
+      <File FileName="Assets/Scripts/Animations/CombineMinor.cs" Line="26" Column="44" />
+      <File FileName="Assets/Scripts/Background/Blink.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
