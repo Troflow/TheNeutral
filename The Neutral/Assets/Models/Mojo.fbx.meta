@@ -42,6 +42,8 @@ ModelImporter:
     100068: Thigh_R
     100070: UpperArm_L
     100072: UpperArm_R
+    100074: Body
+    100076: Head 1
     400000: Armature
     400002: Beads
     400004: Beads_end
@@ -79,8 +81,12 @@ ModelImporter:
     400068: Thigh_R
     400070: UpperArm_L
     400072: UpperArm_R
+    400074: Body
+    400076: Head 1
     4300000: Gunbai
     4300002: Mojo
+    4300004: Body
+    4300006: Head
     7400000: IdleReady
     7400002: Gunbai|Mojo Animations
     7400004: IdleReady to IdleCalm
@@ -103,6 +109,8 @@ ModelImporter:
     9500000: //RootNode
     13700000: Gunbai
     13700002: Mojo
+    13700004: Body
+    13700006: Head
   materials:
     importMaterials: 1
     materialName: 0
