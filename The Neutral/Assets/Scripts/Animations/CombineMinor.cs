@@ -68,24 +68,52 @@ namespace Neutral {
 
 		IEnumerator ForceMove(Vector3 location) {
 			Debug.Log (location);
-			for (int x=0; x<intervals; x++)
+            Vector3[] movements = new Vector3[MinorCount];
+			for (int x=0; x<intervals+1; x++)
 			{
 				for (int z=0; z<MinorCount; z++) {
 					if (x==0){
-						minorContainer[z].GetComponent<NavMeshAgent>().radius = 0.01f;
+                        //minorContainer[z].GetComponent<NavMeshAgent>().enabled = false;
+                        minorContainer[z].GetComponent<NavMeshAgent>().radius = 0.001f;
 						minor_spawn.SetActive(false);
-					}
+                        /*
+                        Vector3 mVect = new Vector3(location.x - minorContainer[z].transform.position.x,
+                            0,
+                            location.z - minorContainer[z].transform.position.z);
+                        mVect = mVect.normalized / distancePerIntervalDivisor;
 
-					if (minorContainer[z].transform.position == location) {
-						Debug.Log("MINONS HAVE REACHED");
-					}
-					else {
-						minorContainer[z].GetComponent<NavMeshAgent>().Move((location - minorContainer[z].transform.position).normalized/distancePerIntervalDivisor);
-					}
-					minorContainer[z].transform.localScale = minorContainer[z].transform.localScale - minorContainer[z].transform.localScale/80;
-					minorContainer[z].transform.position.Set(minorContainer[z].transform.position.x, 
-					                                         minorContainer[z].transform.position.y+minorContainer[z].transform.position.y/5, 
-					                                         minorContainer[z].transform.position.z);
+                        movements[z] = mVect;
+                        continue;
+					
+                         */
+                    }
+
+                    if (minorContainer[z].transform.position == location)
+                    {
+                        Debug.Log("MINONS HAVE REACHED");
+                    }
+                    else
+                    {
+                        minorContainer[z].GetComponent<NavMeshAgent>().Move((location - minorContainer[z].transform.position).normalized / distancePerIntervalDivisor);
+                        //minorContainer[z].GetComponent<NavMeshAgent>().Move(movements[z]);
+
+                        /*
+                        Vector3 mergeVect = new Vector3((location.x - minorContainer[z].transform.position.x),
+                                         0,
+                                         location.z - minorContainer[z].transform.position.z).normalized / distancePerIntervalDivisor;
+                        Debug.Log("z: " + z + ", " + mergeVect);
+
+                        minorContainer[z].transform.position.Set(minorContainer[z].transform.position.x+mergeVect.x,
+                            minorContainer[z].transform.position.y+mergeVect.y,
+                            minorContainer[z].transform.position.z+mergeVect.z);
+                    }
+                         
+                        minorContainer[z].GetComponent<CharacterController>().Move((location.x - minorContainer[z].transform.position.x),
+                                         0,
+                                         location.z - minorContainer[z].transform.position.z).normalized / distancePerIntervalDivisor;
+                         */
+                    }
+					minorContainer[z].transform.localScale = minorContainer[z].transform.localScale - minorContainer[z].transform.localScale/125;
 					if (x==intervals-1) {
 						minorContainer[z].SetActive(false);
 					}
@@ -95,9 +123,6 @@ namespace Neutral {
 			majorSpawnPoint.y = minor_spawn.transform.position.y;
 			GameObject major_final = (GameObject)Instantiate(major_spawn,majorSpawnPoint,major_spawn.transform.rotation);
 			major_final.SetActive(true);
-			//MajorNavMeshController realMajor = (MajorNavMeshController)major_final.GetComponent("MajorNavMeshController");
-			//Animator tmpanim = realMajor.GetComponent<Animator> ();
-			//tmpanim.SetBool(Animator.StringToHash("isSpawn"),true);
 			Animator anim = major_final.GetComponent<Animator> ();
 			anim.SetBool("isSpawn",true);
 		}
