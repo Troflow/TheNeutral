@@ -36,12 +36,12 @@ namespace Neutral
 
             if (Input.GetMouseButtonDown(0))
             {
-                if (Physics.Raycast(ray, out hit, 100))
+                if (Physics.Raycast(ray, out hit, 500))
                 {
                     navMeshAgent.SetDestination(hit.point);
                 }
             }
-
+            
             AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
 
             anim.SetFloat(speed, Mathf.Abs(navMeshAgent.velocity.magnitude));

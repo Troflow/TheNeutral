@@ -15,6 +15,7 @@ namespace Neutral
             }
             return false;
         }
+
 		public bool AnimationFinished(AnimatorStateInfo animState, float length)
 		{
 			Debug.Log("Normalized Time/Length (MODIFIED): " + animState.normalizedTime + "/" + length);
@@ -25,5 +26,13 @@ namespace Neutral
 			}
 			return false;
 		}
+
+        public bool TimeBetweenCombatCombination()
+        {
+            Debug.Log("TimeBetweenCombatCombination");
+
+            return false;
+        }
+
     }
 }
