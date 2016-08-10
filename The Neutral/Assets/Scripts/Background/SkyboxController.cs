@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEditor;
 using System.Collections;
 //using System.Drawing; find way for unity to include or use general conversion of rgb -> hsv
 
