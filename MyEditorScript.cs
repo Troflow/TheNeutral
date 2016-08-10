@@ -10,11 +10,13 @@ class MyEditorScript
 
     static string APP_NAME = "Bound";
     static string TARGET_DIR = "target";
-
+    
     static void PerformLinuxBuild()
     {
         string target_dir = APP_NAME + ".app";
-        GenericBuild(SCENES, TARGET_DIR + "/" + target_dir, BuildTarget.StandaloneLinux64, BuildOptions.None);
+        string[] scenes = { "NavmeshScene.unity", "Assets/NavmeshScene.unity" };
+        BuildPipeline.BuildPlayer(scenes, "StandaloneLinux64", BuildTarget.StandaloneLinux64, BuildOptions.None);
+        //GenericBuild(SCENES, TARGET_DIR + "/" + target_dir, BuildTarget.StandaloneLinux64, BuildOptions.None);
     }
 
     private static string[] FindEnabledEditorScenes()
