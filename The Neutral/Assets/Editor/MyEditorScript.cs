@@ -15,7 +15,7 @@ class MyEditorScript
     {
         string target_dir = APP_NAME + ".app";
         string[] scenes = {"Assets/Scenes/NavmeshScene.unity" };
-        BuildPipeline.BuildPlayer(scenes, "StandaloneLinux64", BuildTarget.StandaloneLinux64, BuildOptions.None);
+        BuildPipeline.BuildPlayer(scenes, "~/StandaloneLinux64", BuildTarget.StandaloneLinux64, BuildOptions.None);
         //GenericBuild(SCENES, TARGET_DIR + "/" + target_dir, BuildTarget.StandaloneLinux64, BuildOptions.None);
     }
 
