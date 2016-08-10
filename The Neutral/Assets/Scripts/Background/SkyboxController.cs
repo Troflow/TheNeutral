@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEditor;
 using System.Collections;
 //using System.Drawing; find way for unity to include or use general conversion of rgb -> hsv
 
@@ -45,13 +44,13 @@ public class SkyboxController : MonoBehaviour {
 
 		if (AutoChange) {
 			skbox_new = new Color(r/255,g/255,b/255);
-			EditorGUIUtility.RGBToHSV(skbox_new,out h,out s,out v); 
+			Color.RGBToHSV(skbox_new,out h,out s,out v); 
 			skybox.material.SetColor ("_Color",skbox_new);
 		}
 
 		else if (Input.GetKey ("return")) {
 			skbox_new = new Color(r/255,g/255,b/255);
-			EditorGUIUtility.RGBToHSV(skbox_new,out h,out s,out v); 
+			Color.RGBToHSV(skbox_new,out h,out s,out v); 
 			skybox.material.SetColor ("_Color",skbox_new);
 		}
 
@@ -64,7 +63,7 @@ public class SkyboxController : MonoBehaviour {
 	public IEnumerator DeSaturation() {
 		for (float sa=s; sa>=0.1f; sa-=0.05f)
 		{
-			skybox.material.SetColor ("_Color", EditorGUIUtility.HSVToRGB(h,sa,v));
+			skybox.material.SetColor ("_Color", Color.HSVToRGB(h,sa,v));
 			Debug.Log("current saturation: "+sa);
 			yield return new WaitForSeconds(0.2f);
 

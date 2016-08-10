@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+
+
 namespace Neutral
 {
     public class MajorNavMeshController : MonoBehaviour
@@ -22,28 +24,27 @@ namespace Neutral
 
         void Update()
         {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            //RaycastHit hit;
+            //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            if (Input.GetMouseButtonDown(0))
-            {
-                if (Physics.Raycast(ray, out hit, 100))
-                {
-                    navMeshAgent.SetDestination(hit.point);
-                }
-            }
+            //if (Input.GetMouseButtonDown(0))
+            //{
+            //    if (Physics.Raycast(ray, out hit, 100))
+            //    {
+            //        navMeshAgent.SetDestination(hit.point);
+            //    }
+            //}
 
 
             AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
-            anim.SetFloat(speed, Mathf.Abs(navMeshAgent.velocity.magnitude));
-            if (Mathf.Abs(navMeshAgent.velocity.magnitude) > 0.5)
-            {
-                anim.Play("Run", 0);
-            }
-            else if (stateInfo.IsName("Run"))
-            {
-                anim.Play("Idle", 0);
-            }
+            //if (Mathf.Abs(navMeshAgent.velocity.magnitude) > 0.5)
+            //{
+            //    anim.Play("Run", 0);
+            //}
+            //else if (stateInfo.IsName("Run"))
+            //{
+            //    anim.Play("Idle", 0);
+            //}
 
             if (Input.GetKey("m"))
             {
@@ -77,7 +78,7 @@ namespace Neutral
                         anim.Play("Respawn");
                     }
 
-
+             
                     if (Input.GetKey("r"))
                     {
                         anim.SetBool(isDead, false);
@@ -86,6 +87,15 @@ namespace Neutral
                     }
                     */
 
+        }
+
+        void OnTriggerEnter(Collider other)
+        {
+            Debug.Log("Collision trigger detected on sphere in Major");
+        }
+        void OnCollisionEnter(Collision other)
+        {
+            Debug.Log("Collision real detected on sphere in Major");
         }
     }
 }
