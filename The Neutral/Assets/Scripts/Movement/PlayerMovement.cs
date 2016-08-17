@@ -16,11 +16,12 @@ namespace Neutral
         {
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
+            Debug.DrawLine(ray.origin, ray.GetPoint(500), Color.red);
             if (Input.GetMouseButtonDown(0))
             {
                 if (Physics.Raycast(ray, out hit, 500))
                 {
+                    print("HIT");
                     NavMeshPath path = new NavMeshPath();
 
                     bool hasFoundPath = agent.CalculatePath(hit.point, path);
@@ -43,7 +44,23 @@ namespace Neutral
                     }
 
                 }
+                else
+                {
+                    print("NOT HIT");
+                }
             }
+            //if (Input.GetMouseButtonDown(0))
+            //{
+            //    if (Physics.Raycast(ray, out hit, 100))
+            //    {
+            //        NavMeshHit navmeshHit;
+            //        int walkableMask = 1 << NavMesh.GetAreaFromName("Walkable");
+            //        if (NavMesh.SamplePosition(hit.point, out navmeshHit, 1.0f, walkableMask))
+            //        {
+            //            agent.SetDestination(navmeshHit.position);
+            //        }
+            //    }
+            //}
 
             return -1;
         }
