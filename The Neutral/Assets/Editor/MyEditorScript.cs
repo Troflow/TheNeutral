@@ -14,7 +14,7 @@ class MyEditorScript
     static void PerformLinuxBuild()
     {
         string target_dir = APP_NAME + ".app";
-        string[] scenes = {"Assets/Scenes/NavmeshScene.unity" };
+        string[] scenes = {"Assets/Scenes/Level.unity" };
         BuildPipeline.BuildPlayer(scenes, "Builds/StandaloneLinux64", BuildTarget.StandaloneLinux64, BuildOptions.None);
         //GenericBuild(SCENES, TARGET_DIR + "/" + target_dir, BuildTarget.StandaloneLinux64, BuildOptions.None);
     }
