@@ -45,8 +45,6 @@ namespace Neutral
             _IsInCoroutine = false;
             IsDelayFinished = false;
             ExciteDelay = ExciteDelay;
-
-
         }
 
         public IEnumerator CombatSequnce(float timePressed)

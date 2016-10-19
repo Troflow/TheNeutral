@@ -21,7 +21,10 @@ namespace Neutral
             {
                 if (Physics.Raycast(ray, out hit, 500))
                 {
-                    print("HIT");
+                    print(hit.collider.tag);
+                    //var sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                    //sphere.transform.position = hit.point;
+                    //sphere.transform.localScale += new Vector3(5, 5, 5);
                     NavMeshPath path = new NavMeshPath();
 
                     bool hasFoundPath = agent.CalculatePath(hit.point, path);

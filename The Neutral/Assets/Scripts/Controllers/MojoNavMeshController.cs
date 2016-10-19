@@ -71,7 +71,6 @@ namespace Neutral
         void Start()
         {
             
-
             movement = new PlayerMovement(GetComponent<NavMeshAgent>());
 
             anim = GetComponent<Animator>();
@@ -146,30 +145,33 @@ namespace Neutral
                 sphere.transform.localScale += new Vector3(1, 1, 1);
 
             }
-//            var sphereRadius = sphere.GetComponent<SphereCollider>().radius;
-//            var edgeOfSphere = new Vector3((sphere.transform.position.x) + (sphere.GetComponent<SphereCollider>().radius * sphere.transform.localScale.x),
-//(sphere.transform.position.y) + (sphere.GetComponent<SphereCollider>().radius * sphere.transform.localScale.y),
-//(sphere.transform.position.z) + (sphere.GetComponent<SphereCollider>().radius * sphere.transform.localScale.z));
-//            print(edgeOfSphere);
-//            var edgeX = new Vector3(edgeOfSphere.x, sphere.transform.position.y, sphere.transform.position.z);
-//            var edgeY = new Vector3(sphere.transform.position.x, edgeOfSphere.y, sphere.transform.position.z);
-//            var edgeZ = new Vector3(sphere.transform.position.x, sphere.transform.position.y, edgeOfSphere.z);
-//            Debug.DrawLine(sphere.transform.position, edgeX);
-//            Debug.DrawLine(sphere.transform.position, edgeY);
-//            Debug.DrawLine(sphere.transform.position, edgeZ);
 
-//            Debug.DrawLine(sphere.transform.position, GunbaiCollision.collider.transform.position);
+            #region dynamic-collision-debug
+            //            var sphereRadius = sphere.GetComponent<SphereCollider>().radius;
+            //            var edgeOfSphere = new Vector3((sphere.transform.position.x) + (sphere.GetComponent<SphereCollider>().radius * sphere.transform.localScale.x),
+            //(sphere.transform.position.y) + (sphere.GetComponent<SphereCollider>().radius * sphere.transform.localScale.y),
+            //(sphere.transform.position.z) + (sphere.GetComponent<SphereCollider>().radius * sphere.transform.localScale.z));
+            //            print(edgeOfSphere);
+            //            var edgeX = new Vector3(edgeOfSphere.x, sphere.transform.position.y, sphere.transform.position.z);
+            //            var edgeY = new Vector3(sphere.transform.position.x, edgeOfSphere.y, sphere.transform.position.z);
+            //            var edgeZ = new Vector3(sphere.transform.position.x, sphere.transform.position.y, edgeOfSphere.z);
+            //            Debug.DrawLine(sphere.transform.position, edgeX);
+            //            Debug.DrawLine(sphere.transform.position, edgeY);
+            //            Debug.DrawLine(sphere.transform.position, edgeZ);
 
-//            print("distance between sphereX and gunabi: " + Vector3.Distance(edgeX, GunbaiCollision.collider.transform.position));
-//            print("distance between sphereY and gunabi: " + Vector3.Distance(edgeY, GunbaiCollision.collider.transform.position));
-//            print("distance between sphereZ and gunabi: " + Vector3.Distance(edgeZ, GunbaiCollision.collider.transform.position));
-//            var dir = (GunbaiCollision.collider.transform.position - sphere.transform.position).normalized;
-//            var distanceToMultiply = (edgeZ - sphere.transform.position).magnitude;
-//            var edgeOfSphereWithGunabiDirection = sphere.transform.position + dir * distanceToMultiply;
-//            Debug.DrawLine(sphere.transform.position, edgeOfSphereWithGunabiDirection, Color.red);
-//            var edgeOfSphereToGunbaiCollider = Vector3.Distance(edgeOfSphereWithGunabiDirection, GunbaiCollision.collider.transform.position);
-//            print("dist: " + edgeOfSphereToGunbaiCollider);
-//            Debug.DrawLine(edgeOfSphereWithGunabiDirection, GunbaiCollision.collider.transform.position, Color.green);
+            //            Debug.DrawLine(sphere.transform.position, GunbaiCollision.collider.transform.position);
+
+            //            print("distance between sphereX and gunabi: " + Vector3.Distance(edgeX, GunbaiCollision.collider.transform.position));
+            //            print("distance between sphereY and gunabi: " + Vector3.Distance(edgeY, GunbaiCollision.collider.transform.position));
+            //            print("distance between sphereZ and gunabi: " + Vector3.Distance(edgeZ, GunbaiCollision.collider.transform.position));
+            //            var dir = (GunbaiCollision.collider.transform.position - sphere.transform.position).normalized;
+            //            var distanceToMultiply = (edgeZ - sphere.transform.position).magnitude;
+            //            var edgeOfSphereWithGunabiDirection = sphere.transform.position + dir * distanceToMultiply;
+            //            Debug.DrawLine(sphere.transform.position, edgeOfSphereWithGunabiDirection, Color.red);
+            //            var edgeOfSphereToGunbaiCollider = Vector3.Distance(edgeOfSphereWithGunabiDirection, GunbaiCollision.collider.transform.position);
+            //            print("dist: " + edgeOfSphereToGunbaiCollider);
+            //            Debug.DrawLine(edgeOfSphereWithGunabiDirection, GunbaiCollision.collider.transform.position, Color.green);
+            #endregion
 
             int pathStatus = movement.Move();
             if (pathStatus == 0)
