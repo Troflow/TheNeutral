@@ -2,6 +2,7 @@
 using System.Collections;
 
 namespace Neutral {
+
 	public class CombineMinor : MonoBehaviour {
 		private int MinorCount=0;
 		private Vector3 majorSpawnPoint = new Vector3();
