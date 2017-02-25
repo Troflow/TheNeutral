@@ -7,7 +7,7 @@ namespace Neutral
     {
 
         private Animator anim;
-        NavMeshAgent navMeshAgent;
+        UnityEngine.AI.NavMeshAgent navMeshAgent;
         AnimationUtilities AnimHelper;
         int isDead = Animator.StringToHash("isDead");
         int isMerge = Animator.StringToHash("isMerge");
@@ -24,7 +24,7 @@ namespace Neutral
         {
 
             anim = GetComponent<Animator>();
-            navMeshAgent = GetComponent<NavMeshAgent>();
+            navMeshAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
             AnimHelper = new AnimationUtilities();
         }
 

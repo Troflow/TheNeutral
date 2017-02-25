@@ -7,7 +7,7 @@ namespace Neutral
     public class MajorNavMeshController : MonoBehaviour
     {
         private Animator anim;
-        NavMeshAgent navMeshAgent;
+        UnityEngine.AI.NavMeshAgent navMeshAgent;
         AnimationUtilities AnimHelper;
         int isAttack = Animator.StringToHash("isAttack");
         int isSpawn = Animator.StringToHash("isSpawn");
@@ -17,7 +17,7 @@ namespace Neutral
         {
 
             anim = GetComponent<Animator>();
-            navMeshAgent = GetComponent<NavMeshAgent>();
+            navMeshAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
             AnimHelper = new AnimationUtilities();
         }
 

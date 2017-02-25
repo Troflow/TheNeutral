@@ -71,7 +71,7 @@ namespace Neutral
         void Start()
         {
             
-            movement = new PlayerMovement(GetComponent<NavMeshAgent>());
+            movement = new PlayerMovement(GetComponent<UnityEngine.AI.NavMeshAgent>());
 
             anim = GetComponent<Animator>();
 
@@ -326,7 +326,7 @@ namespace Neutral
                                 //Debug.Log("starting coroutine");
                                 StartCoroutine(move.CombatSequnce(Time.time));
                             }
-                        }
+                        }	
                     }
                     if (move.ComboActivated)
                     {

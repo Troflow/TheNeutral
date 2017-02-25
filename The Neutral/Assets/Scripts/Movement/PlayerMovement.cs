@@ -5,9 +5,9 @@ namespace Neutral
 {
     public class PlayerMovement : MonoBehaviour, IMovementBase
     {
-        public NavMeshAgent agent { get; set; }
+        public UnityEngine.AI.NavMeshAgent agent { get; set; }
 
-        public PlayerMovement(NavMeshAgent agent)
+        public PlayerMovement(UnityEngine.AI.NavMeshAgent agent)
         {
             this.agent = agent;
         }
@@ -19,31 +19,31 @@ namespace Neutral
             Debug.DrawLine(ray.origin, ray.GetPoint(500), Color.red);
             if (Input.GetMouseButtonDown(0))
             {
-                if (Physics.Raycast(ray, out hit, 500))
+				if (Physics.Raycast(ray, out hit, 500f))
                 {
                     print(hit.collider.tag);
                     //var sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                     //sphere.transform.position = hit.point;
                     //sphere.transform.localScale += new Vector3(5, 5, 5);
-                    NavMeshPath path = new NavMeshPath();
+                    UnityEngine.AI.NavMeshPath path = new UnityEngine.AI.NavMeshPath();
 
                     bool hasFoundPath = agent.CalculatePath(hit.point, path);
                     Debug.Log(agent.updateRotation);
 
-                    if (path.status == NavMeshPathStatus.PathComplete)
+                    if (path.status == UnityEngine.AI.NavMeshPathStatus.PathComplete)
                     {
                         agent.SetPath(path);
-                        return (int)NavMeshPathStatus.PathComplete;
+                        return (int)UnityEngine.AI.NavMeshPathStatus.PathComplete;
                         //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(hit.point), Time.deltaTime);
                     }
-                    else if (path.status == NavMeshPathStatus.PathPartial)
+                    else if (path.status == UnityEngine.AI.NavMeshPathStatus.PathPartial)
                     {
                         agent.SetPath(path);
-                        return (int)NavMeshPathStatus.PathPartial;
+                        return (int)UnityEngine.AI.NavMeshPathStatus.PathPartial;
                     }
-                    else if (path.status == NavMeshPathStatus.PathInvalid)
+                    else if (path.status == UnityEngine.AI.NavMeshPathStatus.PathInvalid)
                     {
-                        return (int)NavMeshPathStatus.PathInvalid;
+                        return (int)UnityEngine.AI.NavMeshPathStatus.PathInvalid;
                     }
 
                 }

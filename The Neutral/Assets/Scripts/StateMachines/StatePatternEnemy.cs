@@ -43,7 +43,7 @@ namespace Neutral
         public PatrolState patrolState;
 
         [HideInInspector]
-        public NavMeshAgent navMeshAgent;
+        public UnityEngine.AI.NavMeshAgent navMeshAgent;
 
         [HideInInspector]
         public Animator anim;
@@ -57,7 +57,7 @@ namespace Neutral
             alertState = new AlertState(this);
             patrolState = new PatrolState(this);
             combatState = new CombatState(this);
-            navMeshAgent = GetComponent<NavMeshAgent>();
+            navMeshAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
             anim = GetComponent<Animator>();
             animHelper = new AnimationUtilities();
         }

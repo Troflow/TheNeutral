@@ -1,14 +1,19 @@
-﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Animations/CombineMinor.cs">
+﻿<Properties StartupItem="Assembly-CSharp.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Controllers/MojoNavMeshController.cs">
     <Files>
-      <File FileName="Assets/AstarPathfindingProject/Core/AI/AIPath.cs" Line="1" Column="1" />
-      <File FileName="Assets/AstarPathfindingProject/Core/AstarPath.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Controllers/MajorNavMeshController.cs" Line="14" Column="21" />
-      <File FileName="Assets/Scripts/Controllers/MinorNavMeshController.cs" Line="99" Column="13" />
-      <File FileName="Assets/Scripts/Animations/AnimationUtilities.cs" Line="22" Column="45" />
-      <File FileName="Assets/Scripts/Animations/CombineMinor.cs" Line="26" Column="44" />
-      <File FileName="Assets/Scripts/Background/Blink.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Controllers/RemyNavMeshController.cs" Line="76" Column="6" />
+      <File FileName="Assets/Scripts/Controllers/CombatController.cs" Line="70" Column="7" />
+      <File FileName="Assets/Scripts/Controllers/MojoNavMeshController.cs" Line="106" Column="10" />
+      <File FileName="Assets/Scripts/Movement/PlayerMovement.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/StateMachines/StatePatternEnemy.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/StateMachines/ChaseState.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/StateMachines/AlertState.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/StateMachines/CombatState.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/StateMachines/IEnemyState.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Controllers/MinorNavMeshController.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Map/GenerateNature.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Controllers/Tier.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

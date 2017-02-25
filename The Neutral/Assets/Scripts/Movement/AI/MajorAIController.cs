@@ -10,7 +10,7 @@ namespace Neutral
         // Use this for initialization
         void Start()
         {
-            movement = new AIMovement(GetComponent<NavMeshAgent>());
+            movement = new AIMovement(GetComponent<UnityEngine.AI.NavMeshAgent>());
         }
 
         // Update is called once per frame

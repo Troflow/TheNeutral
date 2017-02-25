@@ -5,15 +5,15 @@ namespace Neutral
 {
     public class AIMovement : MonoBehaviour, IMovementBase
     {
-        public NavMeshAgent agent { get; set; }
-        public AIMovement(NavMeshAgent agent)
+        public UnityEngine.AI.NavMeshAgent agent { get; set; }
+        public AIMovement(UnityEngine.AI.NavMeshAgent agent)
         {
             this.agent = agent;
         }
 
         public int Move()
         {
-            NavMeshPath path = new NavMeshPath();
+            UnityEngine.AI.NavMeshPath path = new UnityEngine.AI.NavMeshPath();
 
             //agent.CalculatePath(this.transform.position*)
             return 0;
