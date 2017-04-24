@@ -55,7 +55,7 @@ namespace Neutral
         {
             RaycastHit hit;
             //check if hit within the sight range AND if the thing hit was the player
-            if (Physics.Raycast(enemy.eyes.transform.position, enemy.eyes.transform.forward, out hit, enemy.sightRange) && hit.collider.CompareTag("Player"))
+            if (Physics.Raycast(enemy.eyes.transform.position, enemy.eyes.transform.forward, out hit, enemy.sightRange) && hit.collider.CompareTag("Player-Sphere"))
             {
                 enemy.target = hit.transform;
                 ToChaseState();

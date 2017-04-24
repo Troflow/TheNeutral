@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace Neutral
 {
-    public class Tier : MonoBehaviour
+    public class Tier
     {
-        public static bool _IsComboFinished = false;
+        public bool _IsComboFinished = false;
         public const float BaseDelay = 0.2f;
 
         private int _TierLevel;
@@ -52,7 +52,6 @@ namespace Neutral
             //so that if a combo's 1st and 2nd char are the same, they both dont activate with 1 keypress
             if (_IsComboFinished)
             {
-
                 yield return null;
             }
 

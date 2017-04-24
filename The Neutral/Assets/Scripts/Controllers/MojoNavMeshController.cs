@@ -6,12 +6,13 @@ namespace Neutral
 {
     public class MojoNavMeshController : MonoBehaviour
     {
-        private Animator anim;
-        IMovementBase movement;
-
+        
+        CombatController combatController;
         AnimationUtilities AnimHelper;
-        Rigidbody rb; 
-        private GameObject sphere;
+
+        private Animator anim;
+        Rigidbody rb;
+        
 
         int isIdleReady = Animator.StringToHash("isIdleReady");
         int isIdleReadyToIdleCalm = Animator.StringToHash("isIdleReadyToIdleCalm");
@@ -26,14 +27,6 @@ namespace Neutral
 
         int isCombat = Animator.StringToHash("isCombat");
 
-        private bool isDelayCoRoutineRunning;
-        private bool isDelayFinished;
-        private float idleReadyDurationValue;
-        private bool idleStateHasChanged;
-        private bool timerStart;
-
-        private bool combatAnimationInitiated;
-        private bool animationPlayed;
 
         private Tier currentTierPlaying;
         public List<Tier> tierList;
@@ -46,84 +39,41 @@ namespace Neutral
                 tierList.Add(new Tier());
             }
             tierList[0].TierLevel = 1;
-            tierList[0].Combo = "asd";
+            tierList[0].Combo = "zxc";
             tierList[0].AnimationHash = Animator.StringToHash("isTier1");
             tierList[0].AnimationStateName = "Tier 1";
-            tierList[0].ExpansionRate = 0.4f;
+            tierList[0].ExpansionRate = 0.6f;
 
 
             tierList[1].TierLevel = 4;
-            tierList[1].Combo = "aad";
+            tierList[1].Combo = "zzc";
             tierList[1].AnimationHash = Animator.StringToHash("isTier4");
             tierList[1].AnimationStateName = "Tier 4";
-            tierList[1].ExpansionRate = 0.25f;
+            tierList[1].ExpansionRate = 0.4f;
 
 
             tierList[2].TierLevel = 7;
-            tierList[2].Combo = "das";
+            tierList[2].Combo = "czx";
             tierList[2].AnimationHash = Animator.StringToHash("isTier7");
             tierList[2].AnimationStateName = "Tier 7";
             tierList[2].ExpansionRate = 0.15f;
 
+
+            combatController = GetComponent<CombatController>();
+            combatController.SetCombatControllerDefaults(tierList, anim, GameObject.Find("Mojo-Sphere"), this.tag);
         }
 
         // Use this for initialization
         void Start()
         {
             
-            movement = new PlayerMovement(GetComponent<UnityEngine.AI.NavMeshAgent>());
-
             anim = GetComponent<Animator>();
 
-            movement.agent.updateRotation = false;
-
-
             AnimHelper = new AnimationUtilities();
-            idleReadyDurationValue = 0f;
-            idleStateHasChanged = false;
-            timerStart = false;
-            combatAnimationInitiated = false;
-            animationPlayed = false;
-            isDelayCoRoutineRunning = false;
-            isDelayFinished = false;
+
+
             InitializeDefaultTierList();
-            currentTierPlaying = new Tier();
 
-            sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            Vector3 spherePos = new Vector3(this.transform.localPosition.x / 2, this.transform.localPosition.y, this.transform.localPosition.z / 2);
-            sphere.transform.position = spherePos;
-            sphere.transform.localScale += new Vector3(1, 1, 1);
-            sphere.transform.parent = this.transform;
-        }
-
-
-        public void Combat()
-        {
-
-        }
-
-        public IEnumerator SphereWithTime(float tierExpansionRate)
-        {
-            
-            while (sphere.transform.localScale.y < 31)
-            { 
-                sphere.transform.localScale += new Vector3(tierExpansionRate, tierExpansionRate, tierExpansionRate);
-                yield return new WaitForEndOfFrame();
-            }
-            while (sphere.transform.localScale.y > 11)
-            {
-                sphere.transform.localScale -= new Vector3(tierExpansionRate, tierExpansionRate, tierExpansionRate);
-                yield return new WaitForEndOfFrame();
-            }
-        }
-
-        public IEnumerator WaitForDelay(float seconds)
-        {
-            isDelayCoRoutineRunning = true;
-            yield return new WaitForSeconds(seconds);
-            print("DONE");
-            isDelayCoRoutineRunning = false;
-            isDelayFinished = true;
         }
 
         void ResetAllCombatTriggers()
@@ -134,18 +84,14 @@ namespace Neutral
                 anim.ResetTrigger(tierList[x].AnimationHash);
             }
             anim.ResetTrigger(isCounterState);
-            combatAnimationInitiated = false;
         }
 
         // Update is called once per frame
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.O))
-            {
-                sphere.transform.localScale += new Vector3(1, 1, 1);
 
-            }
-
+            AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
+            combatController.checkForMoveCombination(stateInfo);
             #region dynamic-collision-debug
             //            var sphereRadius = sphere.GetComponent<SphereCollider>().radius;
             //            var edgeOfSphere = new Vector3((sphere.transform.position.x) + (sphere.GetComponent<SphereCollider>().radius * sphere.transform.localScale.x),
@@ -173,7 +119,7 @@ namespace Neutral
             //            Debug.DrawLine(edgeOfSphereWithGunabiDirection, GunbaiCollision.collider.transform.position, Color.green);
             #endregion
 
-            int pathStatus = movement.Move();
+            int pathStatus = PlayerMovement.Move();
             if (pathStatus == 0)
             {
                 print("The agent can reach the destionation");
@@ -193,55 +139,58 @@ namespace Neutral
             }
 
             //rotations and animations
-            AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
-            if (movement.agent.hasPath)
+            
+            if (PlayerMovement.inControl(false))
             {
-                if (stateInfo.IsName("IdleReady"))
+                if (PlayerMovement.agent.hasPath)
                 {
-                    anim.SetBool(isRunning, true);
-                    anim.SetBool(isIdleReady, false);
+                    if (stateInfo.IsName("IdleReady"))
+                    {
+                        anim.SetBool(isRunning, true);
+                        anim.SetBool(isIdleReady, false);
+                    }
+
+                    anim.SetFloat(speed, Mathf.Abs(PlayerMovement.agent.velocity.magnitude));
+
+                    //check if difference between destination and current position is above a certain threshold to apply rotation
+                    if (Mathf.Abs((PlayerMovement.agent.steeringTarget - transform.position).x) > 1.0)
+                    {
+
+                        //create a new rotation from our transform, to the difference of position of the destination and ourselves with standard time
+                        var new_rot = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(PlayerMovement.agent.steeringTarget - transform.position), Time.deltaTime);
+                        //no x or z rotation to stop tilts
+                        new_rot = new Quaternion(0, new_rot.y, 0, new_rot.w);
+                        transform.rotation = new_rot;
+                    }
+
                 }
 
-                anim.SetFloat(speed, Mathf.Abs(movement.agent.velocity.magnitude));
-
-                //check if difference between destination and current position is above a certain threshold to apply rotation
-                if (Mathf.Abs((movement.agent.steeringTarget - transform.position).x) > 1.0)
+                if (PlayerMovement.agent.remainingDistance <= PlayerMovement.agent.stoppingDistance)
                 {
-
-                    //create a new rotation from our transform, to the difference of position of the destination and ourselves with standard time
-                    var new_rot = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement.agent.steeringTarget - transform.position), Time.deltaTime);
-                    //no x or z rotation to stop tilts
-                    new_rot = new Quaternion(0, new_rot.y, 0, new_rot.w);
-                    transform.rotation = new_rot;
+                    if (PlayerMovement.agent.velocity.sqrMagnitude == 0f)
+                    {
+                        PlayerMovement.agent.ResetPath();
+                        anim.SetBool(isRunning, false);
+                        anim.SetBool(isIdleReady, true);
+                    }
                 }
-
             }
 
-            if (movement.agent.remainingDistance <= movement.agent.stoppingDistance)
+            if (Input.GetKeyDown(KeyCode.L))
             {
-                if (movement.agent.velocity.sqrMagnitude == 0f)
-                {
-                    movement.agent.ResetPath();
-                    anim.SetBool(isRunning, false);
-                    anim.SetBool(isIdleReady, true);
-                }
-            }
-
-            if (Input.GetKeyDown(KeyCode.C))
-            {
-                movement.agent.ResetPath();
+                PlayerMovement.agent.ResetPath();
                 anim.SetBool(isCombat, true);
                 anim.SetTrigger(isCounterState);
             }
             if (Input.GetKeyDown(KeyCode.V))
             {
-                movement.agent.ResetPath();
+                PlayerMovement.agent.ResetPath();
                 anim.SetBool(isCombat, true);
                 anim.SetTrigger(isCounterStateSuccess);
             }
             if (Input.GetKeyDown(KeyCode.B))
             {
-                movement.agent.ResetPath();
+                PlayerMovement.agent.ResetPath();
                 anim.SetBool(isCombat, true);
                 anim.SetTrigger(isCounterStateSuccess);
                 anim.SetBool(isDead, true);
@@ -308,103 +257,7 @@ namespace Neutral
             //}
 
             //iterates through all of the moves if there is no combat animation playing
-            if (!combatAnimationInitiated)
-            {
-                //Debug.Log("TAKING INPUT FOR MOVES");
-                foreach (var move in tierList)
-                {
-                    if (Input.GetKeyDown(move.Combo[0].ToString()) && move.ComboPressed.Count == 0)
-                    {
-                        move.ComboPressed.Add(move.Combo[0].ToString());
-                    }
-                    if (move.ComboPressed.Count == 1)
-                    {
-                        if (move.ComboPressed[0].Equals(move.Combo[0].ToString()))
-                        {
-                            if (!move._IsInCoroutine)
-                            {
-                                //Debug.Log("starting coroutine");
-                                StartCoroutine(move.CombatSequnce(Time.time));
-                            }
-                        }	
-                    }
-                    if (move.ComboActivated)
-                    {
-                        //if you have queued up a move, then try to use another move during the delay period
-                        //add in baseDelay
-                        if (!isDelayCoRoutineRunning && !isDelayFinished) StartCoroutine(WaitForDelay(move.ExciteDelay));
-                        else if (isDelayCoRoutineRunning)
-                        {
-                            continue;
-                        }
-                        print(isDelayFinished);
-                        if (isDelayFinished)
-                        {
-                            //reset the path so that it stops calculating
-                            movement.agent.ResetPath();
-
-                            currentTierPlaying = move;
-                            combatAnimationInitiated = true;
-
-                            //set the combat to true so the animation goes straight from run -> combat
-                            anim.SetBool(isCombat, true);
-                            //set the speed to zero which implies no more movement therefore no more running
-                            movement.agent.velocity = Vector3.zero;
-
-                            anim.SetTrigger(move.AnimationHash);
-
-                            //clears all combo pressed
-                            tierList.ForEach(x => x.ComboPressed.Clear());
-                            
-
-                            StartCoroutine(SphereWithTime(move.ExpansionRate));
-                            break;
-                        }
-                        else
-                        {
-                            //this block is when we are in the delay phase
-                        }
-
-                    }
-
-                    if (move.ComboPressed.Count > 0)
-                    {
-                        //they are in mid-keypress of a combo
-                    }
-
-                }//foreach move
-
-            }
-
-
-            if (combatAnimationInitiated && stateInfo.IsName(currentTierPlaying.AnimationStateName))
-            {
-                animationPlayed = true;
-            }
-
-
-            if (combatAnimationInitiated && stateInfo.IsName("IdleReady") && animationPlayed)
-            {
-                //while playing animation
-                for (int x=0; x<tierList.Count; x++)
-                {
-                    if (tierList[x].ComboActivated)
-                    {
-                        //reset all variables
-                        //anim.ResetTrigger(tierList[x].AnimationHash);
-                        anim.SetBool(isCombat, false);
-
-                        combatAnimationInitiated = false;
-                        animationPlayed = false;
-
-                        tierList[x].ComboActivated = false;
-                        isDelayFinished = false;
-                    }
-
-                }//iterate tierList
-                Tier._IsComboFinished = false;
-                ResetAllCombatTriggers();
-            }//stop combat
+            
 
         }//Update func
 

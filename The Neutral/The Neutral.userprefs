@@ -1,19 +1,19 @@
-﻿<Properties StartupItem="Assembly-CSharp.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Controllers/MojoNavMeshController.cs">
+﻿<Properties StartupItem="The Neutral.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Controllers\CombatController.cs">
     <Files>
-      <File FileName="Assets/Scripts/Controllers/RemyNavMeshController.cs" Line="76" Column="6" />
-      <File FileName="Assets/Scripts/Controllers/CombatController.cs" Line="70" Column="7" />
-      <File FileName="Assets/Scripts/Controllers/MojoNavMeshController.cs" Line="106" Column="10" />
-      <File FileName="Assets/Scripts/Movement/PlayerMovement.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/StateMachines/StatePatternEnemy.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/StateMachines/ChaseState.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/StateMachines/AlertState.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/StateMachines/CombatState.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/StateMachines/IEnemyState.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Controllers/MinorNavMeshController.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Map/GenerateNature.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Controllers/Tier.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Controllers\RemyNavMeshController.cs" Line="55" Column="1" />
+      <File FileName="Assets\Scripts\Controllers\CombatController.cs" Line="69" Column="1" />
+      <File FileName="Assets\Scripts\Controllers\MojoNavMeshController.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Movement\PlayerMovement.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\StateMachines\StatePatternEnemy.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\StateMachines\ChaseState.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\StateMachines\AlertState.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\StateMachines\CombatState.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\StateMachines\IEnemyState.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Controllers\MinorNavMeshController.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Map\GenerateNature.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Controllers\Tier.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -51,7 +51,7 @@ namespace Neutral
             Vector3 enemyToTarget = (enemy.target.position + enemy.offset) - enemy.eyes.transform.position;
             
             //check if hit within the combat range and if was the player
-            if (Physics.Raycast(enemy.eyes.transform.position, enemy.eyes.transform.forward, out hit, enemy.combatRange) && hit.collider.CompareTag("Player"))
+            if (Physics.Raycast(enemy.eyes.transform.position, enemy.eyes.transform.forward, out hit, enemy.combatRange) && hit.collider.CompareTag("Player-Sphere"))
             {
                 enemy.target = hit.transform;
                 ToCombatState();
@@ -62,7 +62,7 @@ namespace Neutral
             }
 
             //check if hit within the sight range AND if the thing hit was the player
-            if (Physics.Raycast(enemy.eyes.transform.position, enemyToTarget, out hit, enemy.sightRange) && hit.collider.CompareTag("Player"))
+            if (Physics.Raycast(enemy.eyes.transform.position, enemyToTarget, out hit, enemy.sightRange) && hit.collider.CompareTag("Player-Sphere"))
             {
                 enemy.target = hit.transform;
                 ToChaseState();
