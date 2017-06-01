@@ -122,16 +122,16 @@ namespace Neutral
             int pathStatus = PlayerMovement.Move();
             if (pathStatus == 0)
             {
-                print("The agent can reach the destionation");
+                //print("The agent can reach the destionation");
             }
             else if (pathStatus == 1)
             {
-                print("The agent can only get close to the destination");
+                //print("The agent can only get close to the destination");
             }
             else if (pathStatus == 2)
             {
-                print("The agent cannot reach the destination");
-                print("hasFoundPath will be false");
+                //print("The agent cannot reach the destination");
+                //print("hasFoundPath will be false");
             }
             else
             {

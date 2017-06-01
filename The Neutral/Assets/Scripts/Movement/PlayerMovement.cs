@@ -35,39 +35,35 @@ namespace Neutral
             {
 				if (Physics.Raycast(ray, out hit, 500f))
                 {
-                    Debug.Log(hit.collider.tag);
-                   
-
-                        if (hit.collider.CompareTag("Player-Sphere"))
+                    if (hit.collider.CompareTag("Player-Sphere"))
+                    {
+                        isPlayerControl = true;
+                        if (recentControlCharacters.ContainsKey("Player"))
                         {
-                            isPlayerControl = true;
-                            if (recentControlCharacters.ContainsKey("Player"))
-                            {
-                                agent = recentControlCharacters["Player"];
-                            }
-                            else
-                            {
-                                recentControlCharacters.Add("Player", GameObject.FindGameObjectWithTag("Player").GetComponent<UnityEngine.AI.NavMeshAgent>());
-                                agent = recentControlCharacters["Player"];
-                            }
-                            
+                            agent = recentControlCharacters["Player"];
                         }
-                        else if (hit.collider.CompareTag("Enemy-Sphere"))
+                        else
                         {
-                            isPlayerControl = false;
-                            if (recentControlCharacters.ContainsKey("Enemy"))
-                            {
-                                agent = recentControlCharacters["Enemy"];
-                            }
-                            else
-                            {
-                                recentControlCharacters.Add("Enemy", GameObject.FindGameObjectWithTag("Enemy").GetComponent<UnityEngine.AI.NavMeshAgent>());
-                                agent = recentControlCharacters["Enemy"];
-                            }
-                            
+                            recentControlCharacters.Add("Player", GameObject.FindGameObjectWithTag("Player").GetComponent<UnityEngine.AI.NavMeshAgent>());
+                            agent = recentControlCharacters["Player"];
                         }
+                            
+                    }
+                    else if (hit.collider.CompareTag("Enemy-Sphere"))
+                    {
+                        isPlayerControl = false;
+                        if (recentControlCharacters.ContainsKey("Enemy"))
+                        {
+                            agent = recentControlCharacters["Enemy"];
+                        }
+                        else
+                        {
+                            recentControlCharacters.Add("Enemy", GameObject.FindGameObjectWithTag("Enemy").GetComponent<UnityEngine.AI.NavMeshAgent>());
+                            agent = recentControlCharacters["Enemy"];
+                        }
+                            
+                    }
                     
-
                     else
                     {
                         UnityEngine.AI.NavMeshPath path = new UnityEngine.AI.NavMeshPath();

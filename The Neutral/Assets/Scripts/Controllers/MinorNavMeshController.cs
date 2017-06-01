@@ -14,6 +14,12 @@ namespace Neutral
         int isRespawn = Animator.StringToHash("isRespawn");
         int speed = Animator.StringToHash("speed");
 
+
+        [SerializeField]
+        private string spawnZone;
+
+        private bool minorCollision;
+
         void ResetAnimatorParameters()
         {
             anim.SetBool(isDead, false);
@@ -22,10 +28,11 @@ namespace Neutral
         }
         void Start()
         {
-
             anim = GetComponent<Animator>();
             navMeshAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
             AnimHelper = new AnimationUtilities();
+            spawnZone = "";
+            minorCollision = false;
         }
 
 
@@ -34,15 +41,15 @@ namespace Neutral
            
             AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
 
-            anim.SetFloat(speed, Mathf.Abs(navMeshAgent.velocity.magnitude));
-            if (Mathf.Abs(navMeshAgent.velocity.magnitude) > 0.5)
-            {
-                anim.Play("Run", 0);
-            }
-            else if (stateInfo.IsName("Run"))
-            {
-                anim.Play("Idle", 0);
-            }
+            if (navMeshAgent != null) anim.SetFloat(speed, Mathf.Abs(navMeshAgent.velocity.magnitude));
+            //if (Mathf.Abs(navMeshAgent.velocity.magnitude) > 0.5)
+            //{
+            //    anim.Play("Run", 0);
+            //}
+            //else if (stateInfo.IsName("Run"))
+            //{
+            //    anim.Play("Idle", 0);
+            //}
 
 
             if (Input.GetKey("z"))
@@ -60,13 +67,21 @@ namespace Neutral
             }
             if (stateInfo.IsName("Respawn"))
             {
+                minorCollision = false;
                 if (AnimHelper.AnimationFinished(stateInfo))
                 {
                     anim.SetBool(isRespawn, false);
                     anim.SetBool(isDead, false);
                 }
             }
-
+            else if (stateInfo.IsName("Merge"))
+            {
+                minorCollision = false;
+            }
+            else
+            {
+                minorCollision = true;
+            }
 
             if (Input.GetKey("x"))
             {
@@ -74,32 +89,52 @@ namespace Neutral
                 anim.Play("Merge");
             }
 
-    //        if (stateInfo.IsName("Merge")) 	
-    //        {
-				//Debug.Log("Modified merge time: " + (stateInfo.length-2.5f));
-    //            if (AnimHelper.AnimationFinished(stateInfo,stateInfo.length-2.5f))
-    //            {
-				//	Debug.Log ("SETTING MERGE TO FALSE");
-    //                anim.SetBool(isMerge, false);
-    //            }
-    //        }
+            //if (stateInfo.IsName("Merge"))
+            //{
+            //    Debug.Log("Modified merge time: " + (stateInfo.length - 2.5f));
+            //    if (AnimHelper.AnimationFinished(stateInfo, stateInfo.length - 2.5f))
+            //    {
+            //        Debug.Log("SETTING MERGE TO FALSE");
+            //        anim.SetBool(isMerge, false);
+            //    }
+            //}
 
-			if (Input.GetKeyDown ("p")) {
-				Vector3 centerPosition = new Vector3(this.transform.position.x - 0.5f, 0, this.transform.position.z-28f);
-				//navMeshAgent.SetDestination(centerPosition);
-				StartCoroutine("ForceMove");
-			}
+            //if (Input.GetKeyDown ("p")) {
+            //	Vector3 centerPosition = new Vector3(this.transform.position.x - 0.5f, 0, this.transform.position.z-28f);
+            //	//navMeshAgent.SetDestination(centerPosition);
+            //	StartCoroutine("ForceMove");
+            //}
 
             //uncomment if you want to test respawn animation alone with a key, otherwise it is played after death animation automatically
-            /*
-            if (Input.GetKey("c"))
-            {
-                anim.SetBool(isRespawn, true);
-                anim.Play("Respawn");
-            }
-            */
+            
+            //if (Input.GetKey("c"))
+            //{
+            //    anim.SetBool(isRespawn, true);
+            //    anim.Play("Respawn");
+            //}
+            
 
 
+        }
+
+        public void setSpawnZone(string zone)
+        {
+            spawnZone = zone;
+        }
+
+        public string getSpawnZone()
+        {
+            return spawnZone;
+        }
+
+        public bool canMinorCollide()
+        {
+            return minorCollision;
+        }
+
+        public void setMinorCollision(bool canCollide)
+        {
+            minorCollision = canCollide;
         }
 
     }
