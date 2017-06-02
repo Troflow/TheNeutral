@@ -1,14 +1,14 @@
-﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Animations/CombineMinor.cs">
+﻿<Properties StartupItem="Assembly-CSharp.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/UI/HUDManager.cs">
     <Files>
-      <File FileName="Assets/AstarPathfindingProject/Core/AI/AIPath.cs" Line="1" Column="1" />
-      <File FileName="Assets/AstarPathfindingProject/Core/AstarPath.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Controllers/MajorNavMeshController.cs" Line="14" Column="21" />
-      <File FileName="Assets/Scripts/Controllers/MinorNavMeshController.cs" Line="99" Column="13" />
-      <File FileName="Assets/Scripts/Animations/AnimationUtilities.cs" Line="22" Column="45" />
-      <File FileName="Assets/Scripts/Animations/CombineMinor.cs" Line="26" Column="44" />
-      <File FileName="Assets/Scripts/Background/Blink.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/UI/HUDManager.cs" Line="74" Column="5" />
+      <File FileName="Assets/Scripts/UI/Stamina/StaminaText.cs" Line="35" Column="45" />
+      <File FileName="Assets/Scripts/UI/BillboardBehaviour.cs" Line="16" Column="19" />
+      <File FileName="Assets/Scripts/UI/Stamina/StaminaRing.cs" Line="19" Column="2" />
+      <File FileName="Assets/Scripts/UI/PlayerState.cs" Line="18" Column="29" />
+      <File FileName="Assets/Scripts/UI/IHUDObservable.cs" Line="11" Column="47" />
+      <File FileName="Assets/Scripts/UI/IHUDObserver.cs" Line="11" Column="27" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

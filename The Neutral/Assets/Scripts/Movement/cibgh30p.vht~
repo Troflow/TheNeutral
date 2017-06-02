@@ -1,0 +1,86 @@
+﻿using UnityEngine;
+using System.Collections;
+
+namespace Neutral
+{
+    public class PlayerMovement : IMovementBase
+    {
+        public static UnityEngine.AI.NavMeshAgent agent { get; set; }
+        public Shader outlineShader;
+        private bool debug = false;
+
+
+        public PlayerMovement(UnityEngine.AI.NavMeshAgent agent)
+        {
+            PlayerMovement.agent = agent;
+            outlineShader = Shader.Find("outline");
+        }
+
+        public int Move()
+        {
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Debug.DrawLine(ray.origin, ray.GetPoint(500), Color.red);
+            if (Input.GetMouseButtonDown(0))
+            {
+				if (Physics.Raycast(ray, out hit, 500f))
+                {
+                    Debug.Log(hit.collider.tag);
+                    if (hit.collider.CompareTag("Player"))
+                    {
+                        agent = GameObject.Find("Player").GetComponent<UnityEngine.AI.NavMeshAgent>();
+                        GameObject.Find("Player").GetComponent<Renderer>().material.shader = outlineShader;
+                    }
+                    else if (hit.collider.CompareTag("Enemy"))
+                    {
+                        agent = GameObject.Find("Enemy").GetComponent<UnityEngine.AI.NavMeshAgent>();
+                    }
+                    else
+                    {
+                        UnityEngine.AI.NavMeshPath path = new UnityEngine.AI.NavMeshPath();
+
+                        bool hasFoundPath = agent.CalculatePath(hit.point, path);
+                        if (debug) Debug.Log(agent.updateRotation);
+
+                        if (path.status == UnityEngine.AI.NavMeshPathStatus.PathComplete)
+                        {
+                            agent.SetPath(path);
+                            return (int)UnityEngine.AI.NavMeshPathStatus.PathComplete;
+                            //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(hit.point), Time.deltaTime);
+                        }
+                        else if (path.status == UnityEngine.AI.NavMeshPathStatus.PathPartial)
+                        {
+                            agent.SetPath(path);
+                            return (int)UnityEngine.AI.NavMeshPathStatus.PathPartial;
+                        }
+                        else if (path.status == UnityEngine.AI.NavMeshPathStatus.PathInvalid)
+                        {
+                            return (int)UnityEngine.AI.NavMeshPathStatus.PathInvalid;
+                        }
+                    }
+                    
+
+                }
+                else
+                {
+                    Debug.Log("NOT HIT");
+                }
+            }
+            //if (Input.GetMouseButtonDown(0))
+            //{
+            //    if (Physics.Raycast(ray, out hit, 100))
+            //    {
+            //        NavMeshHit navmeshHit;
+            //        int walkableMask = 1 << NavMesh.GetAreaFromName("Walkable");
+            //        if (NavMesh.SamplePosition(hit.point, out navmeshHit, 1.0f, walkableMask))
+            //        {
+            //            agent.SetDestination(navmeshHit.position);
+            //        }
+            //    }
+            //}
+
+            return -1;
+        }
+    }
+
+}

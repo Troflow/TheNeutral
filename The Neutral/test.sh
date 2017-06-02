@@ -10,3 +10,4 @@ for y in $(find . -iname $1); do
 	done
 done
 echo The counter is $COUNTER
+echo LOL

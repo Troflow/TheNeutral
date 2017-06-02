@@ -2,6 +2,7 @@
 using System.Collections;
 
 namespace Neutral {
+
 	public class CombineMinor : MonoBehaviour {
 		private int MinorCount=0;
 		private Vector3 majorSpawnPoint = new Vector3();
@@ -74,7 +75,7 @@ namespace Neutral {
 				for (int z=0; z<MinorCount; z++) {
 					if (x==0){
                         //minorContainer[z].GetComponent<NavMeshAgent>().enabled = false;
-                        minorContainer[z].GetComponent<NavMeshAgent>().radius = 0.001f;
+                        minorContainer[z].GetComponent<UnityEngine.AI.NavMeshAgent>().radius = 0.001f;
 						minor_spawn.SetActive(false);
                         /*
                         Vector3 mVect = new Vector3(location.x - minorContainer[z].transform.position.x,
@@ -94,7 +95,7 @@ namespace Neutral {
                     }
                     else
                     {
-                        minorContainer[z].GetComponent<NavMeshAgent>().Move((location - minorContainer[z].transform.position).normalized / distancePerIntervalDivisor);
+                        minorContainer[z].GetComponent<UnityEngine.AI.NavMeshAgent>().Move((location - minorContainer[z].transform.position).normalized / distancePerIntervalDivisor);
                         //minorContainer[z].GetComponent<NavMeshAgent>().Move(movements[z]);
 
                         /*

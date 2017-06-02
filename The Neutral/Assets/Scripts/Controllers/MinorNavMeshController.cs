@@ -7,7 +7,7 @@ namespace Neutral
     {
 
         private Animator anim;
-        NavMeshAgent navMeshAgent;
+        UnityEngine.AI.NavMeshAgent navMeshAgent;
         AnimationUtilities AnimHelper;
         int isDead = Animator.StringToHash("isDead");
         int isMerge = Animator.StringToHash("isMerge");
@@ -24,24 +24,14 @@ namespace Neutral
         {
 
             anim = GetComponent<Animator>();
-            navMeshAgent = GetComponent<NavMeshAgent>();
+            navMeshAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
             AnimHelper = new AnimationUtilities();
         }
 
 
         void Update()
         {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            if (Input.GetMouseButtonDown(0))
-            {
-                if (Physics.Raycast(ray, out hit, 500))
-                {
-                    navMeshAgent.SetDestination(hit.point);
-                }
-            }
-            
+           
             AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
 
             anim.SetFloat(speed, Mathf.Abs(navMeshAgent.velocity.magnitude));
@@ -83,15 +73,16 @@ namespace Neutral
                 anim.SetBool(isMerge, true);
                 anim.Play("Merge");
             }
-            if (stateInfo.IsName("Merge")) 	
-            {
-				Debug.Log("Modified merge time: " + (stateInfo.length-2.5f));
-                if (AnimHelper.AnimationFinished(stateInfo,stateInfo.length-2.5f))
-                {
-					Debug.Log ("SETTING MERGE TO FALSE");
-                    anim.SetBool(isMerge, false);
-                }
-            }
+
+    //        if (stateInfo.IsName("Merge")) 	
+    //        {
+				//Debug.Log("Modified merge time: " + (stateInfo.length-2.5f));
+    //            if (AnimHelper.AnimationFinished(stateInfo,stateInfo.length-2.5f))
+    //            {
+				//	Debug.Log ("SETTING MERGE TO FALSE");
+    //                anim.SetBool(isMerge, false);
+    //            }
+    //        }
 
 			if (Input.GetKeyDown ("p")) {
 				Vector3 centerPosition = new Vector3(this.transform.position.x - 0.5f, 0, this.transform.position.z-28f);
