@@ -1,7 +1,6 @@
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2008
-
-Project("{7160D49A-CA25-3B2F-0A20-A1D8398B3A37}") = "The Neutral", "Assembly-CSharp.csproj", "{17817702-D3AC-A32A-42E6-307CC728EF1C}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2017
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "The Neutral", "The Neutral.csproj", "{7877B786-E9DD-6110-AC46-3B5BFDC2A7FD}"
 EndProject
 Project("{7160D49A-CA25-3B2F-0A20-A1D8398B3A37}") = "The Neutral", "Assembly-CSharp-Editor.csproj", "{1DF8972E-1613-02F5-BEDB-E55E80F6BB2C}"
 EndProject

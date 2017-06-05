@@ -12,7 +12,7 @@ public class ModifyMaterialDI : MonoBehaviour
     {
         ren = GetComponent<Renderer>();
         materials = Resources.LoadAll<Material>("Materials");
-        Debug.Log("We have " + materials.Length + " materials loaded");
+        //Debug.Log("We have " + materials.Length + " materials loaded");
     }
 
     // Update is called once per frame

@@ -13,6 +13,7 @@ namespace Neutral {
 		private bool isDelayFinished;
 		private float idleReadyDurationValue;
 		private bool idleStateHasChanged;
+        public bool isAnimationFinished;
         private bool skipMoveCombinationCheck;
 
         private bool timerStart;
@@ -41,6 +42,8 @@ namespace Neutral {
             animationPlayed = false;
             isDelayCoRoutineRunning = false;
             isDelayFinished = false;
+            isAnimationFinished = false;
+
             skipMoveCombinationCheck = false;
   
             currentTierPlaying = new Tier();
@@ -59,15 +62,13 @@ namespace Neutral {
 
         private IEnumerator SphereWithTime(float tierExpansionRate)
         {
-            print(sphere.name); 
-            print(tierExpansionRate);
-            
+
             while (sphere.transform.localScale.y < 31)
             {
                 //Vector3 currScale = sphere.transform.localScale;
                 //currScale.Set(currScale.x + tierExpansionRate, currScale.y + tierExpansionRate, currScale.z + tierExpansionRate);
                 //sphere.transform.localScale = currScale;
-                print(sphere.transform.localScale.y);
+                //print(sphere.transform.localScale.y);
                 sphere.transform.localScale += new Vector3(tierExpansionRate, tierExpansionRate, tierExpansionRate);
                 yield return new WaitForFixedUpdate();
             }
@@ -151,7 +152,6 @@ namespace Neutral {
 						//clears all combo pressed
 						tierList.ForEach(x => x.ComboPressed.Clear());
                         //print("MOVE EXPANSION RATE: " + move.ExpansionRate);
-						StartCoroutine(SphereWithTime(move.ExpansionRate));
 						break;
 					}
 					else
@@ -180,6 +180,8 @@ namespace Neutral {
 
             if (combatAnimationInitiated && animationPlayed)
             {
+                StartCoroutine(SphereWithTime(currentTierPlaying.ExpansionRate));
+                isAnimationFinished = true;
                 //while playing animation
                 for (int x = 0; x < tierList.Count; x++)
                 {
@@ -203,12 +205,28 @@ namespace Neutral {
                 ResetAllCombatTriggers();
             }//stop combat
 
-
         }
-		
 
-		// Use this for initialization
-		void Start () {
+        public bool isCombatAnimationPlaying(AnimatorStateInfo stateInfo)
+        {
+            for (int x = 0; x < tierList.Count; x++)
+            {
+                if (stateInfo.IsName(tierList[x].AnimationStateName))
+                {
+                    return true;
+                }
+                else if (stateInfo.IsName("Base."+tierList[x].AnimationStateName))
+                {
+                    print("secondary check success");
+                }
+
+            }
+            return false;
+        }
+
+
+        // Use this for initialization
+        void Start () {
 
 		}
 

@@ -13,12 +13,14 @@ namespace Neutral
         int isSpawn = Animator.StringToHash("isSpawn");
         int speed = Animator.StringToHash("speed");
 
+        private int spawnZone;
+
         void Start()
         {
-
             anim = GetComponent<Animator>();
             navMeshAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
             AnimHelper = new AnimationUtilities();
+            spawnZone = 0;
         }
 
 
@@ -59,8 +61,6 @@ namespace Neutral
                     anim.SetBool(isSpawn, false);
                 }
             }
-
-
             /*
                     if (Input.GetKey("z"))
                     {
@@ -89,6 +89,11 @@ namespace Neutral
 
         }
 
+        public void setSpawnZone(int zone)
+        {
+            spawnZone = zone;
+        }
+
         void OnTriggerEnter(Collider other)
         {
             Debug.Log("Collision trigger detected on sphere in Major");
@@ -97,5 +102,6 @@ namespace Neutral
         {
             Debug.Log("Collision real detected on sphere in Major");
         }
+
     }
 }
