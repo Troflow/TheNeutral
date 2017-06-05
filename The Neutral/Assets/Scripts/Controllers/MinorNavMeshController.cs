@@ -14,8 +14,6 @@ namespace Neutral
         int isRespawn = Animator.StringToHash("isRespawn");
         int speed = Animator.StringToHash("speed");
 
-
-        [SerializeField]
         private string spawnZone;
 
         private bool minorCollision;

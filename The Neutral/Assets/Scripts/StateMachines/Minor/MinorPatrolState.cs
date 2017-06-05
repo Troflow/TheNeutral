@@ -65,10 +65,18 @@ namespace Neutral
         private void Patrol ()
         {
             enemy.meshRendererFlag.material.color = Color.green;
+
+            if (enemy.waypoints.Count == 0)
+            {
+                //current period when the AI has spawned but not yet have any waypoints
+                return;
+            }
+
             //destination is the next waypoint in the array
-            enemy.navMeshAgent.destination = enemy.wayPoints[nextWayPoint].position;
+            enemy.navMeshAgent.destination = enemy.waypoints[nextWayPoint].position;
 
             AnimatorStateInfo stateInfo = enemy.anim.GetCurrentAnimatorStateInfo(0);
+
             if (!stateInfo.IsName("Respawn")) {
                 enemy.navMeshAgent.isStopped = false;
             }
@@ -80,7 +88,7 @@ namespace Neutral
             if (enemy.navMeshAgent.remainingDistance <= enemy.navMeshAgent.stoppingDistance && !enemy.navMeshAgent.pathPending)
             {
                 //need modulo to loop back (after hits last one in array, goes back to 0)
-                nextWayPoint = (nextWayPoint + 1) % enemy.wayPoints.Length ;
+                nextWayPoint = (nextWayPoint + 1) % enemy.waypoints.Count;
             }
         }
 

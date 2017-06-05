@@ -8,45 +8,60 @@ namespace Neutral {
 
     public class MinorZone : MonoBehaviour, IZone
     {
+
+        // prefab of the minors for this zone
         [HideInInspector]
         private GameObject minor_spawn;
+
+        // prefab of the major for this zone
         [HideInInspector]
         private GameObject major_spawn;
 
+        // list of waypoints we set to to the AI's in the zone
         [HideInInspector]
-        public Transform[] waypoints;
+        public List<Transform> waypoints;
 
+        // determines if we use user generated waypoints or randomized ones in the zone
         public bool randomizeWaypoints;
+
+        // number of waypoints to generate if we use random ones
         [HideInInspector]
         public int randomizedWaypointCount;
 
-        //this list contains all the minor gameobjects in the zone
+        // this list contains all the minor gameobjects in the zone
         private IList<GameObject> group;
-        //this list contains a record of all unique minors that were once and currently in the zone
+
+        // this list contains a record of all unique minors that were once and currently in the zone
         private IList<int> allInstanceIDs;
 
+        // lets us know if we are in the transition phase of the zone
         private bool minorTransitionInProgress;
-
 
         // Use this for initialization
         void Start()
         {
+            waypoints = new List<Transform>();
 
+            // if we need to randomize waypoints
             if (randomizeWaypoints)
             {
                 if (randomizedWaypointCount <= 0)
                 {
                     throw new System.Exception("Can not have 0 waypoints");
                 }
-                waypoints = new Transform[randomizedWaypointCount];
-                for (int x=0; x<randomizedWaypointCount; x++)
+                
+                for (int x=0; x< randomizedWaypointCount; x++)
                 {
+                    // instantiate the waypoints with this zone as the parent and sets the position relative to the parent
                     GameObject waypoint = Instantiate(new GameObject("MinorWaypoint" + (x + 1)), this.transform, false);
-                    waypoint.transform.position = (Random.insideUnitSphere * 100) + this.transform.position;
-                    waypoints[x] = waypoint.transform;
+                    // set the position of the waypoint a random point within the current zones sphere
+                    waypoint.transform.position = (Random.insideUnitSphere * GetComponent<SphereCollider>().radius) + this.transform.position;
+                    waypoints.Add(waypoint.transform);
                 }
 
             }
+            
+            // if we have waypoints placed in the zone already
             else
             {
                 for (int x = 0; x < 999; x++)
@@ -56,7 +71,7 @@ namespace Neutral {
                     {
                         break;
                     }
-                    waypoints[x] = waypoint.transform;
+                    waypoints.Add(waypoint.transform);
                 }
             }
 
@@ -78,28 +93,27 @@ namespace Neutral {
 
         public void add(GameObject minor)
         {
-            //we must check if the minor being added is a unique minor
-            //this is to circumvent the bug when removing a minor,
-            //the auto detecting collision instantly adds it back before the gameobject
-            //can actually delete causing wrong behaviour.
-
+            // we must check if the minor being added is a unique minor
+            // this is to circumvent the bug when removing a minor,
+            // the auto detecting collision instantly adds it back before the gameobject
+            // can actually be deleted causing incorrect behaviour.
             if (allInstanceIDs.Contains(minor.GetInstanceID()))
             {
-                //print("Duplicate minor, not adding");
                 return;
             }
+
+            // add new minor id to list of ids
             allInstanceIDs.Add(minor.GetInstanceID());
-            minor.GetComponent<MinorStatePatternEnemy>().setWaypoints(waypoints);
+            // set waypoints for AI script
+            minor.GetComponent<IStatePatternEnemy>().setWaypoints(waypoints);
+            // add minor to zone
             group.Add(minor);
 
-            //Debug.Log("current minors in zone after add:  " + group.Count);
         }
 
         public void delete(GameObject minor)
         {
             group.Remove(minor);
-            //Debug.Log("current minors in zone after del: " + group.Count);
-
         }
 
         public bool contains(GameObject minor)
@@ -110,14 +124,13 @@ namespace Neutral {
                 {
                     return true;
                 }
-            }
+            } 
             return false;
         }
 
         public void setEntityZone(GameObject minor)
         {
             minor.GetComponent<MinorNavMeshController>().setSpawnZone(this.gameObject.name);
-            //Debug.Log(minor.GetComponent<MinorNavMeshController>().getSpawnZone());
         }
 
         public int entitiesInZone()
@@ -141,6 +154,9 @@ namespace Neutral {
 
                 case EnemyType.Major:
                     Vector3 majorSpawnPoint = Vector3.zero;
+                    
+                    // calculate the major spawn position based off of the
+                    // averages of the minor positions
                     for (int x = 0; x < group.Count; x++)
                     {
                         group[x].GetComponentInParent<MinorNavMeshController>().setMinorCollision(false);
@@ -151,10 +167,10 @@ namespace Neutral {
                     majorSpawnPoint.x = majorSpawnPoint.x / group.Count;
                     majorSpawnPoint.z = majorSpawnPoint.z / group.Count;
 
-                    //Instantiate(GameObject.CreatePrimitive(PrimitiveType.Cube), majorSpawnPoint, Quaternion.identity);
+                    //makes sure to only start one move routine
                     if (!minorTransitionInProgress)
                     {
-                        StartCoroutine("ForceMove", majorSpawnPoint);
+                        StartCoroutine("MinorToMajorTansformation", majorSpawnPoint);
                     }
                     break;
 
@@ -164,56 +180,72 @@ namespace Neutral {
             }
         }
 
+        private void setMajorSettings(GameObject major)
+        {
+            major.SetActive(true);
+            major.GetComponent<Animator>().SetBool("isSpawn", true);
+            major.GetComponent<IStatePatternEnemy>().setWaypoints(waypoints);
+        }
 
-        private IEnumerator ForceMove(Vector3 location)
+        private IEnumerator MinorToMajorTansformation(Vector3 location)
         {
             minorTransitionInProgress = true;
+
             for (int x=0; x<group.Count; x++)
             {
+                // get the distance of each minor to the major spawn location
                 var heading = location - group[x].transform.position;
                 var distance = heading.magnitude;
                 var minor = group[x];
                 minor.transform.SetPositionAndRotation(minor.transform.position, Quaternion.identity);
+                
+                // move each individual minor based off of their distance to the major location
                 StartCoroutine(MoveIndividualMinor(group[x], location, distance));
             }
 
+            // the transformation stops based off of a fixed time which has to do with the animation time
             float startTime = Time.time;
-
             while (Time.time - startTime < 3.66667f)
             {
                 yield return new WaitForEndOfFrame();
             }
 
-            //BE CAREFUL OF THIS, NOT SURE OF EXPECTED BEHAVIOUR OF OTHER COROUTINES RUNNING
-            StopAllCoroutines();
+            // stop all current coroutines aside from this one
+            // this will stop the (s)lerping for the minors just
+            // before we spawn the major
+            StopAllCoroutines(); 
 
             foreach (GameObject minorInZone in group)
             {
                 Destroy(minorInZone);
             }
             group.Clear();
-            GameObject major_final = Instantiate(major_spawn, location, major_spawn.transform.rotation);
-            major_final.SetActive(true);
-            Animator anim = major_final.GetComponent<Animator>();
-            anim.SetBool("isSpawn", true);
-            minorTransitionInProgress = false;
 
+            // instantiate the major and set the default settings
+            GameObject major_final = Instantiate(major_spawn, location, major_spawn.transform.rotation);
+            setMajorSettings(major_final);
+            minorTransitionInProgress = false;
         }
 
 
         private IEnumerator MoveIndividualMinor(GameObject minor, Vector3 location, float distance)
         {
+
+            // destroy the navmeshagent to stop all movement/collisions
             Destroy(minor.GetComponent<UnityEngine.AI.NavMeshAgent>());
-            
-            minor.GetComponent<MinorStatePatternEnemy>().stopAI();
+
+            // tell the AI controller to stop movement
+            minor.GetComponent<IStatePatternEnemy>().stopAI();
+
+            // start the merge animation for the minor
             minor.GetComponent<Animator>().SetTrigger("isMerge");
-            float i = 0f;
+
             var startLerpPos = minor.transform.position;
 
-            float startTime = Time.time;
-
+            float i = 0f;
             while (i <= 1f)
             {
+                // set the slerp step with some algorithm that bearly works
                 i += Time.deltaTime * ((distance/(100 - (100-distance)))/2);
                 minor.transform.position = Vector3.Slerp(startLerpPos, location, i);
                 yield return new WaitForEndOfFrame();
@@ -224,6 +256,10 @@ namespace Neutral {
     }
 
 
+    // this is to add the functionality when you click a certain boolean value
+    // something else pops up. In this case, when you click the randomize waypoints
+    // checkbox, an integer field will pop up
+    #region Custom Editor Script
     [CustomEditor(typeof(MinorZone))]
     public class MinorZoneEditorScript : Editor
     {
@@ -231,7 +267,6 @@ namespace Neutral {
         {
             DrawDefaultInspector();
             var minorZone = target as MinorZone;
-            //minorZone.randomizeWaypoints = GUILayout.Toggle(minorZone.randomizeWaypoints, "Randomize Waypoints");
 
             if (minorZone.randomizeWaypoints)
             {
@@ -240,6 +275,7 @@ namespace Neutral {
             
         }
     }
+    #endregion
 }
 
 

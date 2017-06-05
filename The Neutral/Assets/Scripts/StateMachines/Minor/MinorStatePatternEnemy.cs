@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Neutral
 {
-    public class MinorStatePatternEnemy : MonoBehaviour
+    public class MinorStatePatternEnemy : MonoBehaviour, IStatePatternEnemy
     {
 
         //in alert mode, this is the variable which controls the speed at which it turns around to look for the player
@@ -16,7 +17,7 @@ namespace Neutral
         public float combatRange = 20f;
         //stores waypoints
         [HideInInspector]
-        public Transform[] wayPoints;
+        public IList<Transform> waypoints;
         //empty gameobject at eye-level for the enemy so that we cast from a sensable place where we are looking from
         public Transform eyes;
         //this is for lifting the "look" so they are not looking at the players feet, but at the head/body area
@@ -61,11 +62,16 @@ namespace Neutral
             alertState = new MinorAlertState(this);
             patrolState = new MinorPatrolState(this);
             combatState = new MinorCombatState(this);
+
             navMeshAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
             anim = GetComponent<Animator>();
+
             animHelper = new AnimationUtilities();
             currentState = patrolState;
+
             stop = false;
+
+            waypoints = new List<Transform>();
         }
 
         // Update is called once per frame
@@ -91,9 +97,10 @@ namespace Neutral
             stop = false;
         }
 
-        public void setWaypoints(Transform[] waypoints)
+        public void setWaypoints(IList<Transform> waypoints)
         {
-            wayPoints = waypoints;
+            waypoints.Shuffle();
+            this.waypoints = waypoints;
         }
     }
 

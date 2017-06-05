@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Neutral
 {
-    public class MajorStatePatternEnemy : MonoBehaviour
+    public class MajorStatePatternEnemy : MonoBehaviour, IStatePatternEnemy
     {
 
         //in alert mode, this is the variable which controls the speed at which it turns around to look for the player
@@ -15,7 +16,7 @@ namespace Neutral
         //how far the raycast goes to initiate combat moves
         public float combatRange = 20f;
         //stores waypoints
-        public Transform[] wayPoints;
+        public IList<Transform> waypoints;
         //empty gameobject at eye-level for the enemy so that we cast from a sensable place where we are looking from
         public Transform eyes;
         //this is for lifting the "look" so they are not looking at the players feet, but at the head/body area
@@ -60,21 +61,16 @@ namespace Neutral
             alertState = new MajorAlertState(this);
             patrolState = new MajorPatrolState(this);
             combatState = new MajorCombatState(this);
+
             navMeshAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
             anim = GetComponent<Animator>();
             animHelper = new AnimationUtilities();
+
             currentState = patrolState;
+
             stop = false;
 
-            for (int x=0; x<10; x++)
-            {
-                GameObject waypoint = GameObject.Find("MinorWaypoint" + (x + 1));
-                if (waypoint == null)
-                {
-                    break;
-                }
-                wayPoints[x] = GameObject.Find("MinorWaypoint" + (x + 1)).transform;
-            }
+            waypoints = new List<Transform>();
         }
 
         // Update is called once per frame
@@ -98,6 +94,12 @@ namespace Neutral
         public void resumeAI()
         {
             stop = false;
+        }
+        
+        public void setWaypoints(IList<Transform> waypoints)
+        {
+            waypoints.Shuffle();
+            this.waypoints = waypoints;
         }
     }
 

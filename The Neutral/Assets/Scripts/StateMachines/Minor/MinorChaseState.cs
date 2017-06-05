@@ -77,7 +77,7 @@ namespace Neutral
         {
             enemy.meshRendererFlag.material.color = Color.red;
             enemy.navMeshAgent.destination = enemy.target.position;
-            enemy.navMeshAgent.Resume();
+            enemy.navMeshAgent.isStopped = false;
         }
     }
 
