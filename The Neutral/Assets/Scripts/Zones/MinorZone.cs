@@ -47,7 +47,7 @@ namespace Neutral {
             {
                 if (randomizedWaypointCount <= 0)
                 {
-                    throw new System.Exception("Can not have 0 waypoints");
+                    throw new System.Exception("Can not have 0 waypoints"); 
                 }
                 
                 for (int x=0; x< randomizedWaypointCount; x++)
@@ -55,7 +55,7 @@ namespace Neutral {
                     // instantiate the waypoints with this zone as the parent and sets the position relative to the parent
                     GameObject waypoint = Instantiate(new GameObject("MinorWaypoint" + (x + 1)), this.transform, false);
                     // set the position of the waypoint a random point within the current zones sphere
-                    waypoint.transform.position = (Random.insideUnitSphere * GetComponent<SphereCollider>().radius) + this.transform.position;
+                    waypoint.transform.position = (Random.insideUnitSphere * GetComponentInChildren<SphereCollider>().radius) + this.transform.position;
                     waypoints.Add(waypoint.transform);
                 }
 
@@ -75,7 +75,7 @@ namespace Neutral {
                 }
             }
 
-
+             
             group = new List<GameObject>();
             allInstanceIDs = new List<int>();
 
@@ -130,6 +130,7 @@ namespace Neutral {
 
         public void setEntityZone(GameObject minor)
         {
+            print("SETTING ZONE TO: " + this.gameObject.name);
             minor.GetComponent<MinorNavMeshController>().setSpawnZone(this.gameObject.name);
         }
 
@@ -145,9 +146,9 @@ namespace Neutral {
                 case EnemyType.Minor:
                     float scaleFactor = GetComponentInChildren<SphereCollider>().radius / 2;
                     Instantiate(minor_spawn, new Vector3(
-                        minor_spawn.transform.position.x + Random.Range(-scaleFactor, scaleFactor),
+                        this.transform.position.x + Random.Range(-scaleFactor, scaleFactor),
                         minor_spawn.transform.position.y,
-                        minor_spawn.transform.position.z + Random.Range(-scaleFactor, scaleFactor)),
+                        this.transform.position.z + Random.Range(-scaleFactor, scaleFactor)),
                         rotation).SetActive(true);
                     break;
 
