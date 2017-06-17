@@ -19,12 +19,13 @@ public class TimedTileField : TouchTileField {
 
 	// Use this for initialization
 	void Start () {
+		defaultTileAwareState = false;
 		tiles = new List<Transform>();
 		populateTiles ();
 		tileCount = tiles.Count;
 
-		// For debugging purposes. Final activation will be handled
-		// within touched() 
+		// For debugging purposes. Actual activation will be handled
+		// within interactedWith() 
 		activateTileField ();
 	}
 		
@@ -33,11 +34,12 @@ public class TimedTileField : TouchTileField {
 	/// Sets isActivated to true, picks a random tile to be 'marked'
 	/// moves the tileMarker to the position of the marked tile
 	/// </summary>
-	private void activateTileField()
+	protected override void activateTileField()
 	{
 		isActivated = true;
 		markedTile = tiles [Random.Range (0, tiles.Count)];
-		markedTile.GetComponent<TouchTile> ().isMarkedTile = true;
+		markedTile.GetComponent<TouchTile> ().isAware = true;
+		//StartCoroutine (startTimer);
 		placeInitialMarker ();
 	}
 
@@ -50,7 +52,7 @@ public class TimedTileField : TouchTileField {
 	{
 		isActivated = false;
 		StopCoroutine (startTimer ());
-		hideMarker ();
+		tileMarker.gameObject.SetActive (false);
 	}
 		
 	/// <summary>
@@ -76,7 +78,7 @@ public class TimedTileField : TouchTileField {
 	private void displaceMarker()
 	{
 		// set the current markedTile as no longer marked
-		markedTile.GetComponent<TouchTile>().isMarkedTile = false;
+		markedTile.GetComponent<TouchTile>().isAware = false;
 			
 		// Duplicate tiles List, and remove the markedTile from duplicateList
 		List<Transform> duplicateList = new List<Transform>(tiles);
@@ -84,7 +86,7 @@ public class TimedTileField : TouchTileField {
 
 		// Pick a tile from from duplicateList. At random. Set it as isMarkedTile
 		markedTile = duplicateList[Random.Range(0, duplicateList.Count)];
-		markedTile.GetComponent<TouchTile> ().isMarkedTile = true;
+		markedTile.GetComponent<TouchTile> ().isAware = true;
 
 		// Place the tileMarker at the position of the markedTile. Offset upwards
 		Vector3 markerPosition = markedTile.position;
@@ -92,36 +94,15 @@ public class TimedTileField : TouchTileField {
 		tileMarker.position = markerPosition;
 	}
 
-	/// <summary>
-	/// Hides the tileMarker beneath the game terrain
-	/// </summary>
-	private void hideMarker()
-	{
-		tileMarker.gameObject.SetActive (false);
-	}
-
 
 	public override void touched(Transform pTile)
-	{
-		if (!isActivated) {
-			//activateTileField ();
-			//StartCoroutine (startTimer ());
-		} 
-		else 
+	{ 
+		if(isActivated) 
 		{
-			// If Player reaches the Tile in time: increment tileScore and pick a new, random Tile as marked
-			// Else, end the entire game.
-			// If Player gets tileScore >= targetTileScore, end puzzle and reveal reward
-
 			incrementTileScore ();
 			displaceMarker ();
-			resetTimer ();
+			//resetTimer ();
 		}
-	}
-
-	public override void interactedWith ()
-	{
-		throw new System.NotImplementedException ();
 	}
 		
 	private void incrementTileScore()
@@ -137,7 +118,7 @@ public class TimedTileField : TouchTileField {
 
 	protected override void showPrize ()
 	{
-		throw new System.NotImplementedException ();
+		//throw new System.NotImplementedException ();
 	}
 
 	/// <summary>

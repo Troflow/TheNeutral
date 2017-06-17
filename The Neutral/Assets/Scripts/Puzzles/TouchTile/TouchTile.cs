@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class TouchTile : MonoBehaviour {
 
-	public bool isMarkedTile = false;
+	public bool isAware;
 
 	public void OnTriggerEnter(Collider pColl)
 	{
-		if (pColl.CompareTag("Player") && isMarkedTile)
+		if (pColl.CompareTag("Player") && isAware)
 		{
 			transform.parent.GetComponent<TouchTileField> ().touched (transform);
 		}
