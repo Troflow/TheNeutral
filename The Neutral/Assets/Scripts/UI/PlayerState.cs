@@ -9,6 +9,7 @@ public class PlayerState : MonoBehaviour
 	private HUDManager _HUD;
 
 	public int stamina;
+	public string heldColour;
 
 	void Awake()
 	{

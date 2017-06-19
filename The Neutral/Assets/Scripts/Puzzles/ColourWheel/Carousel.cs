@@ -4,19 +4,19 @@ using UnityEngine;
 
 public class Carousel : MonoBehaviour {
 
-	private ColourWheel outerWheel;
-	private ColourWheel midWheel;
-	private ColourWheel innerWheel;
-	private ColourWheel centreWheel;
+	//private List<ColourWheel> colourWheels;
+	[SerializeField]
+	private ColourWheel centre;
+	private List<ColourWheel> haltedColourWheels;
 
 
 	// Use this for initialization
 	void Start () {
 		
 	}
+
 	
 	// Update is called once per frame
 	void Update () {
-		
 	}
 }
