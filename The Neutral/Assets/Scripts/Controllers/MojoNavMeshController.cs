@@ -7,7 +7,7 @@ namespace Neutral
     public class MojoNavMeshController : MonoBehaviour
     {
         
-        CombatController combatController;
+        CombatUtilities combatController;
         AnimationUtilities AnimHelper;
 
         private Animator anim;
@@ -59,8 +59,8 @@ namespace Neutral
             tierList[2].ExpansionRate = 0.15f;
 
 
-            combatController = GetComponent<CombatController>();
-            combatController.SetCombatControllerDefaults(tierList, anim, GameObject.Find("Mojo-Sphere"), this.tag);
+            combatController = GetComponent<CombatUtilities>();
+            combatController.SetCombatUtilityDefaults(tierList, anim, GameObject.Find("Mojo-Sphere"), this.tag);
         }
 
         // Use this for initialization

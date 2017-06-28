@@ -55,6 +55,8 @@ namespace Neutral
 
         public void OnTriggerEnter(Collider col)
         {
+
+            
             if (col.gameObject.tag == "Player-Sphere" || col.gameObject.tag == "Enemy-Sphere")
             {
                 Renderer sphereToLerp;
@@ -93,12 +95,17 @@ namespace Neutral
                 if (!isZoneCheck)
                 {
                     Debug.Log("DOING ZONE CHECK");
-                    StartCoroutine(MinorCollision(GetComponentInParent<CombatController>()));
+                    StartCoroutine(MinorCollision(GetComponentInParent<CombatUtilities>()));
                 }
+            }
+
+            if (col.gameObject.CompareTag("Major-Sphere"))
+            {
+
             }
         }
 
-        private IEnumerator MinorCollision(CombatController combatController)
+        private IEnumerator MinorCollision(CombatUtilities combatController)
         {
             isZoneCheck = true;
             Animator remyAnimator = GetComponentInParent<Animator>();
@@ -129,22 +136,23 @@ namespace Neutral
                 }
             }
 
+            else if (aggregatedCollisions.Count % 2 != 0)
+            {
+                Debug.Log("SPAWNING NEW MINOR");
+
+                for (int x = 0; x < spawnCount; x++)
+                {
+                    zone.spawn(EnemyType.Minor, Quaternion.identity);
+                }
+            }
+
             else if (zone.entitiesInZone()+spawnCount >= 7)
             {
                 Debug.Log("SPAWNING MAJOR");
                 zone.spawn(EnemyType.Major, Quaternion.identity);
                 
             }
-
-            else if (aggregatedCollisions.Count %2 != 0)
-            {
-                Debug.Log("SPAWNING NEW MINOR");
-                
-                for (int x=0; x<spawnCount; x++)
-                {
-                    zone.spawn(EnemyType.Minor, Quaternion.identity);
-                }
-            }
+            
             
             isZoneCheck = false;
             aggregatedCollisions.Clear();           

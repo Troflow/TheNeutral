@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Neutral {
 	public class RemyNavMeshController : MonoBehaviour {
 		
-        CombatController combatController;
+        CombatUtilities combatController;
 		AnimationUtilities AnimHelper;
         List<Tier> tierList;
 
@@ -15,6 +15,7 @@ namespace Neutral {
 		int isIdleReady = Animator.StringToHash("isIdle");
 		int isRunning = Animator.StringToHash("isRunning");
 		int isDashing = Animator.StringToHash("isDashing");
+        int isDashingCancel = Animator.StringToHash("isDashingCancel");
 		int isExhausted = Animator.StringToHash("isExhausted");
         int isCounterState = Animator.StringToHash("isCounterState");
         int isCounter = Animator.StringToHash("isCounter");
@@ -51,8 +52,8 @@ namespace Neutral {
             tierList[2].ExpansionRate = 0.45f;
 
             //combatController = new CombatController(tierList, anim, movement);
-            combatController = GetComponent<CombatController>();
-            combatController.SetCombatControllerDefaults(tierList, anim, GameObject.FindGameObjectWithTag("Player-Sphere"), this.tag);
+            combatController = GetComponent<CombatUtilities>();
+            combatController.SetCombatUtilityDefaults(tierList, anim, GameObject.FindGameObjectWithTag("Player-Sphere"), this.tag);
         }
 
 
@@ -136,11 +137,6 @@ namespace Neutral {
                 }
             }
 
-            
-			if (Input.GetKeyDown (KeyCode.Q)) {
-				anim.SetTrigger(isDashing);
-			}
-
 			if (Input.GetKeyDown (KeyCode.E)) {
                 PlayerMovement.agent.ResetPath();
 				anim.SetBool (isExhausted, true);
@@ -172,6 +168,22 @@ namespace Neutral {
             {
                 setTriggerAndCancelMovement(isDefeated);
             }
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                if (combatController.isCombatAnimationPlaying(stateInfo))
+                {
+                    anim.SetTrigger(isDashingCancel);
+                    combatController.resetSphere();
+                    //PlayerMovement.agent.Move(transform.);
+                }
+                else
+                {
+                    anim.SetTrigger(isDashing);
+                }
+                
+            }
+
+
         }
 	}
 

@@ -98,8 +98,14 @@ namespace Neutral
         
         public void setWaypoints(IList<Transform> waypoints)
         {
+            Debug.Log(this.waypoints);
             waypoints.Shuffle();
             this.waypoints = waypoints;
+            foreach (Transform t in waypoints)
+            {
+                Debug.Log(t.name);
+            }
+            Debug.Log(this.waypoints);
         }
     }
 

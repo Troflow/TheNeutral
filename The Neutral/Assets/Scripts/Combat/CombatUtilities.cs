@@ -4,7 +4,8 @@ using UnityEngine;
 
 namespace Neutral {
 	
-	public class CombatController : MonoBehaviour {
+	public class CombatUtilities : MonoBehaviour {
+
         private string name;
 		private List<Tier> tierList;
 		private Animator anim;
@@ -15,6 +16,7 @@ namespace Neutral {
 		private bool idleStateHasChanged;
         public bool isAnimationFinished;
         private bool skipMoveCombinationCheck;
+        private bool isSphereExpanding;
 
         private bool timerStart;
 
@@ -27,7 +29,10 @@ namespace Neutral {
 
         private bool debug = false;
 
-        public void SetCombatControllerDefaults(List<Tier> tierList, Animator anim, GameObject sphere, string name) {
+
+        private Coroutine lastRunningRoutine;
+
+        public void SetCombatUtilityDefaults(List<Tier> tierList, Animator anim, GameObject sphere, string name) {
             this.name = name;
 			this.tierList = tierList;
 			this.anim = anim;
@@ -47,6 +52,8 @@ namespace Neutral {
             skipMoveCombinationCheck = false;
   
             currentTierPlaying = new Tier();
+
+            lastRunningRoutine = null;
         }
 
         private void ResetAllCombatTriggers()
@@ -62,9 +69,9 @@ namespace Neutral {
 
         private IEnumerator SphereWithTime(float tierExpansionRate)
         {
-
             while (sphere.transform.localScale.y < 31)
             {
+                Debug.Log("sphere expand");
                 //Vector3 currScale = sphere.transform.localScale;
                 //currScale.Set(currScale.x + tierExpansionRate, currScale.y + tierExpansionRate, currScale.z + tierExpansionRate);
                 //sphere.transform.localScale = currScale;
@@ -74,10 +81,22 @@ namespace Neutral {
             }
             while (sphere.transform.localScale.y > 13)
             {
+                Debug.Log("sphere retract");
                 sphere.transform.localScale -= new Vector3(tierExpansionRate, tierExpansionRate, tierExpansionRate);
                 //Vector3 currScale = sphere.transform.localScale;
                 //currScale.Set(currScale.x - tierExpansionRate, currScale.y - tierExpansionRate, currScale.z - tierExpansionRate);
                 //sphere.transform.localScale = currScale;
+                yield return new WaitForFixedUpdate();
+            }
+        
+        }
+
+        private IEnumerator ReduceSphereFromCurrent(float tierExpansionRate)
+        {
+            while (sphere.transform.localScale.y > 13)
+            {
+                Debug.Log("Reducing sphere from current");
+                sphere.transform.localScale -= new Vector3(tierExpansionRate, tierExpansionRate, tierExpansionRate);
                 yield return new WaitForFixedUpdate();
             }
         }
@@ -158,7 +177,6 @@ namespace Neutral {
 					{
 						//this block is when we are in the delay phase
 					}
-
 				}
 
 				if (move.ComboPressed.Count > 0)
@@ -180,7 +198,7 @@ namespace Neutral {
 
             if (combatAnimationInitiated && animationPlayed)
             {
-                StartCoroutine(SphereWithTime(currentTierPlaying.ExpansionRate));
+                lastRunningRoutine = StartCoroutine(SphereWithTime(currentTierPlaying.ExpansionRate));
                 isAnimationFinished = true;
                 //while playing animation
                 for (int x = 0; x < tierList.Count; x++)
@@ -205,7 +223,7 @@ namespace Neutral {
                 ResetAllCombatTriggers();
             }//stop combat
 
-        }
+        }//end checkForMoveCombination
 
         public bool isCombatAnimationPlaying(AnimatorStateInfo stateInfo)
         {
@@ -224,6 +242,18 @@ namespace Neutral {
             return false;
         }
 
+
+        //IEnumerator TransitionCorotuines()
+        //{
+        //    StopCoroutine(lastRunningRoutine);
+        //    StartCoroutine(ReduceSphereFromCurrent(currentTierPlaying.ExpansionRate));
+        //}
+
+        public void resetSphere()
+        {
+            StopCoroutine(lastRunningRoutine);
+            StartCoroutine(ReduceSphereFromCurrent(currentTierPlaying.ExpansionRate));
+        }
 
         // Use this for initialization
         void Start () {
