@@ -11,7 +11,17 @@ public class TouchTile : MonoBehaviour {
 	{
 		if (pColl.CompareTag("Player") && isAware)
 		{
-			transform.parent.GetComponent<TouchTileField> ().touched (transform);
+			//transform.parent.GetComponent<TouchTileField> ().touched (transform);
+			Debug.Log("Player Entered");
+		}
+	}
+
+	public void OnTriggerExit(Collider pColl)
+	{
+		if (pColl.CompareTag("Player") && isAware)
+		{
+			//transform.parent.GetComponent<TouchTileField> ().touched (transform);
+			Debug.Log("Player Exit");
 		}
 	}
 }
