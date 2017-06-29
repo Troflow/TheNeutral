@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
+using System.Collections;
 
 
 namespace Neutral {
@@ -7,7 +7,7 @@ namespace Neutral {
 		
         CombatUtilities combatController;
 		AnimationUtilities AnimHelper;
-        List<Tier> tierList;
+        System.Collections.Generic.List<Tier> tierList;
 
         private Animator anim;
         Rigidbody rb; 
@@ -24,9 +24,11 @@ namespace Neutral {
         int isExploit = Animator.StringToHash("isExploit");
 		int speed = Animator.StringToHash("speed");
 
+        private int dashSpeed;
+
         private void initializeCombatController()
         {
-            tierList = new List<Tier>();
+            tierList = new System.Collections.Generic.List<Tier>();
             for (int x = 0; x < 3; x++)
             {
                 tierList.Add(new Tier());
@@ -65,13 +67,27 @@ namespace Neutral {
             anim.SetBool(isIdleReady, true);
         }
 
+
+        private IEnumerator SlidePlayer()
+        {
+            var startTime = Time.time;
+            while (Time.time - startTime < 0.7)
+            {
+                PlayerMovement.agent.Move(transform.forward * Time.deltaTime * dashSpeed);
+                yield return new WaitForEndOfFrame();
+            }
+
+        }
+
         // Use this for initialization
         void Start () {
             PlayerMovement.SetInitialMovement();
 			anim = GetComponent<Animator>();
             
 			AnimHelper = new AnimationUtilities();
-            
+
+            dashSpeed = 10;
+
             initializeCombatController();
         }
 
@@ -174,13 +190,13 @@ namespace Neutral {
                 {
                     anim.SetTrigger(isDashingCancel);
                     combatController.resetSphere();
-                    //PlayerMovement.agent.Move(transform.);
                 }
                 else
                 {
                     anim.SetTrigger(isDashing);
                 }
-                
+                StartCoroutine("SlidePlayer");
+
             }
 
 
