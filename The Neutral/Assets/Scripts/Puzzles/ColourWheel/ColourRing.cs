@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class ColourRing : MonoBehaviour {
 
+	// TODO: change to static const
 	[SerializeField]
-	private int colourTransferTime;
+	private float colourTransferTime;
 	[SerializeField]
 	private string ringColour;
 
@@ -16,20 +17,17 @@ public class ColourRing : MonoBehaviour {
 
 	private IEnumerator grantColour(PlayerState pState)
 	{
-		for (int x = 0; x >= colourTransferTime; x++) 
-		{
-			yield return new WaitForSeconds (1f);
-			Debug.Log ("Time Passed: " + x);
-		}
-
+		//Debug.Log ("In Coroutine");
+		yield return new WaitForSeconds (colourTransferTime);
 		pState.heldColour = ringColour;
-		Debug.Log ("Player Held Colour Now: " + ringColour);
+		//Debug.Log ("After Coroutine");
 	}
 
 	public void OnTriggerEnter(Collider col)
 	{
 		if (col.CompareTag ("Player")) 
 		{
+			//Debug.Log ("Player Collided");
 			startGrantingColour (col.GetComponent<PlayerState>());
 		}
 	}
@@ -38,7 +36,8 @@ public class ColourRing : MonoBehaviour {
 	{
 		if (col.CompareTag ("Player")) 
 		{
-			//StopCoroutine (grantColour (col.GetComponent<PlayerState>()));
+			//Debug.Log ("Exit Coroutine");
+			StopCoroutine (grantColour (col.GetComponent<PlayerState>()));
 		}
 	}
 	

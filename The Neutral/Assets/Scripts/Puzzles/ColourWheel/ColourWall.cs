@@ -4,19 +4,23 @@ using UnityEngine;
 
 public class ColourWall : MonoBehaviour {
 
+	private ColourWheel colourWheel;
+	[SerializeField]
 	private string desiredColour;
-	public bool isColouredWell;
+	public bool isColouredCorrect = false;
 
 	// Use this for initialization
 	void Start () {
-		
+		colourWheel = transform.parent.GetComponent<ColourWheel> ();
 	}
 
 	private void checkPlayerColour(string pPlayerColour)
 	{
 		if (pPlayerColour == desiredColour) 
 		{
-			//isColouredWell = true;
+			Debug.Log ("Colours Match: " + pPlayerColour + " " + desiredColour);
+			isColouredCorrect = true;
+			colourWheel.halt ();
 		}
 	}
 

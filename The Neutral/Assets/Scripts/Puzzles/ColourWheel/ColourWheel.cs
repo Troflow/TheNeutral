@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ColourWheel : MonoBehaviour {
 
+	private Carousel carousel;
 	public int haltOrder;
 	[SerializeField]
 	private float spinSpeed;
@@ -11,25 +12,29 @@ public class ColourWheel : MonoBehaviour {
 	private bool isClockwise = true;
 	public bool isHalted = false;
 	private Vector3 spinVector;
-	[SerializeField]
-	private ColourWall colourWall;
 
 	// Use this for initialization
 	void Start () {
+		carousel = transform.parent.GetComponent<Carousel> ();
+
 		if (!isClockwise) 
 		{
 			spinSpeed *= -1f;
 		}
 		spinVector = new Vector3 (0, spinSpeed, 0);
-		colourWall = transform.GetChild(1).GetComponent<ColourWall> ();
+	}
+
+	public void halt()
+	{
+		isHalted = true;
+		carousel.addWheel (this);
 	}
 
 	public void spin()
 	{
-		if (!colourWall.isColouredWell) 
+		if (!isHalted) 
 		{
 			transform.Rotate (spinVector * Time.deltaTime);
-			isHalted = true;
 		}
 	}
 		
