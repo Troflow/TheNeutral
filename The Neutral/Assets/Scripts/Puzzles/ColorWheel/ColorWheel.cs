@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ColourWheel : MonoBehaviour {
+public class ColorWheel : MonoBehaviour {
 
 	private Carousel carousel;
 	public int haltOrder;

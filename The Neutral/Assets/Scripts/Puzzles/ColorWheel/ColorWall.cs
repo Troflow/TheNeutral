@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ColourWall : MonoBehaviour {
+public class ColorWall : MonoBehaviour {
 
-	private ColourWheel colourWheel;
+	private ColorWheel colourWheel;
 	[SerializeField]
 	private string desiredColour;
 	public bool isColouredCorrect = false;
 
 	// Use this for initialization
 	void Start () {
-		colourWheel = transform.parent.GetComponent<ColourWheel> ();
+		colourWheel = transform.parent.GetComponent<ColorWheel> ();
 	}
 
 	private void checkPlayerColour(string pPlayerColour)

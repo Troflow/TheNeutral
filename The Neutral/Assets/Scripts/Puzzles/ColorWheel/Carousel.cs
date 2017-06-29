@@ -6,18 +6,18 @@ public class Carousel : MonoBehaviour {
 
 	//private List<ColourWheel> colourWheels;
 	[SerializeField]
-	private ColourWheel centre;
+	private ColorWheel centre;
 	[SerializeField]
-	private List<ColourWheel> haltedColourWheels;
+	private List<ColorWheel> haltedColourWheels;
 	private bool correctlyOrdered;
 
 
 	// Use this for initialization
 	void Start () {
-		haltedColourWheels = new List<ColourWheel> ();
+		haltedColourWheels = new List<ColorWheel> ();
 	}
 
-	public void addWheel(ColourWheel pColourWheel)
+	public void addWheel(ColorWheel pColourWheel)
 	{
 		if (!haltedColourWheels.Contains (pColourWheel)) 
 		{
@@ -33,7 +33,7 @@ public class Carousel : MonoBehaviour {
 
 		// Loop through haltedColourWheels, making sure each wheel's halt order
 		// matches their index in the list
-		foreach (ColourWheel wheel in haltedColourWheels) 
+		foreach (ColorWheel wheel in haltedColourWheels) 
 		{
 			if (wheel.haltOrder != haltedColourWheels.IndexOf (wheel)) 
 			{

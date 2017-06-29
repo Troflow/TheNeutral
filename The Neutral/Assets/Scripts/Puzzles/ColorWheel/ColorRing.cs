@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ColourRing : MonoBehaviour {
+public class ColorRing : MonoBehaviour {
 
-	// TODO: change to static const
+	// TODO: change to static constant
 	[SerializeField]
 	private float colourTransferTime;
 	[SerializeField]
