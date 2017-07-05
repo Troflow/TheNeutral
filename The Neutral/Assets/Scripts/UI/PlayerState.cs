@@ -10,10 +10,21 @@ public class PlayerState : MonoBehaviour
 
 	public int stamina;
 	public string heldColour;
+	public Dictionary<string, int> completedPuzzles;
 
 	void Awake()
 	{
 		stamina = 100;
+		populateCompletedPuzzles ();
+	}
+
+	private void populateCompletedPuzzles()
+	{
+		completedPuzzles.Add ("Blue_Puzzle", 0);
+		completedPuzzles.Add ("Red_Puzzle", 0);
+		completedPuzzles.Add ("Green_Puzzle", 0);
+		completedPuzzles.Add ("Yellow_Puzzle", 0);
+		completedPuzzles.Add ("Purple_Puzzle", 0);
 	}
 
 	public void onStateChange()
