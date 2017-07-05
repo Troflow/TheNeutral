@@ -4,19 +4,26 @@ using UnityEngine;
 
 public class BodyBox : MonoBehaviour {
 
+	public string boxColor;
+
 	private Vector3 offset;
 	private Vector3 targetPos;
 	private Vector3 collisionPos;
+
+	[SerializeField]
+	private Transform collisionPoints;
 
 	private Transform center;
 	private SpriteRenderer centerSprite;
 	private float centerThreshold;
 
+	[SerializeField]
 	private Transform playerTransform; 
 
 	private bool isColliding;
 	private bool isFollowingPlayer;
-	private float smoothing = 9f;
+	private bool isHandlingCollision;
+	private float smoothing = 2f;
 
 	// Use this for initialization
 	void Start () {
@@ -68,46 +75,34 @@ public class BodyBox : MonoBehaviour {
 
 	}
 
-	private void handleCollision(string pObjectName)
+	private void checkCollisions ()
 	{
-		Vector3 newPos = transform.position;
-		float bounceVal = 1.5f;
-		switch (pObjectName) 
+		foreach (Transform collPoint in collisionPoints) 
 		{
-		case "Wall_North":
-			newPos.z -= bounceVal;
-			break;
-		case "Wall_East":
-			newPos.x -= bounceVal;
-			break;
-		case "Wall_South":
-			newPos.z += bounceVal;
-			break;
-		case "Wall_West":
-			newPos.x += bounceVal;
-			break;
-		default:
-			break;
+			if (collPoint.GetComponent<CollisionPoint>().hasCollided) 
+			{
+				ricochet (collPoint.forward);
+				isFollowingPlayer = false;
+				break;
+			}
 		}
-		collisionPos = newPos;
-		isFollowingPlayer = false;
 	}
 
-	public void OnTriggerEnter(Collider col)
+	private void ricochet(Vector3 pMotionVector)
 	{
-		if (col.CompareTag ("Player")) {
-			playerTransform = col.transform;
-		} else {
-			handleCollision (col.gameObject.name);
-		}
+		if (!isFollowingPlayer)
+			return;
+		
+		Vector3 newPos = transform.position;
+		newPos -= pMotionVector;
+
+		transform.position = newPos;
 	}
 
 	public void OnTriggerStay(Collider col)
 	{
 		if (col.CompareTag ("Player")) {
-			if (!checkPlayerCentered ()) {
-				isFollowingPlayer = false;
-			}
+			playerTransform = col.transform;
 		}
 	}
 
@@ -123,6 +118,7 @@ public class BodyBox : MonoBehaviour {
 	void Update () {
 
 		handleInput ();
+		checkCollisions ();
 
 		if (isFollowingPlayer) 
 		{
