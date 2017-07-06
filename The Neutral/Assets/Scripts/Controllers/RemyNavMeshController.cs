@@ -23,7 +23,7 @@ namespace Neutral {
         int isExploit = Animator.StringToHash("isExploit");
 		int speed = Animator.StringToHash("speed");
 
-        void initializeCombatController()
+        private void initializeCombatController()
         {
             tierList = new List<Tier>();
             for (int x = 0; x < 3; x++)
@@ -34,25 +34,25 @@ namespace Neutral {
             tierList[0].Combo = "asd";
             tierList[0].AnimationHash = Animator.StringToHash("isTier1");
             tierList[0].AnimationStateName = "Tier 1";
-            tierList[0].ExpansionRate = 0.6f;
+            tierList[0].ExpansionRate = 0.9f;
 
 
             tierList[1].TierLevel = 4;
             tierList[1].Combo = "aad";
             tierList[1].AnimationHash = Animator.StringToHash("isTier4");
             tierList[1].AnimationStateName = "Tier 4";
-            tierList[1].ExpansionRate = 0.4f;
+            tierList[1].ExpansionRate = 0.7f;
 
 
             tierList[2].TierLevel = 7;
             tierList[2].Combo = "das";
             tierList[2].AnimationHash = Animator.StringToHash("isTier7");
             tierList[2].AnimationStateName = "Tier 7";
-            tierList[2].ExpansionRate = 0.15f;
+            tierList[2].ExpansionRate = 0.45f;
 
             //combatController = new CombatController(tierList, anim, movement);
             combatController = GetComponent<CombatController>();
-            combatController.SetCombatControllerDefaults(tierList, anim, GameObject.Find("Remy-Sphere"), this.tag);
+            combatController.SetCombatControllerDefaults(tierList, anim, GameObject.FindGameObjectWithTag("Player-Sphere"), this.tag);
         }
 
 
@@ -83,16 +83,16 @@ namespace Neutral {
             int pathStatus = PlayerMovement.Move();
 			if (pathStatus == 0)
 			{
-				print("The agent can reach the destionation");
+				//print("The agent can reach the destionation");
 			}
 			else if (pathStatus == 1)
 			{
-				print("The agent can only get close to the destination");
+				//print("The agent can only get close to the destination");
 			}
 			else if (pathStatus == 2)
 			{
-				print("The agent cannot reach the destination");
-				print("hasFoundPath will be false");
+				//print("The agent cannot reach the destination");
+				//print("hasFoundPath will be false");
 			}
 			else
 			{
