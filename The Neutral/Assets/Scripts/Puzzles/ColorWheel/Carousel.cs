@@ -2,19 +2,36 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Carousel : MonoBehaviour {
+public class Carousel : Puzzle {
 
-	//private List<ColourWheel> colourWheels;
-	[SerializeField]
-	private ColorWheel centre;
-	[SerializeField]
+	/// <summary>
+	/// The centre circle. 
+	/// TODO: discuss with Hussain how this will be important
+	/// during gameplay
+	/// </summary>
+	private Transform centre;
 	private List<ColorWheel> haltedColourWheels;
+
+	[SerializeField]
+	private float colorTransferTime;
 	private bool correctlyOrdered;
 
 
 	// Use this for initialization
 	void Start () {
 		haltedColourWheels = new List<ColorWheel> ();
+		setColorTransferTime ();
+
+	}
+
+	private void setColorTransferTime()
+	{
+		foreach (Transform child in transform) 
+		{
+			ColorRing ring = child.GetComponentInChildren<ColorRing> ();
+			if(ring != null)
+				ring.setTransferTime (colorTransferTime);
+		}
 	}
 
 	public void addWheel(ColorWheel pColourWheel)
@@ -26,9 +43,13 @@ public class Carousel : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Once the number of halted wheels exceeds 2,
+	/// will check to see the walls's index in the list
+	/// matches with its haltOrder
+	/// </summary>
 	private void validateHaltedWheels()
 	{
-		Debug.Log ("Validating Halted Wheels");
 		if (haltedColourWheels.Count < 2) return;
 
 		// Loop through haltedColourWheels, making sure each wheel's halt order
@@ -43,14 +64,11 @@ public class Carousel : MonoBehaviour {
 		}
 
 		correctlyOrdered = true;
-		endPuzzle ();
+		puzzleCompleted ();
 	}
 
-	private void endPuzzle()
+	protected override void puzzleCompleted ()
 	{
-	}
-
-	// Update is called once per frame
-	void Update () {
+		throw new System.NotImplementedException ();
 	}
 }

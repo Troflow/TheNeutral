@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Collision point class, used to replicate
+/// collision detection and response for isTrigger
+/// boxColliders on the BodyBoxes
+/// </summary>
 public class CollisionPoint : MonoBehaviour {
 
 	public bool hasCollided;
-
-	// Use this for initialization
-	void Start () {
-		
-	}
 
 	public void OnTriggerEnter(Collider col)
 	{

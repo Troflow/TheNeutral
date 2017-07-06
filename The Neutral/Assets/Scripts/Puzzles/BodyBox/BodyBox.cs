@@ -1,38 +1,39 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Enums;
 
 public class BodyBox : MonoBehaviour {
 
-	public string boxColor;
+	public Lite boxColor;
 
 	private Vector3 offset;
 	private Vector3 targetPos;
-	private Vector3 collisionPos;
 
-	[SerializeField]
 	private Transform collisionPoints;
 
 	private Transform center;
 	private SpriteRenderer centerSprite;
 	private float centerThreshold;
 
-	[SerializeField]
 	private Transform playerTransform; 
 
-	private bool isColliding;
 	private bool isFollowingPlayer;
-	private bool isHandlingCollision;
 	private float smoothing = 2f;
 
 	// Use this for initialization
 	void Start () {
+
+		// Instantiate Center Attributes
 		center = transform.GetChild (0);
 		centerSprite = center.gameObject.GetComponent<SpriteRenderer> ();
 		centerThreshold = 2f;
+
+		// Instantiate Collision Points
+		collisionPoints = transform.GetChild(0);
 	}
 
-
+	// TODO: remove
 	private void handleInput()
 	{
 		if (Input.GetKeyDown(KeyCode.Comma))
@@ -41,6 +42,10 @@ public class BodyBox : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// If the player is close enough to box center and the correct input
+	/// is given, the box will begin following the player
+	/// </summary>
 	private void setFollowingPlayer()
 	{
 		if (playerTransform == null) {
@@ -54,15 +59,11 @@ public class BodyBox : MonoBehaviour {
 			offset = transform.position - playerTransform.position;
 		}
 	}
-
-	private bool checkPlayerCentered()
-	{
-		bool xCheck = Mathf.Abs(playerTransform.position.x - center.position.x) <= centerThreshold;
-		bool zCheck = Mathf.Abs(playerTransform.position.z - center.position.z) <= centerThreshold;
-
-		return xCheck && zCheck;
-	}
-
+		
+	/// <summary>
+	/// Called per frame. Has the box match the positioning
+	/// of the player, to an offset.
+	/// </summary>
 	private void followPlayer()
 	{
 		if (playerTransform == null) 
@@ -75,6 +76,23 @@ public class BodyBox : MonoBehaviour {
 
 	}
 
+	/// <summary>
+	/// Returns true if player is close enough to the box's center
+	/// </summary>
+	/// <returns><c>true</c>, if player centered was checked, <c>false</c> otherwise.</returns>
+	private bool checkPlayerCentered()
+	{
+		bool xCheck = Mathf.Abs(playerTransform.position.x - center.position.x) <= centerThreshold;
+		bool zCheck = Mathf.Abs(playerTransform.position.z - center.position.z) <= centerThreshold;
+
+		return xCheck && zCheck;
+	}
+
+	#region Collision Handling
+	/// <summary>
+	/// Loops through each collision point, checking if any have entered 
+	/// another collider bounds
+	/// </summary>
 	private void checkCollisions ()
 	{
 		foreach (Transform collPoint in collisionPoints) 
@@ -88,6 +106,10 @@ public class BodyBox : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Pushes the body box back upon collision
+	/// </summary>
+	/// <param name="pMotionVector">P motion vector.</param>
 	private void ricochet(Vector3 pMotionVector)
 	{
 		if (!isFollowingPlayer)
@@ -98,7 +120,7 @@ public class BodyBox : MonoBehaviour {
 
 		transform.position = newPos;
 	}
-
+		
 	public void OnTriggerStay(Collider col)
 	{
 		if (col.CompareTag ("Player")) {
@@ -113,6 +135,7 @@ public class BodyBox : MonoBehaviour {
 			playerTransform = null;
 		}
 	}
+	#endregion
 
 	// Update is called once per frame
 	void Update () {

@@ -6,26 +6,25 @@ public class TimedTileField : TouchTileField {
 
 	[SerializeField]
 	private Transform tileMarker;
-	[SerializeField]
 	private Transform markedTile;
-	[SerializeField]
+	private int tileCount;
 	private int tileScore;
-	[SerializeField]
-	private int targetTileScore;
-	[SerializeField]
-	private float timerDuration;
-	[SerializeField]
-	private float markerOffset;
+	private int targetTileScore = 5;
+	private float timerDuration = 10f;
+	private float markerOffset = 5f;
 
-	// Use this for initialization
 	void Start () {
+		// Set default state to false so only the marked
+		// tile will be chosen to listen for contact with player
 		defaultTileAwareState = false;
+
 		tiles = new List<Transform>();
 		populateTiles ();
 		tileCount = tiles.Count;
 
-		// For debugging purposes. Actual activation will be handled
-		// within interactedWith() 
+		// For debugging purposes. 
+		//Actual activation will be handled in touched() 
+		// only when player uses a Tier on one of the TouchTiles 
 		activateTileField ();
 	}
 		
@@ -95,12 +94,21 @@ public class TimedTileField : TouchTileField {
 	}
 
 
-	public override void touched(Transform pTile)
+	public override void touched(bool tileIsAware, Transform pTile, Transform pPlayerTransform)
 	{ 
-		if(isActivated) 
+		// TODO: Pseudo code. Field should activate
+		// once player is in contact with any of the tiles
+		// AND player uses a Tier move
+		if (!isActivated) //&& pPlayerTransform.isUsingTier) 
+		{
+			//activateTileField ();
+		}
+
+		if(isActivated && tileIsAware) 
 		{
 			incrementTileScore ();
 			displaceMarker ();
+			//TODO: implement when ready:
 			//resetTimer ();
 		}
 	}
@@ -112,15 +120,15 @@ public class TimedTileField : TouchTileField {
 		if (tileScore >= targetTileScore) 
 		{
 			deactivateTileField ();
-			showPrize ();
 		}
 	}
 
-	protected override void showPrize ()
+	protected override void puzzleCompleted ()
 	{
-		//throw new System.NotImplementedException ();
+		throw new System.NotImplementedException ();
 	}
 
+	// TODO: may need to be refactored
 	/// <summary>
 	/// Updates the timer.
 	/// By stopping the ongoing timer coroutine. And resetting it.
@@ -135,10 +143,5 @@ public class TimedTileField : TouchTileField {
 	{
 		yield return new WaitForSeconds(timerDuration);
 		deactivateTileField ();
-	}
-
-	// Update is called once per frame
-	void Update () {
-		
 	}
 }

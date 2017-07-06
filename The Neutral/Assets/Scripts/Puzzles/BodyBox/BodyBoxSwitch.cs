@@ -1,26 +1,29 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Enums;
 
 public class BodyBoxSwitch : MonoBehaviour {
 
-	public string desiredColor;
+	public Lite desiredColor;
 
 	private Vector3 switchPressedPosition;
 	private Vector3 switchRaisedPosition;
-	private float smoothing;
+	private float smoothing = 2f;
 
-	private bool isRaisedFully;
-	public bool isPressedFully;
-	private bool isCovered;
+	private bool isDisplacedDown;
+	private bool isDisplacedUp;
+	public bool isCoveredCorrectly;
 
 	// Use this for initialization
 	void Start () {
-		desiredColor = "RED";
-		smoothing = 2f;
 		setPositions ();
 	}
 
+	/// <summary>
+	/// Sets where the switch will be at its highest and lowest
+	/// points
+	/// </summary>
 	private void setPositions()
 	{
 		switchPressedPosition = transform.position;
@@ -29,55 +32,71 @@ public class BodyBoxSwitch : MonoBehaviour {
 		switchRaisedPosition.y += 2f;
 	}
 
+	/// <summary>
+	/// Called while switch is covered by a BodyBox
+	/// </summary>
 	private void depress()
 	{
 		transform.position = Vector3.Lerp (transform.position, switchPressedPosition, smoothing * Time.deltaTime);
 		if (Vector3.Distance (transform.position, switchPressedPosition) < 0.5f) 
 		{
-			isPressedFully = true;
-			isRaisedFully = false;
+			isDisplacedDown = true;
+			isDisplacedUp = false;
 		}
 	}
 
+	/// <summary>
+	/// Called while switch is not at its highest point, and 
+	/// is not currently covered by a BodyBox
+	/// </summary>
 	private void rise()
 	{
 		transform.position = Vector3.Lerp (transform.position, switchRaisedPosition, smoothing * Time.deltaTime);
 		if (Vector3.Distance (transform.position, switchRaisedPosition) < 0.5f) 
 		{
-			isPressedFully = false;
-			isRaisedFully = true;
+			isDisplacedDown = false;
+			isDisplacedUp = true;
 		}
 	}
 
+	/// <summary>
+	/// Called when a BodyBox comes into contact
+	/// with this BodyBoxSwitch instance. Checks that switch and box
+	/// have the same desired Lite coloring
+	/// </summary>
+	/// <returns><c>true</c>, if check was colored, <c>false</c> otherwise.</returns>
+	/// <param name="pBodyBox">P body box.</param>
 	private bool colorCheck(BodyBox pBodyBox)
 	{
 		return pBodyBox.boxColor == desiredColor;
 	}
 
+	#region Collision Handling
 	public void OnTriggerStay(Collider col)
 	{
 		if (col.CompareTag ("BodyBox") && colorCheck(col.GetComponent<BodyBox>())) {
-			isCovered = true;
+			isCoveredCorrectly = true;
 		}
 	}
 
 	public void OnTriggerExit(Collider col)
 	{
-		if (col.CompareTag ("BodyBox")) 
+		if (col.CompareTag ("BodyBox") && colorCheck(col.GetComponent<BodyBox>())) 
 		{
-			isCovered = false;
+			isCoveredCorrectly = false;
 		}
 	}
+	#endregion
 		
 	// Update is called once per frame
 	void Update () {
 		
-		if (isCovered && !isPressedFully) 
+		if (isCoveredCorrectly && !isDisplacedDown) 
 		{
 			depress ();
 		}
 
-		if (!isCovered && !isRaisedFully) 
+		if (!isCoveredCorrectly && !isDisplacedUp) 
 		{
 			rise ();
 		}

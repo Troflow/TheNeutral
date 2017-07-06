@@ -5,15 +5,14 @@ using UnityEngine;
 public class ColorWheel : MonoBehaviour {
 
 	private Carousel carousel;
-	public int haltOrder;
-	[SerializeField]
-	private float spinSpeed;
-	[SerializeField]
-	private bool isClockwise = true;
-	public bool isHalted = false;
-	private Vector3 spinVector;
 
-	// Use this for initialization
+	public int haltOrder;
+	public bool isHalted = false;
+
+	private Vector3 spinVector;
+	private float spinSpeed = 10f;
+	private bool isClockwise = true;
+
 	void Start () {
 		carousel = transform.parent.GetComponent<Carousel> ();
 
@@ -38,8 +37,6 @@ public class ColorWheel : MonoBehaviour {
 		}
 	}
 		
-	
-	// Update is called once per frame
 	void Update () {
 		spin ();
 	}

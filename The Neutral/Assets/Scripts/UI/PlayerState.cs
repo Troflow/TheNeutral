@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Enums;
 
 public class PlayerState : MonoBehaviour 
 {
@@ -9,8 +10,8 @@ public class PlayerState : MonoBehaviour
 	private HUDManager _HUD;
 
 	public int stamina;
-	public string heldColour;
-	public Dictionary<string, int> completedPuzzles;
+	public Lite heldColour;
+	public Dictionary<Lite, int> completedPuzzles;
 
 	void Awake()
 	{
@@ -20,11 +21,13 @@ public class PlayerState : MonoBehaviour
 
 	private void populateCompletedPuzzles()
 	{
-		completedPuzzles.Add ("Blue_Puzzle", 0);
-		completedPuzzles.Add ("Red_Puzzle", 0);
-		completedPuzzles.Add ("Green_Puzzle", 0);
-		completedPuzzles.Add ("Yellow_Puzzle", 0);
-		completedPuzzles.Add ("Purple_Puzzle", 0);
+		completedPuzzles = new Dictionary<Lite, int> ();
+
+		completedPuzzles.Add (Lite.GREEN, 0);
+		completedPuzzles.Add (Lite.BLUE, 0);
+		completedPuzzles.Add (Lite.YELLOW, 0);
+		completedPuzzles.Add (Lite.RED, 0);
+		completedPuzzles.Add (Lite.GRAY, 0);
 	}
 
 	public void onStateChange()

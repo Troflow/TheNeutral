@@ -1,33 +1,37 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Enums;
 
 public class ColorRing : MonoBehaviour {
 
-	// TODO: change to static constant
+	private float colorTransferTime;
 	[SerializeField]
-	private float colourTransferTime;
-	[SerializeField]
-	private string ringColour;
+	private Lite ringColour;
+
+	public void setTransferTime(float pTransferTime)
+	{
+		colorTransferTime = pTransferTime;
+	}
 
 	private void startGrantingColour(PlayerState pState)
 	{
 		StartCoroutine(grantColour(pState));
 	}
 
+	//TODO: Hussain: timing isn't working correctly. Not always waiting the
+	// given amount
 	private IEnumerator grantColour(PlayerState pState)
 	{
-		//Debug.Log ("In Coroutine");
-		yield return new WaitForSeconds (colourTransferTime);
+		yield return new WaitForSeconds (colorTransferTime);
 		pState.heldColour = ringColour;
-		//Debug.Log ("After Coroutine");
 	}
 
+	#region Collision Handling
 	public void OnTriggerEnter(Collider col)
 	{
 		if (col.CompareTag ("Player")) 
 		{
-			//Debug.Log ("Player Collided");
 			startGrantingColour (col.GetComponent<PlayerState>());
 		}
 	}
@@ -36,13 +40,8 @@ public class ColorRing : MonoBehaviour {
 	{
 		if (col.CompareTag ("Player")) 
 		{
-			//Debug.Log ("Exit Coroutine");
 			StopCoroutine (grantColour (col.GetComponent<PlayerState>()));
 		}
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+	#endregion
 }

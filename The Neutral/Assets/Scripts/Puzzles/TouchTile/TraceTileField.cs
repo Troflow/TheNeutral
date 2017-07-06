@@ -6,29 +6,27 @@ public class TraceTileField : TouchTileField {
 
 	[SerializeField]
 	private Transform tracedLineObject;
-	private LineRenderer tracedLine;
-	[SerializeField]
-	private float tracedLineOffset;
-	[SerializeField]
-	private List<Vector3> touchedTiles;
 
-	[SerializeField]
+	private LineRenderer tracedLine;
+	private float tracedLineOffset = 3.5f;
+	private List<Vector3> touchedTiles;
 	private bool firstPointPlaced;
 
-	// Use this for initialization
 	void Start () {
+		// Set default state to true so all tiles are
+		// listening for contact, to allow drawing
 		defaultTileAwareState = true;
+
+		// Instantiate Tiles attributes
 		tiles = new List<Transform>();
 		populateTiles ();
-		tileCount = tiles.Count;
-
 		touchedTiles = new List<Vector3> ();
 		tracedLine = tracedLineObject.GetComponent<LineRenderer> ();
 		firstPointPlaced = false;
 	}
 
 	/// <summary>
-	/// Handles the input. FOR DEBUGGING ONLY
+	/// Handles the input. FOR DEBUGGING ONLY. remove afterwards
 	/// </summary>
 	private void handleInput()
 	{
@@ -68,9 +66,13 @@ public class TraceTileField : TouchTileField {
 		tracedLineObject.gameObject.SetActive (false);
 	}
 
-	public override void touched (Transform pTile)
+	public override void touched (bool tileIsAware, Transform pTile, Transform pPlayerTransform)
 	{
-		if (!isActivated)
+		// TODO: change so, if not activated and the player
+		// is using a Tier when making contact with the tile
+		// then the field should be activated
+		if (!isActivated) // && pPlayerTransform.isUsingTier
+			//activateTileField ();
 			return;
 
 		if (!firstPointPlaced) 
@@ -123,12 +125,12 @@ public class TraceTileField : TouchTileField {
 		tracedLine.SetPositions (positionsArray);
 	}
 
-	protected override void showPrize ()
+	protected override void puzzleCompleted ()
 	{
 		throw new System.NotImplementedException ();
 	}
 
-	// Update is called once per frame
+	// Remove after debugging
 	void Update () {
 		handleInput ();
 	}

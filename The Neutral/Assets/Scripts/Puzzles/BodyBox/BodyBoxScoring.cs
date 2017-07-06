@@ -1,30 +1,29 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Enums;
 
-public class BodyBoxScoring : MonoBehaviour {
+public class BodyBoxScoring : Puzzle {
 
 	// Use this for initialization
 	void Start () {
-		
 	}
 
+	/// <summary>
+	/// Checks the scoring.
+	/// </summary>
 	public void checkScoring()
 	{
 		foreach (Transform child in transform) 
 		{
-			if (!child.GetComponent<BodyBoxSwitch> ().isPressedFully)
+			if (!child.GetComponent<BodyBoxSwitch> ().isCoveredCorrectly)
 				return;
 		}
 		puzzleCompleted ();
 	}
 
-	public void puzzleCompleted ()
+	protected override void puzzleCompleted ()
 	{
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+		throw new System.NotImplementedException ();
 	}
 }

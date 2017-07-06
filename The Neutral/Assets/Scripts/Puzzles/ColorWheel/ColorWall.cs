@@ -1,29 +1,30 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Enums;
 
 public class ColorWall : MonoBehaviour {
 
 	private ColorWheel colourWheel;
 	[SerializeField]
-	private string desiredColour;
-	public bool isColouredCorrect = false;
+	private Lite desiredColour;
+	public bool isColouredCorrect;
 
 	// Use this for initialization
 	void Start () {
 		colourWheel = transform.parent.GetComponent<ColorWheel> ();
 	}
 
-	private void checkPlayerColour(string pPlayerColour)
+	private void checkPlayerColour(Lite pPlayerColour)
 	{
 		if (pPlayerColour == desiredColour) 
 		{
-			Debug.Log ("Colours Match: " + pPlayerColour + " " + desiredColour);
 			isColouredCorrect = true;
 			colourWheel.halt ();
 		}
 	}
 
+	#region Collision Handling
 	public void OnTriggerEnter(Collider col)
 	{
 		if (col.CompareTag ("Player")) 
@@ -31,9 +32,5 @@ public class ColorWall : MonoBehaviour {
 			checkPlayerColour(col.GetComponent<PlayerState>().heldColour);
 		}
 	}
-
-	// Update is called once per frame
-	void Update () {
-		
-	}
+	#endregion
 }

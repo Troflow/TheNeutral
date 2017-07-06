@@ -9,19 +9,9 @@ public class TouchTile : MonoBehaviour {
 
 	public void OnTriggerEnter(Collider pColl)
 	{
-		if (pColl.CompareTag("Player") && isAware)
+		if (pColl.CompareTag("Player"))
 		{
-			//transform.parent.GetComponent<TouchTileField> ().touched (transform);
-			Debug.Log("Player Entered");
-		}
-	}
-
-	public void OnTriggerExit(Collider pColl)
-	{
-		if (pColl.CompareTag("Player") && isAware)
-		{
-			//transform.parent.GetComponent<TouchTileField> ().touched (transform);
-			Debug.Log("Player Exit");
+			transform.parent.GetComponent<TouchTileField> ().touched (isAware, transform, pColl.transform);
 		}
 	}
 }
