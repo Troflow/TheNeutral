@@ -15,7 +15,6 @@ public class BodyBoxSwitch : MonoBehaviour {
 	private bool isDisplacedUp;
 	public bool isCoveredCorrectly;
 
-	// Use this for initialization
 	void Start () {
 		setPositions ();
 	}
@@ -88,7 +87,6 @@ public class BodyBoxSwitch : MonoBehaviour {
 	}
 	#endregion
 		
-	// Update is called once per frame
 	void Update () {
 		
 		if (isCoveredCorrectly && !isDisplacedDown) 

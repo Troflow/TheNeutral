@@ -26,7 +26,7 @@ public class TraceTileField : TouchTileField {
 	}
 
 	/// <summary>
-	/// Handles the input. FOR DEBUGGING ONLY. remove afterwards
+	/// Handles the input. FOR DEBUGGING ONLY. remove afterwards.
 	/// </summary>
 	private void handleInput()
 	{
@@ -90,7 +90,8 @@ public class TraceTileField : TouchTileField {
 	private void placeFirstPoint(Transform pTile)
 	{
 		addTracedTile (pTile);
-		Vector3 tempPos = pTile.position;
+
+		var tempPos = pTile.position;
 		tempPos.y += tracedLineOffset;
 		tracedLineObject.position = tempPos;
 
@@ -99,7 +100,7 @@ public class TraceTileField : TouchTileField {
 
 	private void addTracedTile(Transform pTile)
 	{
-		Vector3 tempPos;
+		var tempPos = new Vector3 ();;
 		if (!touchedTiles.Contains (pTile.position)) 
 		{
 			tempPos = pTile.position;
@@ -110,7 +111,7 @@ public class TraceTileField : TouchTileField {
 
 	private void removeTracedTile()
 	{
-		Vector3 tempPos;
+		var tempPos = new Vector3();
 		if (touchedTiles.Count > 1) 
 		{
 			touchedTiles.RemoveAt (touchedTiles.Count - 1);
@@ -121,7 +122,8 @@ public class TraceTileField : TouchTileField {
 	private void updateTracedLinePositions()
 	{
 		tracedLine.positionCount = touchedTiles.Count;
-		Vector3[] positionsArray = touchedTiles.ToArray ();
+
+		var positionsArray = touchedTiles.ToArray ();
 		tracedLine.SetPositions (positionsArray);
 	}
 

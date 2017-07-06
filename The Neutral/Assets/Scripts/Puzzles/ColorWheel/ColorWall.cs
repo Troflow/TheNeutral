@@ -3,24 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using Enums;
 
+/// <summary>
+/// Color wall class, responsible for tracking its current color,
+/// and telling its parent color wheel to 'halt' when
+/// this wall is colored properly
+/// </summary>
 public class ColorWall : MonoBehaviour {
 
-	private ColorWheel colourWheel;
+	private ColorWheel colorWheel;
 	[SerializeField]
-	private Lite desiredColour;
-	public bool isColouredCorrect;
+	private Lite desiredColor;
+	public bool isColoredCorrectly;
 
-	// Use this for initialization
 	void Start () {
-		colourWheel = transform.parent.GetComponent<ColorWheel> ();
+		colorWheel = transform.parent.GetComponent<ColorWheel> ();
 	}
 
-	private void checkPlayerColour(Lite pPlayerColour)
+	private void checkPlayerColor(Lite pPlayerColor)
 	{
-		if (pPlayerColour == desiredColour) 
+		if (pPlayerColor == desiredColor) 
 		{
-			isColouredCorrect = true;
-			colourWheel.halt ();
+			isColoredCorrectly = true;
+			colorWheel.halt ();
 		}
 	}
 
@@ -29,7 +33,7 @@ public class ColorWall : MonoBehaviour {
 	{
 		if (col.CompareTag ("Player")) 
 		{
-			checkPlayerColour(col.GetComponent<PlayerState>().heldColour);
+			checkPlayerColor(col.GetComponent<PlayerState>().heldColour);
 		}
 	}
 	#endregion

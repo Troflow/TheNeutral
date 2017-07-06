@@ -3,28 +3,33 @@ using System.Collections.Generic;
 using UnityEngine;
 using Enums;
 
+/// <summary>
+/// Color Ring class, responsible for granting the player
+/// the designated ringColorgame after staying in contact with
+/// the player for a given amount of time.
+/// </summary>
 public class ColorRing : MonoBehaviour {
 
 	private float colorTransferTime;
 	[SerializeField]
-	private Lite ringColour;
+	private Lite ringColor;
 
 	public void setTransferTime(float pTransferTime)
 	{
 		colorTransferTime = pTransferTime;
 	}
 
-	private void startGrantingColour(PlayerState pState)
+	private void startGrantingColor(PlayerState pState)
 	{
-		StartCoroutine(grantColour(pState));
+		StartCoroutine(grantColor(pState));
 	}
 
-	//TODO: Hussain: timing isn't working correctly. Not always waiting the
+	//TODO: Hussain: timing isn't working correctly. Method isn't always waiting the
 	// given amount
-	private IEnumerator grantColour(PlayerState pState)
+	private IEnumerator grantColor(PlayerState pState)
 	{
 		yield return new WaitForSeconds (colorTransferTime);
-		pState.heldColour = ringColour;
+		pState.heldColour = ringColor;
 	}
 
 	#region Collision Handling
@@ -32,7 +37,7 @@ public class ColorRing : MonoBehaviour {
 	{
 		if (col.CompareTag ("Player")) 
 		{
-			startGrantingColour (col.GetComponent<PlayerState>());
+			startGrantingColor (col.GetComponent<PlayerState>());
 		}
 	}
 
@@ -40,7 +45,7 @@ public class ColorRing : MonoBehaviour {
 	{
 		if (col.CompareTag ("Player")) 
 		{
-			StopCoroutine (grantColour (col.GetComponent<PlayerState>()));
+			StopCoroutine (grantColor (col.GetComponent<PlayerState>()));
 		}
 	}
 	#endregion

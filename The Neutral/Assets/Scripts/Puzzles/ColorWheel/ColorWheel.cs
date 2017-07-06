@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Color wheel class, responsible for spinning and
+/// halting when child Color wall has been properly colored.
+/// </summary>
 public class ColorWheel : MonoBehaviour {
 
 	private Carousel carousel;

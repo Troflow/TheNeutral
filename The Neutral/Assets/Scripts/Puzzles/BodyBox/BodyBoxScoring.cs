@@ -5,7 +5,6 @@ using Enums;
 
 public class BodyBoxScoring : Puzzle {
 
-	// Use this for initialization
 	void Start () {
 	}
 

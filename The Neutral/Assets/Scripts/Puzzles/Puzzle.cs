@@ -4,7 +4,7 @@ using UnityEngine;
 using Enums;
 
 /// <summary>
-/// Abstract Puzzle class, enforcing all puzzles
+/// Abstract Puzzle class, ensuring that all puzzles
 /// follow the same structure to maintain consistency
 /// </summary>
 abstract public class Puzzle : MonoBehaviour {

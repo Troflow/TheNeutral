@@ -15,7 +15,7 @@ public class TimedTileField : TouchTileField {
 
 	void Start () {
 		// Set default state to false so only the marked
-		// tile will be chosen to listen for contact with player
+		// tile will be chosen to listen for contact with player.
 		defaultTileAwareState = false;
 
 		tiles = new List<Transform>();
@@ -24,14 +24,14 @@ public class TimedTileField : TouchTileField {
 
 		// For debugging purposes. 
 		//Actual activation will be handled in touched() 
-		// only when player uses a Tier on one of the TouchTiles 
+		// only when player uses a Tier on one of the TouchTiles.
 		activateTileField ();
 	}
 		
 	/// <summary>
 	/// Activates the tile field.
 	/// Sets isActivated to true, picks a random tile to be 'marked'
-	/// moves the tileMarker to the position of the marked tile
+	/// moves the tileMarker to the position of the marked tile.
 	/// </summary>
 	protected override void activateTileField()
 	{
@@ -45,7 +45,7 @@ public class TimedTileField : TouchTileField {
 	/// <summary>
 	/// Deactivates the tile field.
 	/// Stops the timer. Sets the field's isActivated to false
-	/// and hides the tileMarker
+	/// and hides the tileMarker.
 	/// </summary>
 	private void deactivateTileField()
 	{
@@ -57,12 +57,13 @@ public class TimedTileField : TouchTileField {
 	/// <summary>
 	/// Called during activateTileField. 
 	/// Sets the tileMarker to active
-	/// then places the  tileMarker in its initial position - above the markedTile
+	/// then places the  tileMarker in its initial position - above the markedTile.
 	/// </summary>
 	private void placeInitialMarker()
 	{
 		tileMarker.gameObject.SetActive (true);
-		Vector3 markerPosition = markedTile.position;
+
+		var markerPosition = markedTile.position;
 		markerPosition.y += markerOffset;
 		tileMarker.position = markerPosition;
 	}
@@ -72,7 +73,7 @@ public class TimedTileField : TouchTileField {
 	/// Displaces the tileMarker. By changing the old markedTile
 	/// Picking a new markedTile randomly from the list of tiles
 	/// Setting this new tile's isMarkedTile to true
-	/// and finally, moving the tileMarker to the location of the new markedTile
+	/// and finally, moving the tileMarker to the location of the new markedTile.
 	/// </summary>
 	private void displaceMarker()
 	{
@@ -80,7 +81,7 @@ public class TimedTileField : TouchTileField {
 		markedTile.GetComponent<TouchTile>().isAware = false;
 			
 		// Duplicate tiles List, and remove the markedTile from duplicateList
-		List<Transform> duplicateList = new List<Transform>(tiles);
+		var duplicateList = new List<Transform>(tiles);
 		duplicateList.Remove (markedTile);
 
 		// Pick a tile from from duplicateList. At random. Set it as isMarkedTile

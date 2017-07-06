@@ -8,11 +8,11 @@ public abstract class TouchTileField : Puzzle {
 	/// Array of tiles for this TouchTile instance
 	/// </summary>
 	protected List<Transform> tiles;
-	protected bool isActivated;
 	/// <summary>
 	/// The default state of the tile at start.
 	/// </summary>
 	protected bool defaultTileAwareState;
+	protected bool isActivated;
 
 	public abstract void touched(bool tileIsAware, Transform pTile, Transform pPlayerTransform);
 	protected abstract void activateTileField ();

@@ -11,17 +11,14 @@ public class BodyBox : MonoBehaviour {
 	private Vector3 targetPos;
 
 	private Transform collisionPoints;
-
 	private Transform center;
-	private SpriteRenderer centerSprite;
-	private float centerThreshold;
-
 	private Transform playerTransform; 
 
-	private bool isFollowingPlayer;
+	private SpriteRenderer centerSprite;
+	private float centerThreshold;
 	private float smoothing = 2f;
+	private bool isFollowingPlayer;
 
-	// Use this for initialization
 	void Start () {
 
 		// Instantiate Center Attributes
@@ -33,7 +30,7 @@ public class BodyBox : MonoBehaviour {
 		collisionPoints = transform.GetChild(0);
 	}
 
-	// TODO: remove
+	// TODO: remove after debugging
 	private void handleInput()
 	{
 		if (Input.GetKeyDown(KeyCode.Comma))
@@ -82,8 +79,8 @@ public class BodyBox : MonoBehaviour {
 	/// <returns><c>true</c>, if player centered was checked, <c>false</c> otherwise.</returns>
 	private bool checkPlayerCentered()
 	{
-		bool xCheck = Mathf.Abs(playerTransform.position.x - center.position.x) <= centerThreshold;
-		bool zCheck = Mathf.Abs(playerTransform.position.z - center.position.z) <= centerThreshold;
+		var xCheck = Mathf.Abs(playerTransform.position.x - center.position.x) <= centerThreshold;
+		var zCheck = Mathf.Abs(playerTransform.position.z - center.position.z) <= centerThreshold;
 
 		return xCheck && zCheck;
 	}
@@ -115,7 +112,7 @@ public class BodyBox : MonoBehaviour {
 		if (!isFollowingPlayer)
 			return;
 		
-		Vector3 newPos = transform.position;
+		var newPos = transform.position;
 		newPos -= pMotionVector;
 
 		transform.position = newPos;
@@ -137,7 +134,6 @@ public class BodyBox : MonoBehaviour {
 	}
 	#endregion
 
-	// Update is called once per frame
 	void Update () {
 
 		handleInput ();
