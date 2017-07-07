@@ -2,75 +2,89 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HUDManager : MonoBehaviour, IHUDObservable<PlayerState> 
+namespace Neutral
 {
-
-	/// <summary>
-	/// List of all HUD elements that are observers of Remy's state.
-	/// </summary>
-	private List<IHUDObserver<PlayerState>> _observers;
-
-	[SerializeField]
-	private PlayerState _RemyState;
-
-
-	[SerializeField]
-	private Transform _player;
-	private Vector3 _offset;
-	private float smoothing;
-
-
-	// Use this for initialization
-	void Awake () {
-		_observers = new List<IHUDObserver<PlayerState>> ();
-	}
-
-	void Start()
+	public class HUDManager : MonoBehaviour, IObservable<PlayerState> 
 	{
-		_offset = transform.position - _player.position;
-		smoothing = 5f;
-	}
 
-	/// <summary>
-	/// Subscribe the specified IHUDObserver to list of observers
-	/// </summary>
-	/// <param name="IHUDObserver">IHUD observer.</param>
-	/// <param name="observer">Observer.</param>
-	public void Subscribe(IHUDObserver<PlayerState> observer)
-	{
-		if (!_observers.Contains (observer)) 
-		{
-			_observers.Add (observer);
+		/// <summary>
+		/// List of all HUD elements that are observers of player's state.
+		/// </summary>
+		private List<IObserver<PlayerState>> observers;
+
+		private PlayerState playerState;
+		private Transform player;
+		private Vector3 offset;
+		private float smoothing = 5f;
+		private float lockPos = 0f;
+
+
+		void Awake () {
+			HUDElement.HUDManager = this;
+			observers = new List<IObserver<PlayerState>> ();
 		}
 
-		observer.OnNext (_RemyState);
-	}
-
-	public void NotifyAllObservers()
-	{
-		foreach (IHUDObserver<PlayerState> observer in _observers)
+		void Start()
 		{
-			observer.OnNext (_RemyState);
+			offset = transform.position - player.position;
 		}
-	}
 
-	/// <summary>
-	/// Dispose the specified observer from the list of observers, so it is no longer notified
-	/// </summary>
-	/// <param name="observer">Observer.</param>
-	public void Dispose(IHUDObserver<PlayerState> observer)
-	{
-		if (_observers.Contains (observer)) 
+		public void setPlayerState(PlayerState pPlayerState)
 		{
-			_observers.Remove (observer);
+			playerState = pPlayerState;
 		}
-	}
-		
 
-	void FixedUpdate () {
+		public void setPlayerTransform(Transform pPlayerTransform)
+		{
+			player = pPlayerTransform;
+		}
 
-		Vector3 targetCamPos = _player.position + _offset;
+		private void assignParentToAllChildren()
+		{
+			HUDElement.HUDManager = this;
+		}
 
-		//transform.position = Vector3.Lerp (transform.position, targetCamPos, smoothing * Time.deltaTime);
+		#region Observor Methods
+		/// <summary>
+		/// Subscribe the specified IHUDObserver to list of observers.
+		/// </summary>
+		/// <param name="IHUDObserver">IHUD observer.</param>
+		/// <param name="observer">Observer.</param>
+		public void Subscribe(IObserver<PlayerState> observer)
+		{
+			if (!observers.Contains (observer)) 
+			{
+				observers.Add (observer);
+			}
+
+			observer.OnNext (playerState);
+		}
+
+		public void NotifyAllObservers()
+		{
+			foreach (IObserver<PlayerState> observer in observers)
+			{
+				observer.OnNext (playerState);
+			}
+		}
+
+		/// <summary>
+		/// Dispose the specified observer from the list of observers, so it is no longer notified.
+		/// </summary>
+		/// <param name="observer">Observer.</param>
+		public void Dispose(IObserver<PlayerState> observer)
+		{
+			if (observers.Contains (observer)) 
+			{
+				observers.Remove (observer);
+			}
+		}
+		#endregion
+
+		void FixedUpdate () 
+		{
+			var targetPos = player.position + offset;
+			transform.position = targetPos;
+		}
 	}
 }

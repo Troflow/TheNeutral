@@ -4,7 +4,8 @@ using UnityEngine;
 
 namespace Neutral
 {
-	
-	public enum Lite {RED, BLUE, YELLOW, GREEN, BROWN, GOLD, BLACK, WHITE, GRAY};
+	public class HUDElement : MonoBehaviour {
 
+		public static HUDManager HUDManager;
+	}
 }
