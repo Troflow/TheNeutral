@@ -39,11 +39,6 @@ namespace Neutral
 			player = pPlayerTransform;
 		}
 
-		private void assignParentToAllChildren()
-		{
-			HUDElement.HUDManager = this;
-		}
-
 		#region Observor Methods
 		/// <summary>
 		/// Subscribe the specified IHUDObserver to list of observers.

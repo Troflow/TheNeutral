@@ -11,12 +11,16 @@ namespace Neutral
 		private HUDManager HUD;
 
 		#region Player Attributes
-		public int stamina = 100;
+		public int stamina;
+		public bool isExhausted;
 		public Lite heldColor;
 
 		public List<Lite> appliedStacks;
+		public List<Lite> colorSchema;
 
 		public Dictionary<Lite, int> completedPuzzles;
+		public Dictionary<Lite, int> defeatedEnemies;
+		public List<Memory> collectedMemories;
 		#endregion
 
 		void Awake()
