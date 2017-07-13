@@ -3,37 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class StaminaRing : MonoBehaviour, IHUDObserver<PlayerState> 
+namespace Neutral
 {
-	[SerializeField]
-	private HUDManager _HUDManager;
-	private Image _StaminaRing;
-
-
-	void OnEnable ()
+	public class StaminaRing : HUDElement, IObserver<PlayerState> 
 	{
-		_StaminaRing = GetComponent<Image> ();
-		_HUDManager.Subscribe (this);
-	}
+		private Image staminaRing;
 
-	void Start()
-	{
-		_StaminaRing = GetComponent<Image> ();
-		_HUDManager.Subscribe (this);
+		void OnEnable ()
+		{
+			staminaRing = GetComponent<Image> ();
+			HUDManager.Subscribe (this);
+		}
+			
+		void OnDisable () 
+		{
+			HUDManager.Dispose (this);
+		}
+			
+		/// <summary>
+		/// Update this instance of HUD observer
+		/// </summary>
+		/// <param name="newState">New state.</param>
+		public void OnNext(PlayerState newState)
+		{
+			staminaRing.fillAmount = 0.01f * newState.stamina;
+		}
 	}
-	void OnDisable () 
-	{
-		_HUDManager.Dispose (this);
-	}
-		
-	/// <summary>
-	/// Update this instance of HUD observer
-	/// </summary>
-	/// <param name="newState">New state.</param>
-	public void OnNext(PlayerState newState)
-	{
-		_StaminaRing.fillAmount = 0.01f * newState.stamina;
-	}
-		
-
 }
