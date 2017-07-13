@@ -186,6 +186,7 @@ namespace Neutral {
             major.SetActive(true);
             major.GetComponent<Animator>().SetBool("isSpawn", true);
             major.GetComponent<IStatePatternEnemy>().setWaypoints(waypoints);
+            major.GetComponent<MajorNavMeshController>().setSpawnZone(this.gameObject.name);
         }
 
         private IEnumerator MinorToMajorTansformation(Vector3 location)

@@ -13,14 +13,14 @@ namespace Neutral
         int isSpawn = Animator.StringToHash("isSpawn");
         int speed = Animator.StringToHash("speed");
 
-        private int spawnZone;
+        private string spawnZone;
 
         void Start()
         {
             anim = GetComponent<Animator>();
             navMeshAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
             AnimHelper = new AnimationUtilities();
-            spawnZone = 0;
+            
         }
 
 
@@ -89,9 +89,14 @@ namespace Neutral
 
         }
 
-        public void setSpawnZone(int zone)
+        public void setSpawnZone(string zone)
         {
             spawnZone = zone;
+        }
+
+        public string getSpawnZone()
+        {
+            return spawnZone;
         }
 
         void OnTriggerEnter(Collider other)

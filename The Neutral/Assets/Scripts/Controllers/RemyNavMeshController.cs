@@ -86,7 +86,7 @@ namespace Neutral {
             
 			AnimHelper = new AnimationUtilities();
 
-            dashSpeed = 10;
+            dashSpeed = 25;
 
             initializeCombatController();
         }

@@ -36,7 +36,7 @@ namespace Neutral
 
         public void ToChaseState()
         {
-            enemy.currentState = enemy.chaseState;
+            //enemy.currentState = enemy.chaseState;
             spawnTimer = 0f;
         }
 

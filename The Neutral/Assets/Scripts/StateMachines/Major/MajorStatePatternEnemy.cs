@@ -24,6 +24,8 @@ namespace Neutral
         //cube above enemy head (shows state?)
         public MeshRenderer meshRendererFlag;
 
+        public GameObject sphere;
+
         [HideInInspector]
         //reference to players transform
         public Transform target;
@@ -33,15 +35,6 @@ namespace Neutral
 
         [HideInInspector]
         public MajorCombatState combatState;
-
-        [HideInInspector]
-        public MajorChaseState chaseState;
-
-        [HideInInspector]
-        public MajorAlertState alertState;
-
-        [HideInInspector]
-        public MajorPatrolState patrolState;
 
         [HideInInspector]
         public UnityEngine.AI.NavMeshAgent navMeshAgent;
@@ -57,20 +50,21 @@ namespace Neutral
         // Use this for initialization
         void Start()
         {
-            chaseState = new MajorChaseState(this);
-            alertState = new MajorAlertState(this);
-            patrolState = new MajorPatrolState(this);
-            combatState = new MajorCombatState(this);
 
             navMeshAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
             anim = GetComponent<Animator>();
             animHelper = new AnimationUtilities();
 
-            currentState = patrolState;
-
             stop = false;
 
             waypoints = new List<Transform>();
+
+            sphere = GetComponentInChildren<SphereCollider>().gameObject;
+
+            combatState = new MajorCombatState(this);
+
+            currentState = combatState;
+            Debug.Log("SPHERE LOCALSCALE: " + sphere.gameObject.transform.localScale);
         }
 
         // Update is called once per frame
@@ -95,18 +89,24 @@ namespace Neutral
         {
             stop = false;
         }
-        
+
         public void setWaypoints(IList<Transform> waypoints)
         {
-            Debug.Log(this.waypoints);
             waypoints.Shuffle();
             this.waypoints = waypoints;
-            foreach (Transform t in waypoints)
-            {
-                Debug.Log(t.name);
-            }
-            Debug.Log(this.waypoints);
+            
         }
+
+        public void destroyGameObject()
+        {
+            Destroy(this.gameObject);
+        }
+      
+        /*
+         * Major initial sphere expansion should take up zone radius
+         * Major disappears
+         * Zone restarts (minor spawns)
+         */
     }
 
 }

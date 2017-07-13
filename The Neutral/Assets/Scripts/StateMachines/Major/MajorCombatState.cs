@@ -8,10 +8,11 @@ namespace Neutral
         //each state class needs this
         private readonly MajorStatePatternEnemy enemy;
         private float spawnTimer;
-
+        private bool isAttacking;
         public MajorCombatState(MajorStatePatternEnemy statePatternEnemy)
         {
             enemy = statePatternEnemy;
+            isAttacking = false;
         }
 
         public void UpdateState()
@@ -26,7 +27,7 @@ namespace Neutral
 
         public void ToPatrolState()
         {
-
+            
         }
 
         public void ToAlertState()
@@ -36,7 +37,6 @@ namespace Neutral
 
         public void ToChaseState()
         {
-            enemy.currentState = enemy.chaseState;
             spawnTimer = 0f;
         }
 
@@ -47,31 +47,36 @@ namespace Neutral
 
         private void Attack()
         {
+
+            AnimatorStateInfo stateInfo = enemy.anim.GetCurrentAnimatorStateInfo(0);
+
+            if (isAttacking)
+            {
+                if (enemy.sphere.gameObject.transform.localScale.x <= 15f)
+                {
+                    enemy.stopAI();
+                    GameObject.Find(enemy.GetComponent<MajorNavMeshController>().getSpawnZone()).GetComponent<IZone>().spawn(EnemyType.Minor, Quaternion.identity);
+                    enemy.destroyGameObject();
+                }
+                return;
+            }
+
+            isAttacking = true;
+
+
+            if (stateInfo.IsName("Spawn"))
+            {
+                isAttacking = false;
+                return;
+            }
+
             enemy.meshRendererFlag.material.color = Color.black;
-            //spawnTimer += Time.deltaTime;
+            enemy.anim.SetTrigger("isAttack");
 
-            //if (spawnTimer > 10)
-            //{
-            //    IZone zone = GameObject.Find(enemy.gameObject.GetComponent<MinorNavMeshController>().getSpawnZone()).GetComponent<IZone>();
-            //    zone.spawn(enemy.transform.rotation);
-            //    spawnTimer = 0f;
-            //}
-            //AnimatorStateInfo stateInfo = enemy.anim.GetCurrentAnimatorStateInfo(0);
-            //if (stateInfo.IsName("Merge") || enemy.anim.IsInTransition(0))
-            //{
-            //    if (enemy.animHelper.AnimationFinished(stateInfo, stateInfo.length - 2.5f))
-            //    {
-            //        enemy.anim.SetBool(Animator.StringToHash("isMerge"), false);
-            //        ToChaseState();
-            //    }
-            //}
-            //else
-            //{
-            //    enemy.navMeshAgent.Stop();
-            //    enemy.anim.SetBool(Animator.StringToHash("isMerge"), true);
-            //    //enemy.anim.Play("Merge");
-            //}
 
+            enemy.StartCoroutine(CombatHelper.SphereExpandAndRetractFromCurrent(enemy.sphere, 3f, 200));
+
+            return;
         }
     }
 

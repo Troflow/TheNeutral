@@ -138,21 +138,24 @@ namespace Neutral
 
             else if (aggregatedCollisions.Count % 2 != 0)
             {
-                Debug.Log("SPAWNING NEW MINOR");
 
-                for (int x = 0; x < spawnCount; x++)
+                if (zone.entitiesInZone() + spawnCount >= 7)
                 {
-                    zone.spawn(EnemyType.Minor, Quaternion.identity);
+                    Debug.Log("SPAWNING MAJOR");
+                    zone.spawn(EnemyType.Major, Quaternion.identity);
                 }
-            }
 
-            else if (zone.entitiesInZone()+spawnCount >= 7)
-            {
-                Debug.Log("SPAWNING MAJOR");
-                zone.spawn(EnemyType.Major, Quaternion.identity);
-                
+                else
+                {
+                    Debug.Log("SPAWNING NEW MINOR");
+
+                    for (int x = 0; x < spawnCount; x++)
+                    {
+                        zone.spawn(EnemyType.Minor, Quaternion.identity);
+                    }
+                }
+
             }
-            
             
             isZoneCheck = false;
             aggregatedCollisions.Clear();           

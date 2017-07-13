@@ -27,10 +27,13 @@ namespace Neutral {
         int isCombat = Animator.StringToHash("isCombat");
         private Tier currentTierPlaying;
 
+
         private bool debug = false;
 
-
         private Coroutine lastRunningRoutine;
+
+        private float maxSphereScale;
+        private float defaultSphereScale;
 
         public void SetCombatUtilityDefaults(List<Tier> tierList, Animator anim, GameObject sphere, string name) {
             this.name = name;
@@ -67,39 +70,6 @@ namespace Neutral {
             combatAnimationInitiated = false;
         }
 
-        private IEnumerator SphereWithTime(float tierExpansionRate)
-        {
-            while (sphere.transform.localScale.y < 31)
-            {
-                Debug.Log("sphere expand");
-                //Vector3 currScale = sphere.transform.localScale;
-                //currScale.Set(currScale.x + tierExpansionRate, currScale.y + tierExpansionRate, currScale.z + tierExpansionRate);
-                //sphere.transform.localScale = currScale;
-                //print(sphere.transform.localScale.y);
-                sphere.transform.localScale += new Vector3(tierExpansionRate, tierExpansionRate, tierExpansionRate);
-                yield return new WaitForFixedUpdate();
-            }
-            while (sphere.transform.localScale.y > 13)
-            {
-                Debug.Log("sphere retract");
-                sphere.transform.localScale -= new Vector3(tierExpansionRate, tierExpansionRate, tierExpansionRate);
-                //Vector3 currScale = sphere.transform.localScale;
-                //currScale.Set(currScale.x - tierExpansionRate, currScale.y - tierExpansionRate, currScale.z - tierExpansionRate);
-                //sphere.transform.localScale = currScale;
-                yield return new WaitForFixedUpdate();
-            }
-        
-        }
-
-        private IEnumerator ReduceSphereFromCurrent(float tierExpansionRate)
-        {
-            while (sphere.transform.localScale.y > 13)
-            {
-                Debug.Log("Reducing sphere from current");
-                sphere.transform.localScale -= new Vector3(tierExpansionRate, tierExpansionRate, tierExpansionRate);
-                yield return new WaitForFixedUpdate();
-            }
-        }
 
         private IEnumerator WaitForDelay(float seconds)
         {
@@ -198,7 +168,7 @@ namespace Neutral {
 
             if (combatAnimationInitiated && animationPlayed)
             {
-                lastRunningRoutine = StartCoroutine(SphereWithTime(currentTierPlaying.ExpansionRate));
+                lastRunningRoutine = StartCoroutine(CombatHelper.SphereExpandAndRetractFromCurrent(sphere, currentTierPlaying.ExpansionRate, maxSphereScale));
                 isAnimationFinished = true;
                 //while playing animation
                 for (int x = 0; x < tierList.Count; x++)
@@ -252,12 +222,13 @@ namespace Neutral {
         public void resetSphere()
         {
             StopCoroutine(lastRunningRoutine);
-            StartCoroutine(ReduceSphereFromCurrent(currentTierPlaying.ExpansionRate));
+            StartCoroutine(CombatHelper.SphereRetractFromCurrentToDefault(sphere, currentTierPlaying.ExpansionRate, defaultSphereScale));
         }
 
         // Use this for initialization
         void Start () {
-
+            defaultSphereScale = 13;
+            maxSphereScale = 31;
 		}
 
 		// Update is called once per frame
