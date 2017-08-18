@@ -10,7 +10,7 @@ Details about the game itself are as follows:
 
 2. Adventure. With heavy emphasis on puzzles and story to engage the player.
 
-3. Female Main Character, named Remy.
+3. Main Character, named Remy.
 
 4. Theme focuses on vision, colours and the beauty of movement.
 
