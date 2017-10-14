@@ -13,6 +13,7 @@ namespace Neutral
 
 		private Transform collisionPoints;
 		private Transform center;
+        [SerializeField]
 		private Transform playerTransform; 
 
 		private SpriteRenderer centerSprite;
@@ -52,10 +53,10 @@ namespace Neutral
 				return;
 			}
 
-			if (checkPlayerCentered ()) {
+			//if (checkPlayerCentered ()) {
 				isFollowingPlayer = !isFollowingPlayer;
 				offset = transform.position - playerTransform.position;
-			}
+			//}
 		}
 			
 		/// <summary>

@@ -11,43 +11,83 @@ namespace Neutral
 	/// </summary>
 	public class ColorRing : MonoBehaviour {
 
+        [SerializeField]
 		private float colorTransferTime;
 		[SerializeField]
 		private Lite ringColor;
 
-		public void setTransferTime(float pTransferTime)
+        private Coroutine currentCoroutineRunning;
+        private bool isGrantingColor;
+
+        void Start()
+        {
+            isGrantingColor = false;
+        }
+
+        public void setTransferTime(float pTransferTime)
 		{
 			colorTransferTime = pTransferTime;
 		}
 
 		private void startGrantingColor(PlayerState pState)
 		{
-			StartCoroutine(grantColor(pState));
+            if (!isGrantingColor)
+            {
+                Debug.Log("STARTING COROUTINE");
+                currentCoroutineRunning = StartCoroutine(grantColor(pState));
+            }
 		}
 
 		//TODO: Hussain: timing isn't working correctly. Method isn't always waiting the
 		// given amount
 		private IEnumerator grantColor(PlayerState pState)
 		{
-			yield return new WaitForSeconds (colorTransferTime);
-			pState.heldColor = ringColor;
+            isGrantingColor = true;
+            if (ringColor == pState.heldColor)
+            {
+                pState.stopPulseFlag();
+                isGrantingColor = false;
+                yield return null;
+            }
+            else
+            {
+                pState.pulseFlag(ringColor, colorTransferTime);
+
+                yield return new WaitForSeconds(colorTransferTime);
+                Debug.Log("FINISHED WAITFORTIME!");
+                pState.heldColor = ringColor;
+                pState.stopPulseFlag();
+                isGrantingColor = false;
+            }
+
 		}
 
 		#region Collision Handling
 		public void OnTriggerEnter(Collider col)
 		{
-			if (col.CompareTag ("Player")) 
+			if (col.CompareTag("Player-Sphere")) 
 			{
-				startGrantingColor (col.GetComponent<PlayerState>());
+                PlayerState pState = col.GetComponentInParent<PlayerState>();
+                pState.stopPulseFlag();
+                startGrantingColor(pState);
 			}
 		}
 
 		public void OnTriggerExit(Collider col)
 		{
-			if (col.CompareTag ("Player")) 
+			if (col.CompareTag ("Player-Sphere")) 
 			{
-				StopCoroutine (grantColor (col.GetComponent<PlayerState>()));
-			}
+                //Debug.Log("exited ring color: "+ringColor);
+                if (currentCoroutineRunning != null)
+                {
+                    StopCoroutine(currentCoroutineRunning);
+                    // StopAllCoroutines();
+                    isGrantingColor = false;
+                    Debug.Log("STOPPING COROUTINES");
+                }
+
+            }
+
 		}
 		#endregion
 	}

@@ -94,7 +94,7 @@ namespace Neutral
                 }
                 if (!isZoneCheck)
                 {
-                    Debug.Log("DOING ZONE CHECK");
+                    //Debug.Log("DOING ZONE CHECK");
                     StartCoroutine(MinorCollision(GetComponentInParent<CombatUtilities>()));
                 }
             }
@@ -141,13 +141,13 @@ namespace Neutral
 
                 if (zone.entitiesInZone() + spawnCount >= 7)
                 {
-                    Debug.Log("SPAWNING MAJOR");
+                    //Debug.Log("SPAWNING MAJOR");
                     zone.spawn(EnemyType.Major, Quaternion.identity);
                 }
 
                 else
                 {
-                    Debug.Log("SPAWNING NEW MINOR");
+                    //Debug.Log("SPAWNING NEW MINOR");
 
                     for (int x = 0; x < spawnCount; x++)
                     {

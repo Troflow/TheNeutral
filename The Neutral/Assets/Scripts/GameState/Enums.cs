@@ -5,6 +5,17 @@ using UnityEngine;
 namespace Neutral
 {
 	
-	public enum Lite {RED, BLUE, YELLOW, GREEN, BROWN, GOLD, BLACK, WHITE, GRAY};
+	public enum Lite {
+        RED,
+        BLUE,
+        YELLOW,
+        GREEN,
+        BROWN,
+        GOLD,
+        BLACK,
+        WHITE,
+        GRAY
+    };
+    
 
 }

@@ -11,11 +11,19 @@ namespace Neutral {
 
         // prefab of the minors for this zone
         [HideInInspector]
-        private GameObject minor_spawn;
+        private GameObject minorSpawn;
 
         // prefab of the major for this zone
         [HideInInspector]
-        private GameObject major_spawn;
+        private GameObject majorSpawn;
+
+        // cube that spawns in the centre of the sphere
+        // when interaction is used with it, attracts minors to it
+        private GameObject attractionCube;
+        private GameObject attractionCubeCollider;
+
+        private bool isHitAttractionCube;
+        private bool isCubeStopped;
 
         // list of waypoints we set to to the AI's in the zone
         [HideInInspector]
@@ -36,6 +44,9 @@ namespace Neutral {
 
         // lets us know if we are in the transition phase of the zone
         private bool minorTransitionInProgress;
+
+        //the interaction collider within the zone
+        private IInteractionCollider interactionCollider;
 
         // Use this for initialization
         void Start()
@@ -79,15 +90,28 @@ namespace Neutral {
             group = new List<GameObject>();
             allInstanceIDs = new List<int>();
 
-            minor_spawn = Resources.Load("Prefabs/MinorSplitPrefab") as GameObject;
-            major_spawn = Resources.Load("Prefabs/MajorPrefab") as GameObject;
+            minorSpawn = Resources.Load("Prefabs/MinorSplitPrefab") as GameObject;
+            majorSpawn = Resources.Load("Prefabs/MajorPrefab") as GameObject;
 
             minorTransitionInProgress = false;
+
+            interactionCollider = GetComponent<IInteractionCollider>();
+            if (interactionCollider == null)
+            {
+                print("INTERACTION COLLIDER NOT FOUND ON ZONE");
+            }
+
         }
+
 
         // Update is called once per frame
         void Update()
         {
+            
+            if (interactionCollider.IsInteractAction())
+            {
+                interactionCollider.Interact(group);
+            }
 
         }
 
@@ -130,7 +154,7 @@ namespace Neutral {
 
         public void setEntityZone(GameObject minor)
         {
-            print("SETTING ZONE TO: " + this.gameObject.name);
+            //print("SETTING ZONE TO: " + this.gameObject.name);
             minor.GetComponent<MinorNavMeshController>().setSpawnZone(this.gameObject.name);
         }
 
@@ -145,9 +169,9 @@ namespace Neutral {
             {
                 case EnemyType.Minor:
                     float scaleFactor = GetComponentInChildren<SphereCollider>().radius / 2;
-                    Instantiate(minor_spawn, new Vector3(
+                    Instantiate(minorSpawn, new Vector3(
                         this.transform.position.x + Random.Range(-scaleFactor, scaleFactor),
-                        minor_spawn.transform.position.y,
+                        minorSpawn.transform.position.y,
                         this.transform.position.z + Random.Range(-scaleFactor, scaleFactor)),
                         rotation).SetActive(true);
                     break;
@@ -224,7 +248,7 @@ namespace Neutral {
             group.Clear();
 
             // instantiate the major and set the default settings
-            GameObject major_final = Instantiate(major_spawn, location, major_spawn.transform.rotation);
+            GameObject major_final = Instantiate(majorSpawn, location, majorSpawn.transform.rotation);
             setMajorSettings(major_final);
             minorTransitionInProgress = false;
         }

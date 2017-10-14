@@ -16,7 +16,8 @@ namespace Neutral
 		protected bool defaultTileAwareState;
 		protected bool isActivated;
 
-		public abstract void touched(bool tileIsAware, Transform pTile, Transform pPlayerTransform);
+        public abstract void touched(bool tileIsAware, Transform pTile, Transform pPlayerTransform);
+
 		protected abstract void activateTileField ();
 
 		protected virtual void populateTiles ()

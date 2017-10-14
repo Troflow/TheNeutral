@@ -14,23 +14,29 @@ namespace Neutral
 		public int stamina;
 		public bool isExhausted;
 		public Lite heldColor;
+        public MeshRenderer flag;
 
 		public List<Lite> appliedStacks;
 		public List<Lite> colorSchema;
+       
 
 		public Dictionary<Lite, int> completedPuzzles;
 		public Dictionary<Lite, int> defeatedEnemies;
-		public List<Memory> collectedMemories;
-		#endregion
+        public Dictionary<Lite, Color> flagColor;
+        public List<Memory> collectedMemories;
+        private bool isFlagPulsing;
+        #endregion
 
-		void Awake()
+        void Awake()
 		{
 			stamina = 100;
 			populateCompletedPuzzles ();
-
+            initializeFlagColors();
 			HUD.setPlayerState (this);
 			HUD.setPlayerTransform (this.transform);
-		}
+            flag = GameObject.FindGameObjectWithTag("Flag").GetComponent<MeshRenderer>();
+            isFlagPulsing = false;
+        }
 
 		private void populateCompletedPuzzles()
 		{
@@ -43,13 +49,79 @@ namespace Neutral
 			completedPuzzles.Add (Lite.GRAY, 0);
 		}
 
+        private void initializeFlagColors()
+        {
+            flagColor = new Dictionary<Lite, Color>
+            {
+                { Lite.BLACK, Color.black },
+                { Lite.BLUE, Color.blue },
+                { Lite.BROWN, new Color(102,51,0) },
+                { Lite.GOLD, new Color(255,223,0) },
+                { Lite.GRAY, Color.gray },
+                { Lite.GREEN, Color.green },
+                { Lite.RED, Color.red },
+                { Lite.WHITE, Color.white },
+                { Lite.YELLOW, Color.yellow }
+            };
+        }
+
 		public void onStateChange()
 		{
 			HUD.NotifyAllObservers ();
 		}
 
-		// For Debugging purposes.
-		private void handleInput()
+        private IEnumerator PulseFlag(Lite newColor, float pulseTime)
+        {
+            isFlagPulsing = true;
+            float startPulseTime = Time.time;
+            List<int> speedFactors = new List<int> { 2, 3, 4, 5 };
+            int inverseSpeedFactorIndex = speedFactors.Count - 1;
+            int currSpeedFactorIndex = 0;
+            float defaultWaitTime = 0.5f;
+            while (isFlagPulsing)
+            {
+                float currentPulseTime = Time.time - startPulseTime;
+
+                Color color = flag.material.color;
+                flag.material.color = flagColor[newColor];
+
+                if (currentPulseTime > pulseTime / speedFactors[inverseSpeedFactorIndex])
+                {
+                    if (inverseSpeedFactorIndex > 0) inverseSpeedFactorIndex -= 1;
+                    if (currSpeedFactorIndex < speedFactors.Count-1) currSpeedFactorIndex += 1;
+                }
+
+                yield return new WaitForSeconds(defaultWaitTime / speedFactors[currSpeedFactorIndex]);
+
+                color.a = 1f;
+                flag.material.color = flagColor[heldColor];
+                if (currentPulseTime > pulseTime / speedFactors[inverseSpeedFactorIndex])
+                {
+                    if (inverseSpeedFactorIndex > 0) inverseSpeedFactorIndex -= 1;
+                    if (currSpeedFactorIndex < speedFactors.Count-1) currSpeedFactorIndex += 1;
+                }
+
+                yield return new WaitForSeconds(defaultWaitTime / speedFactors[currSpeedFactorIndex]);
+            }
+            
+        }
+
+        public void pulseFlag(Lite newColor, float colorTransferTime)
+        {
+            if (!isFlagPulsing)
+            {
+                StartCoroutine(PulseFlag(newColor, colorTransferTime));
+            }
+        }
+
+        public void stopPulseFlag()
+        {
+            StopAllCoroutines();
+            isFlagPulsing = false;
+        }
+
+        // For Debugging purposes.
+        private void handleInput()
 		{
 			if (Input.GetKey (KeyCode.DownArrow)) 
 			{
@@ -70,6 +142,11 @@ namespace Neutral
 		// Update is called once per frame
 		void Update () {
 			handleInput ();
-		}
-	}
+            if (!isFlagPulsing)
+            {
+                flag.material.color = flagColor[heldColor];
+            }
+            
+        }
+    }
 }

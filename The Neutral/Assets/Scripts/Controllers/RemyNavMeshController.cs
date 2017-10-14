@@ -118,6 +118,7 @@ namespace Neutral {
 
             if (PlayerMovement.inControl(true)) {
 
+                
                 if (PlayerMovement.agent.hasPath)
                 {
                     if (anim.GetBool("isRunning") == false)
@@ -127,18 +128,18 @@ namespace Neutral {
                     }
 
                     anim.SetFloat(speed, Mathf.Abs(PlayerMovement.agent.speed));
-
+                    
 
                     //check if difference between destination and current position is above a certain threshold to apply rotation
-                    if (Mathf.Abs((PlayerMovement.agent.steeringTarget - transform.position).x) > 0.5)
-                    {
+                    //if (Mathf.Abs((PlayerMovement.agent.steeringTarget - transform.position).x) > 0.5)
+                    //{
 
-                        //create a new rotation from our transform, to the difference of position of the destination and ourselves with standard time
-                        var new_rot = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(PlayerMovement.agent.steeringTarget - transform.position), Time.deltaTime);
-                        //no x or z rotation to stop tilts
-                        new_rot = new Quaternion(0, new_rot.y, 0, new_rot.w);
-                        transform.rotation = new_rot;
-                    }
+                    //    //create a new rotation from our transform, to the difference of position of the destination and ourselves with standard time
+                    //    var new_rot = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(PlayerMovement.agent.steeringTarget - transform.position), Time.deltaTime);
+                    //    //no x or z rotation to stop tilts
+                    //    new_rot = new Quaternion(0, new_rot.y, 0, new_rot.w);
+                    //    transform.rotation = new_rot;
+                    //}
 
                 }
 

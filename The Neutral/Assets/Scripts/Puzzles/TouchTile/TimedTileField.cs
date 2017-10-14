@@ -98,7 +98,8 @@ namespace Neutral
 
 
 		public override void touched(bool tileIsAware, Transform pTile, Transform pPlayerTransform)
-		{ 
+		{
+
 			// TODO: Pseudo code. Field should activate
 			// once player is in contact with any of the tiles
 			// AND player uses a Tier move

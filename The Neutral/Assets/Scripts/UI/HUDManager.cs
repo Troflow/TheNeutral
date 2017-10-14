@@ -80,6 +80,7 @@ namespace Neutral
 		{
 			var targetPos = player.position + offset;
 			transform.position = targetPos;
+            transform.rotation = player.rotation;
 		}
 	}
 }

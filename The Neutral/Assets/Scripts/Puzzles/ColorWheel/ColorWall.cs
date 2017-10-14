@@ -32,9 +32,9 @@ namespace Neutral
 		#region Collision Handling
 		public void OnTriggerEnter(Collider col)
 		{
-			if (col.CompareTag ("Player")) 
+			if (col.CompareTag ("Player-Sphere")) 
 			{
-				checkPlayerColor(col.GetComponent<PlayerState>().heldColor);
+				checkPlayerColor(col.GetComponentInParent<PlayerState>().heldColor);
 			}
 		}
 		#endregion

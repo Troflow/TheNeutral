@@ -10,7 +10,8 @@ namespace Neutral
 
 		public void OnTriggerEnter(Collider pColl)
 		{
-			if (pColl.CompareTag("Player"))
+            //Debug.Log(pColl.name);
+			if (pColl.CompareTag("Player-Sphere"))
 			{
 				transform.parent.GetComponent<TouchTileField> ().touched (isAware, transform, pColl.transform);
 			}

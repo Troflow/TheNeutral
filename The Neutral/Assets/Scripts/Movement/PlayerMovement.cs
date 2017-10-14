@@ -12,13 +12,17 @@ namespace Neutral
         private static bool debug = false;
         private static bool isPlayerControl;
 
+        private static GameObject indicator;
+
         public static void SetInitialMovement()
         {
             agent = GameObject.FindGameObjectWithTag("Player").GetComponent<UnityEngine.AI.NavMeshAgent>();
             recentControlCharacters = new Dictionary<string, UnityEngine.AI.NavMeshAgent>();
             recentControlCharacters.Add("Player", agent);
             isPlayerControl = true;
-            agent.updateRotation = false;
+            indicator = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+
+            //agent.updateRotation = false;
         }
 
         public static bool inControl(bool isPlayer)
@@ -26,6 +30,7 @@ namespace Neutral
             return (isPlayerControl == isPlayer);
         }
 
+        //change so that player container moves instead of player for decent camera
         public static int Move()
         {
             RaycastHit hit;
@@ -66,11 +71,13 @@ namespace Neutral
                     
                     else 
                     {
+                        indicator.transform.position = hit.point;
+
                         UnityEngine.AI.NavMeshPath path = new UnityEngine.AI.NavMeshPath();
 
                         bool hasFoundPath = agent.CalculatePath(hit.point, path);
                         if (debug) Debug.Log(agent.updateRotation);
-                        Debug.Log(hit.point);
+                        //Debug.Log(hit.point);
 
                         switch (path.status)
                         {
@@ -90,7 +97,6 @@ namespace Neutral
                         }
                     }
                     
-
                 } //end raycast
 
                 else

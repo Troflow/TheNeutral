@@ -6,25 +6,30 @@ namespace Neutral
     public class SmoothFollow2 : MonoBehaviour
     {
         public Transform target;
-        public float distance = 3.0f;
-        public float height = 3.0f;
-        public float damping = 5.0f;
-        public bool smoothRotation = true;
-        public float rotationDamping = 10.0f;
+
+        private Vector3 startCamPos = new Vector3();
+        private Quaternion startCamRot = Quaternion.identity;
+
+        private void Start()
+        {
+            startCamPos = this.transform.localPosition;
+            startCamRot = this.transform.localRotation;
+        }
 
         void Update()
         {
-            target = PlayerMovement.agent.transform;
-            Vector3 wantedPosition = target.TransformPoint(0, height, -distance);
-            transform.position = Vector3.Lerp(transform.position, wantedPosition, Time.deltaTime * damping);
-
-            if (smoothRotation)
+                        
+            if (Input.GetMouseButton(1))
             {
-                Quaternion wantedRotation = Quaternion.LookRotation(target.position - transform.position, target.up);
-                transform.rotation = Quaternion.Slerp(transform.rotation, wantedRotation, Time.deltaTime * rotationDamping);
+                transform.RotateAround(target.position, Vector3.up, Input.GetAxis("Mouse X") * 5f);
+            }
+            
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                transform.localPosition = startCamPos;
+                transform.localRotation = startCamRot;
             }
 
-            else transform.LookAt(target, target.up);
         }
     }
 }
