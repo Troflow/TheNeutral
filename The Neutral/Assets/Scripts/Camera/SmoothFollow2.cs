@@ -14,7 +14,7 @@ namespace Neutral
 
         void Update()
         {
-            target = PlayerMovement.agent.transform;
+            target = Player.agent.transform;
             Vector3 wantedPosition = target.TransformPoint(0, height, -distance);
             transform.position = Vector3.Lerp(transform.position, wantedPosition, Time.deltaTime * damping);
 

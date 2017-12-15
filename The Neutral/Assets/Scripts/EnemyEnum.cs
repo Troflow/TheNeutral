@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Neutral
 {
@@ -9,6 +8,6 @@ namespace Neutral
         Minor,
         Major,
         Remy
-    } 
+    }
 
 }

@@ -4,7 +4,10 @@ using System.Collections.Generic;
 
 namespace Neutral
 {
-    public static class PlayerMovement
+    /// <summary>
+    /// Partial Class that handles all movement related logic of the Player.
+    /// </summary>
+    public static partial class Player
     {
         private static Dictionary<string, UnityEngine.AI.NavMeshAgent> recentControlCharacters;
         public static UnityEngine.AI.NavMeshAgent agent { get; set; }
@@ -47,7 +50,7 @@ namespace Neutral
                             recentControlCharacters.Add("Player", GameObject.FindGameObjectWithTag("Player").GetComponent<UnityEngine.AI.NavMeshAgent>());
                             agent = recentControlCharacters["Player"];
                         }
-                            
+
                     }
                     else if (hit.collider.CompareTag("Enemy-Sphere"))
                     {
@@ -61,9 +64,9 @@ namespace Neutral
                             recentControlCharacters.Add("Enemy", GameObject.FindGameObjectWithTag("Enemy").GetComponent<UnityEngine.AI.NavMeshAgent>());
                             agent = recentControlCharacters["Enemy"];
                         }
-                            
+
                     }
-                    
+
                     else
                     {
                         UnityEngine.AI.NavMeshPath path = new UnityEngine.AI.NavMeshPath();
@@ -87,7 +90,7 @@ namespace Neutral
                             return (int)UnityEngine.AI.NavMeshPathStatus.PathInvalid;
                         }
                     }
-                    
+
 
                 }
                 else

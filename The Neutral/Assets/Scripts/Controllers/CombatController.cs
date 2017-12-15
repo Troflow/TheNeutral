@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Neutral {
-	
+
 	public class CombatController : MonoBehaviour {
         private string name;
 		private List<Tier> tierList;
@@ -45,7 +45,7 @@ namespace Neutral {
             isAnimationFinished = false;
 
             skipMoveCombinationCheck = false;
-  
+
             currentTierPlaying = new Tier();
         }
 
@@ -110,7 +110,7 @@ namespace Neutral {
                             if (debug) Debug.Log("starting coroutine");
                             StartCoroutine(move.CombatSequnce(Time.time));
 						}
-					}	
+					}
 				}
 				if (move.ComboActivated)
 				{
@@ -126,16 +126,16 @@ namespace Neutral {
 					{
                         if (name == "Player")
                         {
-                            if (PlayerMovement.inControl(true)) {
+                            if (Player.inControl(true)) {
                                 //reset the path so that it stops calculating
-                                PlayerMovement.agent.ResetPath();
+                                Player.agent.ResetPath();
                             }
                         }
                         else
                         {
-                            if (PlayerMovement.inControl(false)) {
+                            if (Player.inControl(false)) {
                                 //reset the path so that it stops calculating
-                                PlayerMovement.agent.ResetPath();
+                                Player.agent.ResetPath();
                             }
                         }
 
@@ -145,7 +145,7 @@ namespace Neutral {
                         //set the combat to true so the animation goes straight from run -> combat
                         //anim.SetBool(isCombat, true);
                         //set the speed to zero which implies no more movement therefore no more running
-                        PlayerMovement.agent.velocity = Vector3.zero;
+                        Player.agent.velocity = Vector3.zero;
 
 						anim.SetTrigger(move.AnimationHash);
 
@@ -197,7 +197,7 @@ namespace Neutral {
                         tierList[x].ComboActivated = false;
                         tierList[x]._IsComboFinished = false;
                         isDelayFinished = false;
-                    
+
                     }
 
                 }//iterate tierList
