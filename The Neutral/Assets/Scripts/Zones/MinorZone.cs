@@ -66,7 +66,7 @@ namespace Neutral {
             {
                 for (int x = 0; x < 999; x++)
                 {
-                    Transform waypoint = transform.FindChild("MinorWaypoint" + (x + 1));
+                    Transform waypoint = transform.Find("MinorWaypoint" + (x + 1));
                     if (waypoint == null)
                     {
                         break;
