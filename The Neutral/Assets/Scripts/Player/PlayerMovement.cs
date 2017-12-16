@@ -15,9 +15,9 @@ namespace Neutral
         private static bool debug = false;
         private static bool isPlayerControl;
 
-        public static void SetInitialMovement()
+        public static void SetInitialMovement(GameObject playerObject)
         {
-            agent = GameObject.FindGameObjectWithTag("Player").GetComponent<UnityEngine.AI.NavMeshAgent>();
+            agent = playerObject.GetComponent<UnityEngine.AI.NavMeshAgent>();
             recentControlCharacters = new Dictionary<string, UnityEngine.AI.NavMeshAgent>();
             recentControlCharacters.Add("Player", agent);
             isPlayerControl = true;
@@ -34,7 +34,7 @@ namespace Neutral
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             Debug.DrawLine(ray.origin, ray.GetPoint(500), Color.red);
-            if (Input.GetMouseButtonDown(0))
+            if (Player.moveButtonPressed)
             {
 				if (Physics.Raycast(ray, out hit, 500f))
                 {

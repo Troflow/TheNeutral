@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Blink : MonoBehaviour {
+public class LegacyBlink : MonoBehaviour {
 
 	public Light light1;
 	public float orig;
@@ -18,7 +18,7 @@ public class Blink : MonoBehaviour {
 		//this interval time is multipled by a random number
 		timePerInterval = 0.09f;
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		if (Input.GetMouseButtonDown(1)) {
@@ -29,7 +29,7 @@ public class Blink : MonoBehaviour {
 			Debug.Log ("Starting CoRoutine");
 			StartCoroutine(Blindness());
 		}
-	
+
 	}
 
 	IEnumerator Blindness () {

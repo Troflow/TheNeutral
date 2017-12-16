@@ -9,25 +9,34 @@ namespace Neutral
     /// </summary>
     public static partial class Player
     {
+        private static Blink playerBlink;
+
         public static int animationID;
+        public static bool moveButtonPressed;
 
         static int isDashing;
         static int isExploit;
         static int isCounterState;
         static int isInteraction;
 
-        public static void SetAnimationID(int pIsDashing, int pIsExploit, int pIsCounterState, int pIsInteraction)
+        public static void SetInitialInputValues(Dictionary<string, int> pAnimationIDS, Blink pBlink)
         {
-            isDashing = pIsDashing;
-            isExploit = pIsExploit;
-            isCounterState = pIsCounterState;
-            isInteraction = pIsInteraction;
+            playerBlink = pBlink;
+            isDashing = pAnimationIDS["isDashing"];
+            isExploit = pAnimationIDS["isExploit"];
+            isCounterState = pAnimationIDS["isCounterState"];
+            isInteraction = pAnimationIDS["isInteraction"];
         }
 
         public static void HandleInput()
         {
             animationID = 0;
+            moveButtonPressed = false;
 
+            if (Input.GetButtonDown("Move"))
+            {
+                moveButtonPressed = true;
+			}
             if (Input.GetButtonDown("Dash"))
             {
                 animationID = isDashing;
@@ -40,9 +49,22 @@ namespace Neutral
             {
                 animationID = isCounterState;
             }
+            if (Input.GetButtonDown("Color_Switch"))
+            {
+                // Respond Accordingly
+            }
             if (Input.GetButtonDown("Bow"))
             {
                 animationID = isInteraction;
+            }
+
+            if (Input.GetButtonDown("Blink"))
+            {
+                playerBlink.closeEyes();
+			}
+            if (Input.GetButtonUp("Blink"))
+            {
+                playerBlink.openEyes();
             }
         }
     }

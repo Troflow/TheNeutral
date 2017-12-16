@@ -5,6 +5,11 @@ using System.Collections.Generic;
 namespace Neutral {
 	public class RemyNavMeshController : MonoBehaviour {
 
+        private GameObject Remy;
+        public Blink playerBlink;
+
+        private float turnSpeed = 10f;
+
         CombatController combatController;
 		AnimationUtilities AnimHelper;
         List<Tier> tierList;
@@ -22,6 +27,37 @@ namespace Neutral {
         int isDefeated = Animator.StringToHash("isDefeated");
         int isExploit = Animator.StringToHash("isExploit");
 		int speed = Animator.StringToHash("speed");
+
+        private Dictionary<string, int> allAnimationID;
+
+        // Use this for initialization
+        void Start () {
+            Remy = transform.GetChild(0).gameObject;
+            playerBlink = gameObject.GetComponent<Blink>();
+            playerStart();
+
+			anim = Remy.GetComponent<Animator>();
+			AnimHelper = new AnimationUtilities();
+
+            initializeCombatController();
+        }
+
+        /// <summary>
+        /// Initialises all values that the static Player class will need to function
+        /// with this NavMeshController
+        /// </summary>
+        private void playerStart()
+        {
+            allAnimationID = new Dictionary<string, int>();
+            allAnimationID.Add("isDashing", isDashing);
+            allAnimationID.Add("isExploit", isExploit);
+            allAnimationID.Add("isCounterState", isCounterState);
+            allAnimationID.Add("isInteraction", isInteraction);
+
+            Player.SetInitialMovement(gameObject);
+            Player.SetInitialInputValues(allAnimationID, playerBlink);
+
+        }
 
         private void initializeCombatController()
         {
@@ -64,18 +100,6 @@ namespace Neutral {
             anim.SetBool(isIdleReady, true);
         }
 
-        // Use this for initialization
-        void Start () {
-            Player.SetInitialMovement();
-            Player.SetAnimationID(isDashing, isExploit, isCounterState, isInteraction);
-
-			anim = GetComponent<Animator>();
-
-			AnimHelper = new AnimationUtilities();
-
-            initializeCombatController();
-        }
-
 		// Update is called once per frame
 		void Update () {
 
@@ -115,14 +139,14 @@ namespace Neutral {
 
 
                     //check if difference between destination and current position is above a certain threshold to apply rotation
-                    if (Mathf.Abs((Player.agent.steeringTarget - transform.position).x) > 0.5)
+                    if (Mathf.Abs((Player.agent.steeringTarget - Remy.transform.position).x) > 0.5)
                     {
 
                         //create a new rotation from our transform, to the difference of position of the destination and ourselves with standard time
-                        var new_rot = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Player.agent.steeringTarget - transform.position), Time.deltaTime);
+                        var new_rot = Quaternion.Slerp(Remy.transform.rotation, Quaternion.LookRotation(Player.agent.steeringTarget - Remy.transform.position), Time.deltaTime * turnSpeed);
                         //no x or z rotation to stop tilts
                         new_rot = new Quaternion(0, new_rot.y, 0, new_rot.w);
-                        transform.rotation = new_rot;
+                        Remy.transform.rotation = new_rot;
                     }
 
                 }
