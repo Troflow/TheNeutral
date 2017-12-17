@@ -16,7 +16,10 @@ namespace Neutral
 		public Lite heldColor;
         public MeshRenderer flag;
 
-		public List<Lite> appliedStacks;
+        private CombatColorRed currentCombatColor;
+        private Color randomColor;
+
+        public List<Lite> appliedStacks;
 		public List<Lite> colorSchema;
        
 
@@ -36,6 +39,11 @@ namespace Neutral
 			HUD.setPlayerTransform (this.transform);
             flag = GameObject.FindGameObjectWithTag("Flag").GetComponent<MeshRenderer>();
             isFlagPulsing = false;
+
+            currentCombatColor = new CombatColorRed();
+            randomColor = currentCombatColor.TestSubtractColor().color.Value;
+            print(randomColor);
+
         }
 
 		private void populateCompletedPuzzles()
@@ -144,7 +152,11 @@ namespace Neutral
 			handleInput ();
             if (!isFlagPulsing)
             {
-                flag.material.color = flagColor[heldColor];
+                if (Input.GetKeyDown(KeyCode.Y))
+                {
+                    randomColor = currentCombatColor.TestSubtractColor().color.Value;
+                }
+                flag.material.color = randomColor;
             }
             
         }

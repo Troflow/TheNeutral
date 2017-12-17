@@ -14,7 +14,9 @@ namespace Neutral
         GOLD,
         BLACK,
         WHITE,
-        GRAY
+        GRAY,
+        PURPLE,
+        MIXED
     };
     
 

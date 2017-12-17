@@ -26,6 +26,8 @@ namespace Neutral {
 
         private int dashSpeed;
 
+        
+
         private void initializeCombatController()
         {
             tierList = new System.Collections.Generic.List<Tier>();
