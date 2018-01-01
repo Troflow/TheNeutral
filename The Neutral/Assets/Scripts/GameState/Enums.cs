@@ -18,6 +18,16 @@ namespace Neutral
         PURPLE,
         MIXED
     };
-    
+
+
+    public enum EnemyType
+    {
+        Minor,
+        Major,
+        Remy,
+        Mojo
+    };
+
+
 
 }

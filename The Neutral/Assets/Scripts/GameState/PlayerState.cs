@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace Neutral
 {
@@ -15,20 +16,30 @@ namespace Neutral
 		public bool isExhausted;
 		public Lite heldColor;
         public MeshRenderer flag;
+        #endregion
 
-        private CombatColorRed currentCombatColor;
+        #region CombatColors
+
+        [SerializeField]
+        public List<CombatColor> colorBook;
+
+        private CombatColor currentCombatColor;
+
         private Color randomColor;
+        #endregion
+
 
         public List<Lite> appliedStacks;
 		public List<Lite> colorSchema;
-       
+
 
 		public Dictionary<Lite, int> completedPuzzles;
 		public Dictionary<Lite, int> defeatedEnemies;
         public Dictionary<Lite, Color> flagColor;
         public List<Memory> collectedMemories;
+
         private bool isFlagPulsing;
-        #endregion
+        
 
         void Awake()
 		{
@@ -37,13 +48,27 @@ namespace Neutral
             initializeFlagColors();
 			HUD.setPlayerState (this);
 			HUD.setPlayerTransform (this.transform);
-            flag = GameObject.FindGameObjectWithTag("Flag").GetComponent<MeshRenderer>();
+            flag = GameObject.FindGameObjectWithTag("PlayerFlag").GetComponent<MeshRenderer>();
             isFlagPulsing = false;
 
-            currentCombatColor = new CombatColorRed();
-            randomColor = currentCombatColor.TestSubtractColor().color.Value;
+            currentCombatColor = new CombatColorGreen();
+            colorBook = new List<CombatColor>();
+            colorBook.Add(currentCombatColor.TestSubtractColor(currentCombatColor));
+            randomColor = colorBook[0].color.Value;
+
             print(randomColor);
 
+        }
+
+
+        public CombatColor getCurrentCombatColor()
+        {
+            return currentCombatColor;
+        }
+
+        public void setCurrentCombatColor(CombatColor newCombatColor)
+        {
+            currentCombatColor = newCombatColor;
         }
 
 		private void populateCompletedPuzzles()
@@ -152,11 +177,32 @@ namespace Neutral
 			handleInput ();
             if (!isFlagPulsing)
             {
+                #region TEST ADD COLOR WITH RANDOM COLOR
+                //if (Input.GetKeyDown(KeyCode.Y))
+                //{
+                //    colorBook.Add(currentCombatColor.TestSubtractColor(currentCombatColor));
+                //    randomColor = colorBook[colorBook.Count - 1].color.Value;
+                //}
+                //flag.material.color = randomColor;
+                #endregion
+
+                #region ColorWheel puzzle
+                //flag.material.color = flagColor[heldColor];
+                #endregion
+
+
+                #region TEST COMBAT COLOR
                 if (Input.GetKeyDown(KeyCode.Y))
                 {
-                    randomColor = currentCombatColor.TestSubtractColor().color.Value;
+                    List<Color> keys = CombatColor.colorLookupTable.Keys.ToList();
+                    int randInd = UnityEngine.Random.Range(0, CombatColor.colorLookupTable.Count);
+                    CombatColor randomColorFromDict = CombatColor.colorLookupTable[keys[randInd]];
+                    currentCombatColor = randomColorFromDict;
                 }
-                flag.material.color = randomColor;
+
+                flag.material.color = currentCombatColor.color.Value;
+                #endregion
+
             }
             
         }

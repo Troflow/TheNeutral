@@ -57,24 +57,38 @@ namespace Neutral
         {
 
             
-            if (col.gameObject.tag == "Player-Sphere" || col.gameObject.tag == "Enemy-Sphere")
+            if (col.gameObject.tag == "Enemy-Sphere")
             {
-                Renderer sphereToLerp;
-                //determine their current level of sphere expansion
-                if (col.gameObject.transform.localScale.x > transform.localScale.x)
-                {
-                    sphereToLerp = sphereRenderer;
-                }
-                else
-                {
-                    sphereToLerp = col.gameObject.GetComponent<Renderer>();
-                }
 
-                currentLerpProgress = 0;
+                col.GetComponentInParent<EnemyCombatColorController>().addColorToColorBook(GetComponentInParent<PlayerState>().getCurrentCombatColor());
 
-                StartCoroutine(SphereColorLerp(sphereToLerp, colorTransitions[currIndex % 4], colorTransitions[(currIndex + 1) % 4]));
-                currIndex += 1;
+
+                //KNOCKBACK LOGIC:
+                /*
+                 * If enemy is within  a certain threshold of sphere1 edge - sphere2 edge :
+                 * move back dash distance (distance where attacker can reach knocked-back enemy within one dash)
+                 * Otherwise:
+                 * move back dash distance + (sphere1 edge - sphere2 edge)
+                */
+                
+
+                //Renderer sphereToLerp;
+                ////determine their current level of sphere expansion
+                //if (col.gameObject.transform.localScale.x > transform.localScale.x)
+                //{
+                //    sphereToLerp = sphereRenderer;
+                //}
+                //else
+                //{
+                //    sphereToLerp = col.gameObject.GetComponent<Renderer>();
+                //}
+
+                //currentLerpProgress = 0;
+
+                //StartCoroutine(SphereColorLerp(sphereToLerp, colorTransitions[currIndex % 4], colorTransitions[(currIndex + 1) % 4]));
+                //currIndex += 1;
                 //otherSphere.material.color.a = alphaColorInit.GetValueOrDefault();
+
             }
 
             if (col.gameObject.CompareTag("Minor-Sphere"))
@@ -94,7 +108,6 @@ namespace Neutral
                 }
                 if (!isZoneCheck)
                 {
-                    //Debug.Log("DOING ZONE CHECK");
                     StartCoroutine(MinorCollision(GetComponentInParent<CombatUtilities>()));
                 }
             }

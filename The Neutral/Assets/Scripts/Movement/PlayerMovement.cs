@@ -21,8 +21,6 @@ namespace Neutral
             recentControlCharacters.Add("Player", agent);
             isPlayerControl = true;
             indicator = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-
-            //agent.updateRotation = false;
         }
 
         public static bool inControl(bool isPlayer)
@@ -54,7 +52,7 @@ namespace Neutral
                         }
                             
                     }
-                    else if (hit.collider.CompareTag("Enemy-Sphere"))
+                    else if (hit.collider.CompareTag("Enemy"))
                     {
                         isPlayerControl = false;
                         if (recentControlCharacters.ContainsKey("Enemy"))
@@ -66,7 +64,7 @@ namespace Neutral
                             recentControlCharacters.Add("Enemy", GameObject.FindGameObjectWithTag("Enemy").GetComponent<UnityEngine.AI.NavMeshAgent>());
                             agent = recentControlCharacters["Enemy"];
                         }
-                            
+                    
                     }
                     
                     else 

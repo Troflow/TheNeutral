@@ -6,7 +6,7 @@ namespace Neutral
 {
     public interface ICombatColor
     {
-
+        void ExposedColorLogic();
     }
 }
 

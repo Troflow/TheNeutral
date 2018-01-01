@@ -225,6 +225,16 @@ namespace Neutral {
             StartCoroutine(CombatHelper.SphereRetractFromCurrentToDefault(sphere, currentTierPlaying.ExpansionRate, defaultSphereScale));
         }
 
+        public float getMaxSphereSize()
+        {
+            return maxSphereScale;
+        }
+
+        public float getDefaultSphereSize()
+        {
+            return defaultSphereScale;
+        }
+
         // Use this for initialization
         void Start () {
             defaultSphereScale = 13;

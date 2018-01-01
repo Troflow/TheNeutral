@@ -4,6 +4,10 @@ using UnityEngine;
 
 namespace Neutral
 {
+
+
+    //if experiencing odd behaviour with colliders it's okay for now!
+
 	/// <summary>
 	/// Class responsible for tracking ColorWheel puzzle completion
 	/// </summary>
