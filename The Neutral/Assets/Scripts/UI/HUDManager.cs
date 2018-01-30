@@ -13,10 +13,6 @@ namespace Neutral
 		private List<IObserver<PlayerState>> observers;
 
 		private PlayerState playerState;
-		// private Transform player;
-		// private Vector3 offset;
-		// private float smoothing = 5f;
-		// private float lockPos = 0f;
 
 
 		void Awake () {
@@ -65,12 +61,5 @@ namespace Neutral
 			}
 		}
 		#endregion
-
-		// void FixedUpdate ()
-		// {
-		// 	var targetPos = player.position + offset;
-		// 	transform.position = targetPos;
-        //     transform.rotation = player.rotation;
-		// }
 	}
 }
