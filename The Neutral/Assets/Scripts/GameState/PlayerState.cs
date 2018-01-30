@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Neutral
 {
-	public class PlayerState : MonoBehaviour 
+	public class PlayerState : MonoBehaviour
 	{
 
 		[SerializeField]
@@ -22,7 +22,7 @@ namespace Neutral
 
         [SerializeField]
         public List<CombatColor> colorBook;
-
+        public CombatColor exposedColor;
         private CombatColor currentCombatColor;
 
         private Color randomColor;
@@ -39,7 +39,7 @@ namespace Neutral
         public List<Memory> collectedMemories;
 
         private bool isFlagPulsing;
-        
+
 
         void Awake()
 		{
@@ -47,7 +47,6 @@ namespace Neutral
 			populateCompletedPuzzles ();
             initializeFlagColors();
 			HUD.setPlayerState (this);
-			HUD.setPlayerTransform (this.transform);
             flag = GameObject.FindGameObjectWithTag("PlayerFlag").GetComponent<MeshRenderer>();
             isFlagPulsing = false;
 
@@ -136,7 +135,7 @@ namespace Neutral
 
                 yield return new WaitForSeconds(defaultWaitTime / speedFactors[currSpeedFactorIndex]);
             }
-            
+
         }
 
         public void pulseFlag(Lite newColor, float colorTransferTime)
@@ -156,14 +155,14 @@ namespace Neutral
         // For Debugging purposes.
         private void handleInput()
 		{
-			if (Input.GetKey (KeyCode.DownArrow)) 
+			if (Input.GetKey (KeyCode.DownArrow))
 			{
 				stamina -= 1;
 				stamina = Mathf.Clamp (stamina, 0, 100);
 				onStateChange ();
 			}
 
-			if (Input.GetKey (KeyCode.UpArrow)) 
+			if (Input.GetKey (KeyCode.UpArrow))
 			{
 				stamina += 1;
 				stamina = Mathf.Clamp (stamina, 0, 100);
@@ -171,7 +170,7 @@ namespace Neutral
 			}
 
 		}
-		
+
 		// Update is called once per frame
 		void Update () {
 			handleInput ();
@@ -204,7 +203,7 @@ namespace Neutral
                 #endregion
 
             }
-            
+
         }
     }
 }

@@ -1,28 +1,29 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Neutral
 {
-	public class StaminaText : HUDElement, IObserver<PlayerState> 
+	public class StaminaText : HUDElement, IObserver<PlayerState>
 	{
 		/// <summary>
 		/// The text mesh component of this instance
 		/// </summary>
-		private TextMesh _TextMesh;
+		public Text staminaText;
 
 		void OnEnable()
 		{
-			_TextMesh = GetComponent<TextMesh>();
+			staminaText = GetComponent<Text>();
 
-			// When set to active, 
+			// When set to active,
 			// add this instance of IHUDObserver to the HUDManager's list of observers
 			HUDManager.Subscribe (this);
 		}
 
 		void OnDisable()
 		{
-			// When set to active, 
+			// When set to active,
 			// add this instance of IHUDObserver to the HUDManager's list of observers
 			HUDManager.Dispose (this);
 		}
@@ -34,7 +35,7 @@ namespace Neutral
 		/// <param name="updatedData">Updated info.</param>
 		public void OnNext(PlayerState newState)
 		{
-			_TextMesh.text = "" + newState.stamina;
+			staminaText.text = "" + newState.stamina;
 		}
 	}
 }
