@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 454b38d286f1742ab9c7505943f2c4b7
-timeCreated: 1495492683
+guid: 841d59f15aa4546639178c1cc7473a73
+timeCreated: 1517353229
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName: {}
@@ -74,39 +74,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
-  - buildTarget: tvOS
-    maxTextureSize: 2048
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
   - buildTarget: Android
-    maxTextureSize: 2048
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-  - buildTarget: Tizen
-    maxTextureSize: 2048
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-  - buildTarget: WebGL
-    maxTextureSize: 2048
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-  - buildTarget: Samsung TV
     maxTextureSize: 2048
     textureFormat: -1
     textureCompression: 1

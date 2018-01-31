@@ -68,6 +68,7 @@ namespace Neutral
         public void setCurrentCombatColor(CombatColor newCombatColor)
         {
             currentCombatColor = newCombatColor;
+            onStateChange();
         }
 
 		private void populateCompletedPuzzles()
@@ -200,6 +201,7 @@ namespace Neutral
                 }
 
                 flag.material.color = currentCombatColor.color.Value;
+                onStateChange();
                 #endregion
 
             }

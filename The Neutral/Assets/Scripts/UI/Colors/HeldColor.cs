@@ -1,13 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Neutral
 {
+	// All HUDElements must be added to the Script Execution Order to prevent
+	// NullReferenceExeption Errors
 	public class HeldColor : HUDElement, IObserver<PlayerState>
 	{
+		private Transform R;
+		private Transform G;
+		private Transform B;
+
 		void OnEnable ()
 		{
+			getChildren();
+			deactivateAllChildren();
 			HUDManager.Subscribe (this);
 		}
 
@@ -16,12 +25,26 @@ namespace Neutral
 			HUDManager.Dispose (this);
 		}
 
-		private void updateHeldColorImage(CombatColor currentCombatColor)
+		void updateHeldColorImage(Color heldColor)
 		{
-			// the currentCombatColor image is comprised of
-			// three R, G and B images.
-			// Each image will only be displayed if the corresponding
-			// RGB value of the exposedColor is not 0
+			R.gameObject.SetActive(heldColor.r > 0f);
+			G.gameObject.SetActive(heldColor.g > 0f);
+			B.gameObject.SetActive(heldColor.b > 0f);
+		}
+
+		void getChildren()
+		{
+			R = transform.Find("R");
+			G = transform.Find("G");
+			B = transform.Find("B");
+		}
+
+		void deactivateAllChildren()
+		{
+			foreach (Transform child in transform)
+			{
+				child.gameObject.SetActive(false);
+			}
 		}
 
 		/// <summary>
@@ -31,7 +54,7 @@ namespace Neutral
 		public void OnNext(PlayerState newState)
 		{
 			var currentCombatColor = newState.getCurrentCombatColor();
-			updateHeldColorImage(currentCombatColor);
+			updateHeldColorImage(currentCombatColor.color.Value);
 		}
 	}
 }

@@ -5,12 +5,14 @@ using UnityEngine.UI;
 
 namespace Neutral
 {
+	// All HUDElements must be added to the Script Execution Order to prevent
+	// NullReferenceExeption Errors
 	public class StaminaText : HUDElement, IObserver<PlayerState>
 	{
 		/// <summary>
-		/// The text mesh component of this instance
+		/// The text component of this instance
 		/// </summary>
-		public Text staminaText;
+		private Text staminaText;
 
 		void OnEnable()
 		{

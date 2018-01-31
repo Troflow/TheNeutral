@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Neutral
 {
+	// All HUDElements must be added to the Script Execution Order to prevent
+	// NullReferenceExeption Errors
 	public class ColorBook : HUDElement, IObserver<PlayerState>
 	{
 		void OnEnable ()

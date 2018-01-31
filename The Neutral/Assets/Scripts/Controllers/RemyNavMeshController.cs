@@ -4,13 +4,13 @@ using System.Collections;
 
 namespace Neutral {
 	public class RemyNavMeshController : MonoBehaviour {
-		
+
         CombatUtilities combatController;
 		AnimationUtilities AnimHelper;
         System.Collections.Generic.List<Tier> tierList;
 
         private Animator anim;
-        Rigidbody rb; 
+        Rigidbody rb;
 
 		int isIdleReady = Animator.StringToHash("isIdle");
 		int isRunning = Animator.StringToHash("isRunning");
@@ -26,7 +26,7 @@ namespace Neutral {
 
         private int dashSpeed;
 
-        
+
 
         private void initializeCombatController()
         {
@@ -65,7 +65,7 @@ namespace Neutral {
         {
             anim.SetTrigger(animationId);
             PlayerMovement.agent.ResetPath();
-            anim.SetBool(isRunning, false); 
+            anim.SetBool(isRunning, false);
             anim.SetBool(isIdleReady, true);
         }
 
@@ -85,7 +85,7 @@ namespace Neutral {
         void Start () {
             PlayerMovement.SetInitialMovement();
 			anim = GetComponent<Animator>();
-            
+
 			AnimHelper = new AnimationUtilities();
 
             dashSpeed = 25;
@@ -120,7 +120,7 @@ namespace Neutral {
 
             if (PlayerMovement.inControl(true)) {
 
-                
+
                 if (PlayerMovement.agent.hasPath)
                 {
                     if (anim.GetBool("isRunning") == false)
@@ -130,7 +130,7 @@ namespace Neutral {
                     }
 
                     anim.SetFloat(speed, Mathf.Abs(PlayerMovement.agent.speed));
-                    
+
 
                     //check if difference between destination and current position is above a certain threshold to apply rotation
                     //if (Mathf.Abs((PlayerMovement.agent.steeringTarget - transform.position).x) > 0.5)

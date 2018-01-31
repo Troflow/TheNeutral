@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 namespace Neutral
 {
+	// All HUDElements must be added to the Script Execution Order to prevent
+	// NullReferenceExeption Errors
 	public class ExposedColor : HUDElement, IObserver<PlayerState>
 	{
 		void OnEnable ()
