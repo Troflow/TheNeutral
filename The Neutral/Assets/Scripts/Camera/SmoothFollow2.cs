@@ -19,13 +19,7 @@ namespace Neutral
         }
 
         void Update()
-        {
-                        
-            if (Input.GetMouseButton(1))
-            {
-                transform.RotateAround(target.position, Vector3.up, Input.GetAxis("Mouse X") * 5f);
-            }
-            
+         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 transform.localPosition = startCamPos;

@@ -27,9 +27,10 @@ namespace Neutral
 
 		void updateHeldColorImage(Color heldColor)
 		{
-			R.gameObject.SetActive(heldColor.r > 0f);
-			G.gameObject.SetActive(heldColor.g > 0f);
-			B.gameObject.SetActive(heldColor.b > 0f);
+			// Can't use 0 as the check, because Yellow has >0f in each value
+			R.gameObject.SetActive(heldColor.r > 0.5f);
+			G.gameObject.SetActive(heldColor.g > 0.5f);
+			B.gameObject.SetActive(heldColor.b > 0.5f);
 		}
 
 		void getChildren()
