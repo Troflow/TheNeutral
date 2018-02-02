@@ -10,7 +10,7 @@ namespace Neutral
     // set their exposed colors
     // set their palette
     // easier to add new combat enemies
-    
+
     // then we can leave this class for just purely the color logic
 
     public class EnemyCombatColorController : MonoBehaviour
@@ -33,11 +33,11 @@ namespace Neutral
                 currentEnemyCombatColor
             };
 
-            for (int x=0; x<this.transform.childCount; x++)
+            foreach (Transform child in transform)
             {
-                if (this.transform.GetChild(x).CompareTag("Flag"))
+                if (child.CompareTag("Flag"))
                 {
-                    colorBookRenderer = this.transform.GetChild(x).GetComponent<MeshRenderer>();
+                    colorBookRenderer = child.GetComponent<MeshRenderer>();
                 }
             }
         }
@@ -55,7 +55,7 @@ namespace Neutral
             var mixedColor = colorBook[0];
             for (int x = 1; x < colorBook.Count; x++)
             {
-                mixedColor = mixedColor + colorBook[x];
+                mixedColor += colorBook[x];
             }
 
             return mixedColor;

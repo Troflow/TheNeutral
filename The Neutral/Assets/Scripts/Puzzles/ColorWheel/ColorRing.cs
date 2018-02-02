@@ -38,8 +38,6 @@ namespace Neutral
             }
 		}
 
-		//TODO: Hussain: timing isn't working correctly. Method isn't always waiting the
-		// given amount
 		private IEnumerator grantColor(PlayerState pState)
 		{
             isGrantingColor = true;
@@ -65,17 +63,17 @@ namespace Neutral
 		#region Collision Handling
 		public void OnTriggerEnter(Collider col)
 		{
-			if (col.CompareTag("Player-Sphere")) 
+			if (col.CompareTag("Player-Sphere"))
 			{
                 PlayerState pState = col.GetComponentInParent<PlayerState>();
-                pState.stopPulseFlag();
-                startGrantingColor(pState);
+                //pState.stopPulseFlag();
+                //startGrantingColor(pState);
 			}
 		}
 
 		public void OnTriggerExit(Collider col)
 		{
-			if (col.CompareTag ("Player-Sphere")) 
+			if (col.CompareTag ("Player-Sphere"))
 			{
                 //Debug.Log("exited ring color: "+ringColor);
                 if (currentCoroutineRunning != null)

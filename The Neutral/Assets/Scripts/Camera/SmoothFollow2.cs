@@ -31,32 +31,6 @@ namespace Neutral
                 colorWheel.SetActive(true);
                 colorWheel.transform.SetPositionAndRotation(transform.position, transform.rotation);
             }
-
-            if (Input.GetKeyUp(KeyCode.LeftControl))
-            {
-                RaycastHit hit;
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(ray, out hit, 500))
-                {
-                    if (hit.transform.name.Contains("ColorWheel"))
-                    {
-                        if (hit.transform.name.Contains("RED"))
-                        {
-                            target.GetComponent<PlayerState>().setCurrentCombatColor(new CombatColorRed());
-                        }
-                        if (hit.transform.name.Contains("GREEN"))
-                        {
-                            target.GetComponent<PlayerState>().setCurrentCombatColor(new CombatColorGreen());
-                        }
-                        if (hit.transform.name.Contains("BLUE"))
-                        {
-                            target.GetComponent<PlayerState>().setCurrentCombatColor(new CombatColorBlue());
-                        }
-                    }
-                }
-                colorWheel.SetActive(false);
-            }
-
         }
     }
 }

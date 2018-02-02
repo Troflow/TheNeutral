@@ -12,12 +12,6 @@ namespace Neutral
 	/// Class responsible for tracking ColorWheel puzzle completion
 	/// </summary>
 	public class Carousel : Puzzle {
-
-		/// <summary>
-		/// The centre circle. 
-		/// TODO: discuss with Hussain how this will be used
-		/// during gameplay
-		/// </summary>
 		private Transform centre;
 		private List<ColorWheel> haltedColorWheels;
 
@@ -32,7 +26,7 @@ namespace Neutral
 
 		private void setColorTransferTime()
 		{
-			foreach (Transform child in transform) 
+			foreach (Transform child in transform)
 			{
 				var ring = child.GetComponentInChildren<ColorRing> ();
 				if(ring != null)
@@ -41,13 +35,13 @@ namespace Neutral
 		}
 
 		/// <summary>
-		/// Adds the wheel to list of color wheels 
+		/// Adds the wheel to list of color wheels
 		/// that have been halted
 		/// </summary>
 		/// <param name="pColourWheel">P colour wheel.</param>
 		public void addWheel(ColorWheel pColourWheel)
 		{
-			if (!haltedColorWheels.Contains (pColourWheel)) 
+			if (!haltedColorWheels.Contains (pColourWheel))
 			{
 				haltedColorWheels.Add (pColourWheel);
 				validateHaltedWheels ();
@@ -65,12 +59,12 @@ namespace Neutral
 
 			// Loop through haltedColourWheels, making sure each wheel's halt order
 			// matches their index in the list
-			foreach (ColorWheel wheel in haltedColorWheels) 
+			foreach (ColorWheel wheel in haltedColorWheels)
 			{
-				if (wheel.haltOrder != haltedColorWheels.IndexOf (wheel)) 
+				if (wheel.haltOrder != haltedColorWheels.IndexOf (wheel))
 				{
 					correctlyOrdered = false;
-					return;	
+					return;
 				}
 			}
 

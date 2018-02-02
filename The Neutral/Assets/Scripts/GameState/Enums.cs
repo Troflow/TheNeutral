@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Neutral
 {
-	
+
 	public enum Lite {
         RED,
         BLUE,

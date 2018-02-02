@@ -19,8 +19,17 @@ namespace Neutral
             { Color.red, new CombatColorRed() },
             { Color.blue, new CombatColorBlue() },
             { Color.yellow, new CombatColorYellow() },
+            { Color.black, new CombatColorBlack() },
         };
 
+        public static IDictionary<Lite, CombatColor> liteLookupTable = new Dictionary<Lite, CombatColor>()
+        {
+            { Lite.GREEN, new CombatColorGreen() },
+            { Lite.RED, new CombatColorRed() },
+            { Lite.BLUE, new CombatColorBlue() },
+            { Lite.YELLOW, new CombatColorYellow() },
+            { Lite.BLACK, new CombatColorBlack() },
+        };
 
         public static CombatColor operator + (CombatColor c1, CombatColor c2)
         {
@@ -42,7 +51,7 @@ namespace Neutral
                 return new CombatColorMixed(newColor);
             }
             // Debug.Log("IN TABLE! - " + colorLookupTable[newColor].color.Value.ToString());
-            
+
             return colorLookupTable[newColor];
         }
 

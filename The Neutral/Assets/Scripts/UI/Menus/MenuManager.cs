@@ -12,6 +12,7 @@ namespace Neutral
 	{
         private PlayerState playerState;
         private Transform colorChooseMenu;
+        private bool colorSelected;
 
         void Awake()
         {
@@ -23,11 +24,17 @@ namespace Neutral
         #region COLOR CHOOSE Menu
         void handleColorChooseMenuDisplay()
         {
-            colorChooseMenu.gameObject.SetActive(Input.GetButton("Color_Switch"));
+            colorChooseMenu.gameObject.SetActive(Input.GetButton("Color_Switch") && !colorSelected);
             if (Input.GetButtonDown("Color_Switch"))
             {
                 colorChooseMenu.position = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0);
+                colorSelected = false;
             }
+        }
+
+        public void setColorSelected(bool newState)
+        {
+            colorSelected = newState;
         }
 
         public void chooseColorRed()
