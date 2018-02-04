@@ -5,35 +5,29 @@ using UnityEngine;
 namespace Neutral
 {
 	/// <summary>
-	/// Color Ring class, responsible for granting the player
-	/// the designated ringColorgame after staying in contact with
-	/// the player for a given amount of time.
+	/// Color Ring class.
+    /// After the Player has stood on the Ring's surface for a period of time
+    /// The Player's color changes to match the color of the Ring
 	/// </summary>
 	public class ColorRing : MonoBehaviour {
 
-        [SerializeField]
-		private float colorTransferTime;
 		[SerializeField]
-		private Lite ringColor;
+		private Lite lite;
+        private CombatColor combatColor;
 
         private Coroutine currentCoroutineRunning;
-        private bool isGrantingColor;
+        private bool isGrantingColor = false;
+        private bool enteredNewRing = false;
 
         void Start()
         {
-            isGrantingColor = false;
+            combatColor = CombatColor.liteLookupTable[lite];
         }
-
-        public void setTransferTime(float pTransferTime)
-		{
-			colorTransferTime = pTransferTime;
-		}
 
 		private void startGrantingColor(PlayerState pState)
 		{
             if (!isGrantingColor)
             {
-                Debug.Log("STARTING COROUTINE");
                 currentCoroutineRunning = StartCoroutine(grantColor(pState));
             }
 		}
@@ -41,47 +35,59 @@ namespace Neutral
 		private IEnumerator grantColor(PlayerState pState)
 		{
             isGrantingColor = true;
-            if (ringColor == pState.heldColor)
+            var pCombatColor = pState.getCurrentCombatColor();
+
+            // If PlayerState's color matches  Ring's color, don't try transferring
+            if (pCombatColor.color.Key == combatColor.color.Key)
             {
-                pState.stopPulseFlag();
                 isGrantingColor = false;
                 yield return null;
             }
             else
             {
-                pState.pulseFlag(ringColor, colorTransferTime);
+                pState.setIncomingTransferColor(combatColor);
 
-                yield return new WaitForSeconds(colorTransferTime);
-                Debug.Log("FINISHED WAITFORTIME!");
-                pState.heldColor = ringColor;
-                pState.stopPulseFlag();
-                isGrantingColor = false;
+                // Once colorTransferValue reaches above 1f, set PlayerState's color to the color of this Ring
+                for (float transferVal = 0f; transferVal <= 1.1f; transferVal += Time.deltaTime/GameManager.colorTransferTimeStep)
+                {
+                    pState.setColorTransferValue(transferVal);
+
+                    if (transferVal > 1f)
+                    {
+                        // Do this in for-loop to prevent the delay after yield return null
+                        pState.setCurrentCombatColor(this.combatColor);
+                        isGrantingColor = false;
+                    }
+
+                    yield return null;
+                }
             }
 
 		}
 
-		#region Collision Handling
+		#region COLLISION HANDLING
 		public void OnTriggerEnter(Collider col)
 		{
-			if (col.CompareTag("Player-Sphere"))
+			if (col.CompareTag("Player-ColorWheel-Collider"))
 			{
                 PlayerState pState = col.GetComponentInParent<PlayerState>();
-                //pState.stopPulseFlag();
-                //startGrantingColor(pState);
+                pState.setColorTransferValue(0f);
+
+                startGrantingColor(pState);
 			}
 		}
 
 		public void OnTriggerExit(Collider col)
 		{
-			if (col.CompareTag ("Player-Sphere"))
+			if (col.CompareTag ("Player-ColorWheel-Collider"))
 			{
-                //Debug.Log("exited ring color: "+ringColor);
                 if (currentCoroutineRunning != null)
                 {
-                    StopCoroutine(currentCoroutineRunning);
-                    // StopAllCoroutines();
+                    PlayerState pState = col.GetComponentInParent<PlayerState>();
+                    pState.setColorTransferValue(0f);
+
                     isGrantingColor = false;
-                    Debug.Log("STOPPING COROUTINES");
+                    StopCoroutine(currentCoroutineRunning);
                 }
 
             }

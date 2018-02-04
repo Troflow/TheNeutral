@@ -24,6 +24,8 @@ namespace Neutral
         public List<CombatColor> colorBook;
         public CombatColor exposedColor;
         private CombatColor currentCombatColor;
+        private CombatColor incomingTransferColor;
+        private float colorTransferValue;
 
         private Color randomColor;
         #endregion
@@ -50,6 +52,8 @@ namespace Neutral
             flag = GameObject.FindGameObjectWithTag("PlayerFlag").GetComponent<MeshRenderer>();
             isFlagPulsing = false;
 
+            colorTransferValue = 0f;
+            incomingTransferColor = CombatColor.colorLookupTable[Color.black];
             currentCombatColor = new CombatColorGreen();
             colorBook = new List<CombatColor>();
             colorBook.Add(currentCombatColor.TestSubtractColor(currentCombatColor));
@@ -70,6 +74,29 @@ namespace Neutral
             currentCombatColor = newCombatColor;
             onStateChange();
         }
+
+        public float getColorTransferValue()
+        {
+            return colorTransferValue;
+        }
+
+        public void setColorTransferValue(float newValue)
+        {
+            colorTransferValue = newValue;
+            onStateChange();
+        }
+
+        public CombatColor getIncomingTransferColor()
+        {
+            return incomingTransferColor;
+        }
+
+        public void setIncomingTransferColor(CombatColor incomingColor)
+        {
+            incomingTransferColor = incomingColor;
+            onStateChange();
+        }
+
 
 		private void populateCompletedPuzzles()
 		{

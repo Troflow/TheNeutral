@@ -15,23 +15,11 @@ namespace Neutral
 		private Transform centre;
 		private List<ColorWheel> haltedColorWheels;
 
-		private float colorTransferTime = 7f;
 		private bool correctlyOrdered;
 
 		void Start () {
 			haltedColorWheels = new List<ColorWheel> ();
-			setColorTransferTime ();
 
-		}
-
-		private void setColorTransferTime()
-		{
-			foreach (Transform child in transform)
-			{
-				var ring = child.GetComponentInChildren<ColorRing> ();
-				if(ring != null)
-					ring.setTransferTime (colorTransferTime);
-			}
 		}
 
 		/// <summary>

@@ -21,7 +21,7 @@ namespace Neutral
             disableAllMenus();
         }
 
-        #region COLOR CHOOSE Menu
+        #region COLOR CHOOSE MENU
         void handleColorChooseMenuDisplay()
         {
             colorChooseMenu.gameObject.SetActive(Input.GetButton("Color_Switch") && !colorSelected);
