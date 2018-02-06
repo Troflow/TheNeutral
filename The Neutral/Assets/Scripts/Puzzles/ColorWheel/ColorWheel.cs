@@ -5,46 +5,56 @@ using UnityEngine;
 namespace Neutral
 {
 	/// <summary>
-	/// Color wheel class, responsible for spinning and
-	/// halting when child Color wall has been properly colored.
+	/// ColorWheel class.
+	/// Responsible for rotating, and is the parent object of the ColorRing and Mural
 	/// </summary>
-	public class ColorWheel : MonoBehaviour {
-
+	public class ColorWheel : MonoBehaviour
+	{
 		private Carousel carousel;
 
-		public int haltOrder;
-		public bool isHalted = false;
+		private int haltOrder;
+		private Vector3 rotateVector;
+		private bool isHalted = false;
 
-		private Vector3 spinVector;
-		private float spinSpeed = 10f;
-		private bool isClockwise = true;
-
-		void Start () {
-			carousel = transform.parent.GetComponent<Carousel> ();
-
-			if (!isClockwise) 
-			{
-				spinSpeed *= -1f;
-			}
-			spinVector = new Vector3 (0, spinSpeed, 0);
+		void Start ()
+		{
+			carousel = transform.parent.GetComponent<Carousel>();
 		}
 
+		public void setRotateVector(float rotateSpeed)
+		{
+			rotateVector = new Vector3 (0, rotateSpeed, 0);
+		}
+
+		public void setHaltOrder(int newHaltOrder)
+		{
+			haltOrder = newHaltOrder;
+		}
+
+		public int getHaltOrder()
+		{
+			return haltOrder;
+		}
+
+		public void setIsHalted(bool newState)
+		{
+			isHalted = newState;
+		}
+
+		/// <summary>
+		/// Called by a Mural when it has been successfully colored by the Player
+		/// </summary>
 		public void halt()
 		{
-			isHalted = true;
-			carousel.addWheel (this);
+			carousel.addWheelToHaltedWheels(this);
 		}
 
-		public void spin()
+		void Update ()
 		{
-			if (!isHalted) 
+			if (!isHalted)
 			{
-				transform.Rotate (spinVector * Time.deltaTime);
+				transform.Rotate(rotateVector * Time.deltaTime);
 			}
-		}
-			
-		void Update () {
-			spin ();
 		}
 	}
 }

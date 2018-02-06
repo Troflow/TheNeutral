@@ -4,64 +4,102 @@ using UnityEngine;
 
 namespace Neutral
 {
-
-
-    //if experiencing odd behaviour with colliders it's okay for now!
-
 	/// <summary>
-	/// Class responsible for tracking ColorWheel puzzle completion
+	/// Carousel class.
+	/// Manages initialisation of ordering, rotation speed,
+	/// and keeps track of puzzle completion
 	/// </summary>
 	public class Carousel : Puzzle {
 		private Transform centre;
+		private List<ColorWheel> allColorWheelsInSystem;
 		private List<ColorWheel> haltedColorWheels;
 
-		private bool correctlyOrdered;
+		private bool correctlyOrdered = false;
 
-		void Start () {
-			haltedColorWheels = new List<ColorWheel> ();
-
+		void Start ()
+		{
+			haltedColorWheels = new List<ColorWheel>();
+			allColorWheelsInSystem = new List<ColorWheel>();
+			initialiseAllColorWheels();
 		}
 
 		/// <summary>
 		/// Adds the wheel to list of color wheels
 		/// that have been halted
 		/// </summary>
-		/// <param name="pColourWheel">P colour wheel.</param>
-		public void addWheel(ColorWheel pColourWheel)
+		/// <param name="pColorWheel">P color wheel.</param>
+		public void addWheelToHaltedWheels(ColorWheel pColorWheel)
 		{
-			if (!haltedColorWheels.Contains (pColourWheel))
+			if (!haltedColorWheels.Contains(pColorWheel))
 			{
-				haltedColorWheels.Add (pColourWheel);
-				validateHaltedWheels ();
+
+				validateHaltedWheels(pColorWheel);
+
+				if (haltedColorWheels.Count == allColorWheelsInSystem.Count)
+				{
+					puzzleCompleted();
+				}
 			}
 		}
 
 		/// <summary>
-		/// Once the number of halted wheels exceeds 2,
-		/// will check to see the walls's index in the list
-		/// matches with its haltOrder
+		/// Once the number of halted wheels exceeds 1, check to see the walls's
+		/// index in the list matches with its haltOrder
 		/// </summary>
-		private void validateHaltedWheels()
+		private bool validateHaltedWheels(ColorWheel pColorWheel)
 		{
-			if (haltedColorWheels.Count < 2) return;
+			haltedColorWheels.Add(pColorWheel);
 
-			// Loop through haltedColourWheels, making sure each wheel's halt order
-			// matches their index in the list
 			foreach (ColorWheel wheel in haltedColorWheels)
 			{
-				if (wheel.haltOrder != haltedColorWheels.IndexOf (wheel))
+				// If even one wheel is not halted in the right ordering
+				// resume rotation of all color wheels
+				if (wheel.getHaltOrder() != haltedColorWheels.IndexOf(wheel))
 				{
-					correctlyOrdered = false;
-					return;
+					resumeAllWheelsRotation();
+					return false;
 				}
 			}
 
-			correctlyOrdered = true;
-			puzzleCompleted ();
+			pColorWheel.setIsHalted(true);
+			return true;
 		}
 
-		protected override void puzzleCompleted ()
+		private void resumeAllWheelsRotation()
 		{
+			foreach (ColorWheel wheel in allColorWheelsInSystem)
+			{
+				wheel.setIsHalted(false);
+			}
+
+			haltedColorWheels.Clear();
+		}
+
+		private void initialiseAllColorWheels()
+		{
+			var rotationDirection = 1f;
+			foreach (Transform child in transform)
+			{
+				if (child.name == "Centre")
+				{
+					continue;
+				}
+
+				rotationDirection *= -1f;
+
+				var colorWheel = child.GetComponent<ColorWheel>();
+				var colorWheelMural = child.Find("Mural").GetComponent<Mural>();
+
+				colorWheel.setHaltOrder(colorWheelMural.getHeight());
+				colorWheel.setRotateVector(GameManager.colorWheelRotateSpeed * rotationDirection);
+
+				allColorWheelsInSystem.Add(colorWheel);
+			}
+		}
+
+		protected override void puzzleCompleted()
+		{
+			correctlyOrdered = true;
 			throw new System.NotImplementedException ();
 		}
 	}

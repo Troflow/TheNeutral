@@ -12,10 +12,12 @@ namespace Neutral
 		private HUDManager HUD;
 
 		#region Player Attributes
+
 		public int stamina;
 		public bool isExhausted;
 		public Lite heldColor;
         public MeshRenderer flag;
+
         #endregion
 
         #region CombatColors
@@ -26,8 +28,11 @@ namespace Neutral
         private CombatColor currentCombatColor;
         private CombatColor incomingTransferColor;
         private float colorTransferValue;
+        private bool isBeingGrantedNewColor;
+        private Coroutine grantingColorCoroutine;
 
         private Color randomColor;
+
         #endregion
 
 
@@ -98,6 +103,11 @@ namespace Neutral
         }
 
 
+        public bool getIsBeingGrantedNewColor()
+        {
+            return isBeingGrantedNewColor;
+        }
+
 		private void populateCompletedPuzzles()
 		{
 			completedPuzzles = new Dictionary<Lite, int> ();
@@ -130,54 +140,57 @@ namespace Neutral
 			HUD.NotifyAllObservers ();
 		}
 
-        private IEnumerator PulseFlag(Lite newColor, float pulseTime)
-        {
-            isFlagPulsing = true;
-            float startPulseTime = Time.time;
-            List<int> speedFactors = new List<int> { 2, 3, 4, 5 };
-            int inverseSpeedFactorIndex = speedFactors.Count - 1;
-            int currSpeedFactorIndex = 0;
-            float defaultWaitTime = 0.5f;
-            while (isFlagPulsing)
+
+        private IEnumerator grantColor(CombatColor newColor)
+		{
+            isBeingGrantedNewColor = true;
+
+            // If PlayerState's color already matches incoming color, don't try transferring
+            if (currentCombatColor.color.Key == newColor.color.Key)
             {
-                float currentPulseTime = Time.time - startPulseTime;
+                isBeingGrantedNewColor = false;
+                yield return null;
+            }
+            else
+            {
+                // Update so incomingTransferColor so UI knows which icon to display
+                setIncomingTransferColor(newColor);
 
-                Color color = flag.material.color;
-                flag.material.color = flagColor[newColor];
-
-                if (currentPulseTime > pulseTime / speedFactors[inverseSpeedFactorIndex])
+                // Once colorTransferValue reaches above 1f, set PlayerState's color to the incoming color
+                for (float transferVal = 0f; transferVal <= 1.1f; transferVal += Time.deltaTime/GameManager.colorTransferTimeStep)
                 {
-                    if (inverseSpeedFactorIndex > 0) inverseSpeedFactorIndex -= 1;
-                    if (currSpeedFactorIndex < speedFactors.Count-1) currSpeedFactorIndex += 1;
+                    setColorTransferValue(transferVal);
+
+                    if (transferVal > 1f)
+                    {
+                        // Do this in for-loop to prevent the delay after yield return null
+                        setCurrentCombatColor(newColor);
+                        isBeingGrantedNewColor = false;
+                    }
+
+                    yield return null;
                 }
-
-                yield return new WaitForSeconds(defaultWaitTime / speedFactors[currSpeedFactorIndex]);
-
-                color.a = 1f;
-                flag.material.color = flagColor[heldColor];
-                if (currentPulseTime > pulseTime / speedFactors[inverseSpeedFactorIndex])
-                {
-                    if (inverseSpeedFactorIndex > 0) inverseSpeedFactorIndex -= 1;
-                    if (currSpeedFactorIndex < speedFactors.Count-1) currSpeedFactorIndex += 1;
-                }
-
-                yield return new WaitForSeconds(defaultWaitTime / speedFactors[currSpeedFactorIndex]);
             }
 
-        }
+		}
 
-        public void pulseFlag(Lite newColor, float colorTransferTime)
+        public void startGrantingColor(CombatColor newColor)
         {
-            if (!isFlagPulsing)
+            if (!isBeingGrantedNewColor)
             {
-                StartCoroutine(PulseFlag(newColor, colorTransferTime));
+                grantingColorCoroutine = StartCoroutine(grantColor(newColor));
             }
         }
 
-        public void stopPulseFlag()
+        public void stopGrantingColor()
         {
-            StopAllCoroutines();
-            isFlagPulsing = false;
+            setColorTransferValue(0f);
+            isBeingGrantedNewColor = false;
+
+            if (grantingColorCoroutine != null)
+            {
+                StopCoroutine(grantingColorCoroutine);
+            }
         }
 
         // For Debugging purposes.

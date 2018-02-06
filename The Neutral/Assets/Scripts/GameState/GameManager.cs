@@ -10,6 +10,11 @@ namespace Neutral
     /// </summary>
 	public static class GameManager
 	{
+        #region COLOR WHEEL
+
         public static float colorTransferTimeStep = 2f;
+        public static float colorWheelRotateSpeed = 10f;
+
+        #endregion
 	}
 }

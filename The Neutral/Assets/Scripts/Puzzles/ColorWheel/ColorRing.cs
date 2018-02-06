@@ -15,7 +15,7 @@ namespace Neutral
 		private Lite lite;
         private CombatColor combatColor;
 
-        private Coroutine currentCoroutineRunning;
+        private static ColorRing ringInContactWithPlayer;
         private bool isGrantingColor = false;
         private bool enteredNewRing = false;
 
@@ -24,70 +24,30 @@ namespace Neutral
             combatColor = CombatColor.liteLookupTable[lite];
         }
 
-		private void startGrantingColor(PlayerState pState)
-		{
-            if (!isGrantingColor)
-            {
-                currentCoroutineRunning = StartCoroutine(grantColor(pState));
-            }
-		}
-
-		private IEnumerator grantColor(PlayerState pState)
-		{
-            isGrantingColor = true;
-            var pCombatColor = pState.getCurrentCombatColor();
-
-            // If PlayerState's color matches  Ring's color, don't try transferring
-            if (pCombatColor.color.Key == combatColor.color.Key)
-            {
-                isGrantingColor = false;
-                yield return null;
-            }
-            else
-            {
-                pState.setIncomingTransferColor(combatColor);
-
-                // Once colorTransferValue reaches above 1f, set PlayerState's color to the color of this Ring
-                for (float transferVal = 0f; transferVal <= 1.1f; transferVal += Time.deltaTime/GameManager.colorTransferTimeStep)
-                {
-                    pState.setColorTransferValue(transferVal);
-
-                    if (transferVal > 1f)
-                    {
-                        // Do this in for-loop to prevent the delay after yield return null
-                        pState.setCurrentCombatColor(this.combatColor);
-                        isGrantingColor = false;
-                    }
-
-                    yield return null;
-                }
-            }
-
-		}
-
 		#region COLLISION HANDLING
+        // NOTE: It must always be the case that the Player-ColorWheel-Collider
+        // enters the successive color ring BEFORE it completely leaves a previous ring
+
 		public void OnTriggerEnter(Collider col)
 		{
-			if (col.CompareTag("Player-ColorWheel-Collider"))
+			if (col.CompareTag("Player-Sphere"))
 			{
+                ringInContactWithPlayer = this;
                 PlayerState pState = col.GetComponentInParent<PlayerState>();
-                pState.setColorTransferValue(0f);
 
-                startGrantingColor(pState);
+                pState.stopGrantingColor();
+                pState.startGrantingColor(combatColor);
 			}
 		}
 
 		public void OnTriggerExit(Collider col)
 		{
-			if (col.CompareTag ("Player-ColorWheel-Collider"))
+			if (col.CompareTag ("Player-Sphere"))
 			{
-                if (currentCoroutineRunning != null)
+                PlayerState pState = col.GetComponentInParent<PlayerState>();
+                if (pState.getIsBeingGrantedNewColor() != null && ringInContactWithPlayer == this)
                 {
-                    PlayerState pState = col.GetComponentInParent<PlayerState>();
-                    pState.setColorTransferValue(0f);
-
-                    isGrantingColor = false;
-                    StopCoroutine(currentCoroutineRunning);
+                    pState.stopGrantingColor();
                 }
 
             }

@@ -15,9 +15,10 @@ namespace Neutral
 		private ColorWheel colorWheel;
 
 		[SerializeField]
+		private int height;
+		[SerializeField]
 		private Lite lite;
 		public bool isColoredCorrectly;
-
 		private List<CombatColor> colorBook;
 		private CombatColor combatColor;
 
@@ -55,6 +56,11 @@ namespace Neutral
 			}
 
 			return mixedColor;
+		}
+
+		public int getHeight()
+		{
+			return height;
 		}
 
 		#region Collision Handling
