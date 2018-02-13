@@ -20,6 +20,11 @@ namespace Neutral
     };
 
 
+    public enum ColorWheelSystemType {
+        Local,
+        Global,
+    };
+
     public enum EnemyType
     {
         Minor,

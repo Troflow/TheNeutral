@@ -24,12 +24,12 @@ namespace Neutral
 			populateTiles ();
 			tileCount = tiles.Count;
 
-			// For debugging purposes. 
-			//Actual activation will be handled in touched() 
+			// For debugging purposes.
+			//Actual activation will be handled in touched()
 			// only when player uses a Tier on one of the TouchTiles.
 			activateTileField ();
 		}
-			
+
 		/// <summary>
 		/// Activates the tile field.
 		/// Sets isActivated to true, picks a random tile to be 'marked'
@@ -55,9 +55,9 @@ namespace Neutral
 			StopCoroutine (startTimer ());
 			tileMarker.gameObject.SetActive (false);
 		}
-			
+
 		/// <summary>
-		/// Called during activateTileField. 
+		/// Called during activateTileField.
 		/// Sets the tileMarker to active
 		/// then places the  tileMarker in its initial position - above the markedTile.
 		/// </summary>
@@ -81,7 +81,7 @@ namespace Neutral
 		{
 			// set the current markedTile as no longer marked
 			markedTile.GetComponent<TouchTile>().isAware = false;
-				
+
 			// Duplicate tiles List, and remove the markedTile from duplicateList
 			var duplicateList = new List<Transform>(tiles);
 			duplicateList.Remove (markedTile);
@@ -103,12 +103,12 @@ namespace Neutral
 			// TODO: Pseudo code. Field should activate
 			// once player is in contact with any of the tiles
 			// AND player uses a Tier move
-			if (!isActivated) //&& pPlayerTransform.isUsingTier) 
+			if (!isActivated) //&& pPlayerTransform.isUsingTier)
 			{
 				//activateTileField ();
 			}
 
-			if(isActivated && tileIsAware) 
+			if(isActivated && tileIsAware)
 			{
 				incrementTileScore ();
 				displaceMarker ();
@@ -116,20 +116,15 @@ namespace Neutral
 				//resetTimer ();
 			}
 		}
-			
+
 		private void incrementTileScore()
 		{
 			tileScore++;
 
-			if (tileScore >= targetTileScore) 
+			if (tileScore >= targetTileScore)
 			{
 				deactivateTileField ();
 			}
-		}
-
-		protected override void puzzleCompleted ()
-		{
-			throw new System.NotImplementedException ();
 		}
 
 		// TODO: may need to be refactored

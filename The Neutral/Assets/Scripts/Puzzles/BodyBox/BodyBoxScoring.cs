@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Neutral
 {
-	public class BodyBoxScoring : Puzzle {
+	public class BodyBoxScoring : MonoBehaviour {
 
 		void Start () {
 		}
@@ -14,17 +14,11 @@ namespace Neutral
 		/// </summary>
 		public void checkScoring()
 		{
-			foreach (Transform child in transform) 
+			foreach (Transform child in transform)
 			{
 				if (!child.GetComponent<BodyBoxSwitch> ().isCoveredCorrectly)
 					return;
 			}
-			puzzleCompleted ();
-		}
-
-		protected override void puzzleCompleted ()
-		{
-			throw new System.NotImplementedException ();
 		}
 	}
 }

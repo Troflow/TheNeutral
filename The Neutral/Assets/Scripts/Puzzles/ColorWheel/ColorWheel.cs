@@ -41,6 +41,11 @@ namespace Neutral
 			isHalted = newState;
 		}
 
+		public void setMuralState(bool newState)
+		{
+			transform.Find("Mural").gameObject.SetActive(newState);
+		}
+
 		/// <summary>
 		/// Called by a Mural when it has been successfully colored by the Player
 		/// </summary>
