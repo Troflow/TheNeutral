@@ -11,7 +11,6 @@ namespace Neutral
 	public class ColorWheel : MonoBehaviour
 	{
 		private Carousel carousel;
-
 		private int haltOrder;
 		private Vector3 rotateVector;
 		private bool isHalted = false;

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Neutral
 {
 	/// <summary>
-	/// Carousel class.
+	/// SingleSystemCarousel class.
 	/// Manages initialisation of ordering, rotation speed,
 	/// and keeps track of puzzle completion
 	/// </summary>
@@ -15,7 +15,7 @@ namespace Neutral
 		void Start()
 		{
 			haltedColorWheels = new List<ColorWheel>();
-			allColorWheelsInSystem = new List<ColorWheel>();
+			allColorWheels = new List<ColorWheel>();
             setLantern();
 			initialiseAllChildren();
 		}
@@ -24,37 +24,29 @@ namespace Neutral
 		{
 			if (!haltedColorWheels.Contains(pColorWheel))
 			{
+				haltedColorWheels.Add(pColorWheel);
 
-				validateHaltedWheels(pColorWheel);
+				// If a single wheel isn't halted in the right ordering
+				// resume rotation of all color wheels
+				foreach (ColorWheel wheel in haltedColorWheels)
+				{
+					if (wheel.getHaltOrder() != haltedColorWheels.IndexOf(wheel))
+					{
+						resumeAllWheelsRotation();
+						return;
+					}
+				}
 
-				if (haltedColorWheels.Count == allColorWheelsInSystem.Count)
+				// Else, halt the newly added wheel's rotation
+				pColorWheel.setIsHalted(true);
+
+				// If the number of halted wheels is the same number as all wheels in the system
+				// set the puzzle as completed.
+				if (haltedColorWheels.Count == allColorWheels.Count)
 				{
 					puzzleCompleted();
 				}
 			}
-		}
-
-		/// <summary>
-		/// Once the number of halted wheels exceeds 1, check to see the walls's
-		/// index in the list matches with its haltOrder
-		/// </summary>
-		private bool validateHaltedWheels(ColorWheel pColorWheel)
-		{
-			haltedColorWheels.Add(pColorWheel);
-
-			foreach (ColorWheel wheel in haltedColorWheels)
-			{
-				// If even one wheel is not halted in the right ordering
-				// resume rotation of all color wheels
-				if (wheel.getHaltOrder() != haltedColorWheels.IndexOf(wheel))
-				{
-					resumeAllWheelsRotation();
-					return false;
-				}
-			}
-
-			pColorWheel.setIsHalted(true);
-			return true;
 		}
 
         private void setLantern()
@@ -69,10 +61,7 @@ namespace Neutral
 			foreach (Transform child in transform)
 			{
 				rotationDirection *= -1f;
-				if (child.name == "Centre")
-				{
-					continue;
-				}
+				if (child.name == "Centre") continue;
 
 				var colorWheel = child.GetComponent<ColorWheel>();
 				var colorWheelMural = child.Find("Mural").GetComponent<Mural>();
@@ -80,7 +69,7 @@ namespace Neutral
 				colorWheel.setHaltOrder(colorWheelMural.getHeight());
 				colorWheel.setRotateVector(GameManager.colorWheelRotateSpeed * rotationDirection);
 
-				allColorWheelsInSystem.Add(colorWheel);
+				allColorWheels.Add(colorWheel);
 			}
 		}
 
@@ -89,7 +78,7 @@ namespace Neutral
 			isSolved = true;
 			lantern.gameObject.SetActive(true);
 
-			foreach (ColorWheel wheel in allColorWheelsInSystem)
+			foreach (ColorWheel wheel in allColorWheels)
 			{
 				wheel.setMuralState(false);
 			}

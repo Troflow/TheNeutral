@@ -22,7 +22,7 @@ namespace Neutral
 
     public enum ColorWheelSystemType {
         Local,
-        Global,
+        Global
     };
 
     public enum EnemyType

@@ -13,7 +13,7 @@ namespace Neutral
         #region COLOR WHEEL
 
         public static float colorTransferTimeStep = 2f;
-        public static float colorWheelRotateSpeed = 10f;
+        public static float colorWheelRotateSpeed = 25f;
 
         #endregion
 	}

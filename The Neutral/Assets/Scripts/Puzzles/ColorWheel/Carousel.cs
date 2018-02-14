@@ -10,11 +10,10 @@ namespace Neutral
 	/// and keeps track of puzzle completion
 	/// </summary>
 	public abstract class Carousel : MonoBehaviour {
-		protected List<ColorWheel> allColorWheelsInSystem;
+
+		protected List<ColorWheel> allColorWheels;
 		protected List<ColorWheel> haltedColorWheels;
-
 		protected bool isSolved = false;
-
 		public abstract void addWheelToHaltedWheels(ColorWheel pColorWheel);
 
 		public bool getIsSolved()
@@ -24,7 +23,7 @@ namespace Neutral
 
 		protected void resumeAllWheelsRotation()
 		{
-			foreach (ColorWheel wheel in allColorWheelsInSystem)
+			foreach (ColorWheel wheel in allColorWheels)
 			{
 				wheel.setIsHalted(false);
 			}

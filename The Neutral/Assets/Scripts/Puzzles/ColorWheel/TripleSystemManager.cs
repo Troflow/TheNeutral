@@ -11,21 +11,29 @@ namespace Neutral
 	/// </summary>
 	public class TripleSystemManager : MonoBehaviour {
         [SerializeField]
-        private ColorWheelSystemType colorWheelType;
+        private ColorWheelSystemType systemType;
 
+        private bool isSolved = false;
         private Transform lantern;
+        private List<ColorWheel> globalHaltedColorWheels;
+        private List<ColorWheel> globalAllColorWheels;
         private List<TripleSystemCarousel> allCarouselsInSystem;
-        private List<TripleSystemCarousel> solvedCarousels;
+        private List<TripleSystemCarousel> completedCarousels;
 
         void Start()
         {
-            solvedCarousels = new List<TripleSystemCarousel>();
+            completedCarousels = new List<TripleSystemCarousel>();
             allCarouselsInSystem = new List<TripleSystemCarousel>();
+            if (systemType == ColorWheelSystemType.Global)
+            {
+                globalHaltedColorWheels = new List<ColorWheel>();
+                globalAllColorWheels = new List<ColorWheel>();
+            }
             setLantern();
-            initialiseAllChildren();
+            initialiseAllCarousels();
         }
 
-        void initialiseAllChildren()
+        void initialiseAllCarousels()
         {
             foreach (Transform child in transform)
 			{
@@ -37,13 +45,84 @@ namespace Neutral
 				}
 
 				var carousel = child.GetComponent<TripleSystemCarousel>();
-				allCarouselsInSystem.Add(carousel);
+
+                // If systemType is Global, TripleSystemManager will handle all initiliasations
+                if (systemType == ColorWheelSystemType.Global)
+                {
+                    initialiseColorWheelsForCarousel(carousel.transform);
+                }
+                // Else if systemType is Local, then each Carousel handles its own initialisation
+                else if (systemType == ColorWheelSystemType.Local)
+                {
+                    carousel.initialiseAllColorWheels();
+                }
+
+                allCarouselsInSystem.Add(carousel);
 			}
         }
 
-        public void addWheelToHaltedWheels()
+        /// <summary>
+        /// Sets the rotation direction and halt ordering for the given carousel
+        /// </summary>
+        /// <param name="carousel"></param>
+        void initialiseColorWheelsForCarousel(Transform carousel)
         {
+            var rotationDirection = 1f;
+            var wheelsToLocalize = new List<ColorWheel>();
+            foreach (Transform child in carousel)
+            {
+                rotationDirection *= -1f;
+                var colorWheel = child.GetComponent<ColorWheel>();
+                var colorWheelMural = child.Find("Mural").GetComponent<Mural>();
 
+                colorWheel.setHaltOrder(colorWheelMural.getHeight());
+                colorWheel.setRotateVector(GameManager.colorWheelRotateSpeed * rotationDirection);
+                globalAllColorWheels.Add(colorWheel);
+            }
+        }
+
+        public void addCompletedCarousel(TripleSystemCarousel carousel)
+        {
+            completedCarousels.Add(carousel);
+            if (completedCarousels.Count == allCarouselsInSystem.Count)
+            {
+                puzzleCompleted();
+            }
+
+        }
+
+        /// <summary>
+        /// This method is called by a child TripleSystemCarousel whenever one of its Murals is colored correctly
+        /// </summary>
+        /// <param name="pColorWheel"></param>
+        public void addWheelToHaltedWheels(ColorWheel pColorWheel)
+        {
+            if (!globalHaltedColorWheels.Contains(pColorWheel))
+            {
+                globalHaltedColorWheels.Add(pColorWheel);
+
+                foreach (ColorWheel wheel in globalHaltedColorWheels)
+                {
+                    if (wheel.getHaltOrder() != globalHaltedColorWheels.IndexOf(wheel))
+                    {
+                        globalResumeAllWheelsRotation();
+                        return;
+                    }
+                }
+
+                pColorWheel.setIsHalted(true);
+                if (globalHaltedColorWheels.Count == globalAllColorWheels.Count) puzzleCompleted();
+            }
+        }
+
+        public ColorWheelSystemType getSystemType()
+        {
+            return systemType;
+        }
+
+        public bool getIsSolved()
+        {
+            return isSolved;
         }
 
         private void setLantern()
@@ -52,9 +131,26 @@ namespace Neutral
             lantern.gameObject.SetActive(false);
         }
 
+        private void globalResumeAllWheelsRotation()
+        {
+            foreach (ColorWheel wheel in globalAllColorWheels)
+            {
+                wheel.setIsHalted(false);
+            }
+        }
+        private void deactivateAllMurals()
+        {
+            foreach (ColorWheel wheel in globalAllColorWheels)
+            {
+                wheel.setMuralState(false);
+            }
+        }
+
         private void puzzleCompleted()
 		{
-            return;
+            if (systemType == ColorWheelSystemType.Global) deactivateAllMurals();
+            lantern.gameObject.SetActive(true);
+            isSolved = true;
 		}
 
         void Update()
