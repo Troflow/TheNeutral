@@ -5,25 +5,25 @@ using UnityEngine;
 namespace Neutral
 {
 	/// <summary>
-	/// TripleSystemCarousel class.
+	/// TripletCarousel class.
 	/// Manages initialisation of ordering, rotation speed,
 	/// and keeps track of puzzle completion
 	/// </summary>
-	public class TripleSystemCarousel : Carousel {
-		private TripleSystemManager tripleSystemManager;
+	public class TripletCarousel : StandardCarousel {
+		private TripletCarouselManager tripletCarouselManager;
         private Transform lantern;
 
 		void Start()
 		{
-            tripleSystemManager = transform.parent.GetComponent<TripleSystemManager>();
+            tripletCarouselManager = transform.parent.GetComponent<TripletCarouselManager>();
 		}
 
         public override void addWheelToHaltedWheels(ColorWheel pColorWheel)
 		{
-			// If systemType is Global, TripleSystemManager is in charge of managing halted ColorWheels
-			if (tripleSystemManager.getSystemType() == ColorWheelSystemType.Global)
+			// If systemType is Global, tripletCarouselManager is in charge of managing halted ColorWheels
+			if (tripletCarouselManager.getSystemType() == ColorWheelSystemType.Global)
 			{
-				tripleSystemManager.addWheelToHaltedWheels(pColorWheel);
+				tripletCarouselManager.addWheelToHaltedWheels(pColorWheel);
 				return;
 			}
 
@@ -95,7 +95,7 @@ namespace Neutral
 		private void completed()
 		{
 			//isSolved = true;
-			tripleSystemManager.addCompletedCarousel(this);
+			tripletCarouselManager.addCompletedCarousel(this);
 			foreach (ColorWheel wheel in allColorWheels)
 			{
 				wheel.setMuralState(false);

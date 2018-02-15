@@ -9,7 +9,7 @@ namespace Neutral
 	/// Manages TripleSystem ColorWheel Puzzles
 	/// and the logic of both Global and Local Variations
 	/// </summary>
-	public class TripleSystemManager : MonoBehaviour {
+	public class TripletCarouselManager : MonoBehaviour {
         [SerializeField]
         private ColorWheelSystemType systemType;
 
@@ -17,13 +17,13 @@ namespace Neutral
         private Transform lantern;
         private List<ColorWheel> globalHaltedColorWheels;
         private List<ColorWheel> globalAllColorWheels;
-        private List<TripleSystemCarousel> allCarouselsInSystem;
-        private List<TripleSystemCarousel> completedCarousels;
+        private List<TripletCarousel> allCarouselsInSystem;
+        private List<TripletCarousel> completedCarousels;
 
         void Start()
         {
-            completedCarousels = new List<TripleSystemCarousel>();
-            allCarouselsInSystem = new List<TripleSystemCarousel>();
+            completedCarousels = new List<TripletCarousel>();
+            allCarouselsInSystem = new List<TripletCarousel>();
             if (systemType == ColorWheelSystemType.Global)
             {
                 globalHaltedColorWheels = new List<ColorWheel>();
@@ -44,7 +44,7 @@ namespace Neutral
 					continue;
 				}
 
-				var carousel = child.GetComponent<TripleSystemCarousel>();
+				var carousel = child.GetComponent<TripletCarousel>();
 
                 // If systemType is Global, TripleSystemManager will handle all initiliasations
                 if (systemType == ColorWheelSystemType.Global)
@@ -81,7 +81,7 @@ namespace Neutral
             }
         }
 
-        public void addCompletedCarousel(TripleSystemCarousel carousel)
+        public void addCompletedCarousel(TripletCarousel carousel)
         {
             completedCarousels.Add(carousel);
             if (completedCarousels.Count == allCarouselsInSystem.Count)
@@ -92,7 +92,7 @@ namespace Neutral
         }
 
         /// <summary>
-        /// This method is called by a child TripleSystemCarousel whenever one of its Murals is colored correctly
+        /// This method is called by a child TripletCarousel whenever one of its Murals is colored correctly
         /// </summary>
         /// <param name="pColorWheel"></param>
         public void addWheelToHaltedWheels(ColorWheel pColorWheel)

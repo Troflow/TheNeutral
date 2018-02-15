@@ -5,11 +5,11 @@ using UnityEngine;
 namespace Neutral
 {
 	/// <summary>
-	/// Carousel class.
+	/// StandardCarousel class.
 	/// Manages initialisation of ordering, rotation speed,
 	/// and keeps track of puzzle completion
 	/// </summary>
-	public abstract class Carousel : MonoBehaviour {
+	public abstract class StandardCarousel : MonoBehaviour {
 
 		protected List<ColorWheel> allColorWheels;
 		protected List<ColorWheel> haltedColorWheels;

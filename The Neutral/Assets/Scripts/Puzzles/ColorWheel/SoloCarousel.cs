@@ -9,7 +9,7 @@ namespace Neutral
 	/// Manages initialisation of ordering, rotation speed,
 	/// and keeps track of puzzle completion
 	/// </summary>
-	public class SingleSystemCarousel : Carousel {
+	public class SoloCarousel : StandardCarousel {
 		private Transform lantern;
 
 		void Start()

@@ -10,14 +10,14 @@ namespace Neutral
 	/// </summary>
 	public class ColorWheel : MonoBehaviour
 	{
-		private Carousel carousel;
+		private StandardCarousel carousel;
 		private int haltOrder;
 		private Vector3 rotateVector;
 		private bool isHalted = false;
 
 		void Start ()
 		{
-			carousel = transform.parent.GetComponent<Carousel>();
+			carousel = transform.parent.GetComponent<StandardCarousel>();
 		}
 
 		public void setRotateVector(float rotateSpeed)

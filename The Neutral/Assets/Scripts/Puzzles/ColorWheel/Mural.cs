@@ -23,7 +23,7 @@ namespace Neutral
 		private CombatColor combatColor;
 
 		void Start () {
-			colorWheel = transform.parent.GetComponent<ColorWheel> ();
+			colorWheel = transform.parent.GetComponent<ColorWheel>();
 			combatColor = CombatColor.liteLookupTable[Lite.BLACK];
 			colorBook = new List<CombatColor>()
 			{
@@ -68,16 +68,16 @@ namespace Neutral
 		{
 			if (col.CompareTag ("Player-Sphere"))
 			{
-				var playerState = col.GetComponentInParent<PlayerState>();
+				var pState = col.GetComponentInParent<PlayerState>();
 
 				// If Player isDashing, simply check if Player's currentCombatColor matches the mural's combatColor
 				// if (playerState.isDashing):
-				checkColorMatchesLite(playerState.getCurrentCombatColor());
+				checkColorMatchesLite(pState.getCurrentCombatColor());
 
 				// Else, if Player isAttacking, add the Player's currentCombatColor to the mural's combatColor,
 				// then check if the Mural's combatColor.color.Key matches its lite
 				// if (playerState.isAttacking):
-				addColorToColorBookAndCheck(playerState.getCurrentCombatColor());
+				addColorToColorBookAndCheck(pState.getCurrentCombatColor());
 			}
 		}
 		#endregion

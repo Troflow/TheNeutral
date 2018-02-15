@@ -16,8 +16,6 @@ namespace Neutral
         private CombatColor combatColor;
 
         private static ColorRing ringInContactWithPlayer;
-        private bool isGrantingColor = false;
-        private bool enteredNewRing = false;
 
         void Start()
         {
