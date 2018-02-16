@@ -10,6 +10,7 @@ namespace Neutral
 	/// </summary>
 	public class ColorlessWheel : MonoBehaviour
 	{
+
 		private ReverseCarousel carousel;
 		private Vector3 rotateVector;
 
@@ -18,10 +19,15 @@ namespace Neutral
 			carousel = transform.parent.GetComponent<ReverseCarousel>();
 		}
 
-        public void getNewColor(CombatColor color)
-        {
-            carousel.addNewlyColoredWheel(this);
-        }
+		public CombatColor getRingColor()
+		{
+			return transform.Find("ColorlessRing").GetComponent<ColorlessRing>().getCombatColor();
+		}
+
+		public CombatColor getMuralColor()
+		{
+			return transform.Find("ReverseMural").GetComponent<ReverseMural>().getCombatColor();
+		}
 
 		public void setRotateVector(float rotateSpeed)
 		{
@@ -30,10 +36,10 @@ namespace Neutral
 
 		public void setMuralState(bool newState)
 		{
-			transform.Find("Mural").gameObject.SetActive(newState);
+			transform.Find("ReverseMural").gameObject.SetActive(newState);
 		}
 
-		void Update ()
+		public void rotate()
 		{
 			transform.Rotate(rotateVector * Time.deltaTime);
 		}

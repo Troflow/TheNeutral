@@ -10,16 +10,12 @@ namespace Neutral
     /// The Player's color changes to match the color of the Ring
 	/// </summary>
 	public class ColorlessRing : MonoBehaviour {
-        private ColorlessWheel colorlessWheel;
-
-		[SerializeField]
-		private Lite lite;
+        public Lite testLite;
         private CombatColor combatColor;
         private List<CombatColor> colorBook;
 
         void Start()
         {
-            colorlessWheel = transform.parent.GetComponent<ColorlessWheel>();
             combatColor = CombatColor.liteLookupTable[Lite.BLACK];
             colorBook = new List<CombatColor>()
             {
@@ -31,7 +27,17 @@ namespace Neutral
         {
             colorBook.Add(color);
             combatColor = computeColoringBookColor();
-            colorlessWheel.getNewColor(combatColor);
+            testLite = combatColor.color.Key;
+            transform.root.GetComponent<ReverseCarousel>().addNewlyColoredWheel(transform.parent);
+
+            changeRingColor();
+        }
+
+        private void changeRingColor()
+        {
+            // For Debugging purposes
+            MeshRenderer ring = transform.GetComponent<MeshRenderer>();
+            ring.material.color = combatColor.color.Value;
         }
 
         private CombatColor computeColoringBookColor()
@@ -45,12 +51,19 @@ namespace Neutral
 			return mixedColor;
 		}
 
+        public CombatColor getCombatColor()
+        {
+            return combatColor;
+        }
+
 		#region COLLISION HANDLING
 		public void OnTriggerEnter(Collider col)
 		{
 			if (col.CompareTag("Player-Sphere"))
 			{
                 var pState = col.GetComponentInParent<PlayerState>();
+
+                // If Player isAttacking:
                 addColorToColorBook(pState.getCurrentCombatColor());
 			}
 		}

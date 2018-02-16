@@ -23,9 +23,9 @@ namespace Neutral
 			initialiseAllChildren();
 		}
 
-        public void addNewlyColoredWheel(ColorlessWheel wheel)
+        public void addNewlyColoredWheel(Transform wheel)
         {
-            nowColoredWheels.Add(wheel);
+            nowColoredWheels.Add(wheel.GetComponent<ColorlessWheel>());
 
             if (allColorlessWheels.Count == nowColoredWheels.Count)
             {
@@ -35,11 +35,31 @@ namespace Neutral
 
 		private void validateAllWheelColorations()
 		{
-            // Loop through each wheel, making sure that none of its neighbouring
-            // wheels has the same color as it
-            // Then, make sure that the color wheel doesn't have the same coloring
-            // As its Mural
-            // If all checks pass, the puzzle is completed. Else, return
+			// Loop through Wheels until the penultimate ColorWheel in allColorWheels
+			List<CombatColor> allColorsInSystem = new List<CombatColor>();
+			for (int x = 0; x < allColorlessWheels.Count-1; x++)
+			{
+				var index = x;
+				var currentWheel = allColorlessWheels[index];
+				var nextWheel = allColorlessWheels[++index];
+
+				if (!allColorsInSystem.Contains(currentWheel.getRingColor()))
+				{
+					allColorsInSystem.Add(currentWheel.getRingColor());
+				}
+
+				var currentRingMatchesMural = currentWheel.getRingColor() == currentWheel.getMuralColor();
+				var nextRingMatchesMural = nextWheel.getRingColor().color.Key == nextWheel.getMuralColor().color.Key;
+				var currentRingMatchesNextRing = currentWheel.getRingColor() == nextWheel.getRingColor();
+				var nextRingColorAlreadyUsed = allColorsInSystem.Contains(nextWheel.getRingColor());
+
+				if (currentRingMatchesMural || nextRingMatchesMural || currentRingMatchesNextRing || nextRingColorAlreadyUsed)
+				{
+					// TODO: Make the CombatColor Comparison deterministic. It doesn't work properly all the time
+					return;
+				}
+			}
+			puzzleCompleted();
 		}
 
         private void setLantern()
@@ -62,6 +82,14 @@ namespace Neutral
 			}
 		}
 
+		private void rotateAllWheels()
+		{
+			foreach (ColorlessWheel wheel in allColorlessWheels)
+			{
+				wheel.rotate();
+			}
+		}
+
 		private void puzzleCompleted()
 		{
 			isSolved = true;
@@ -79,6 +107,11 @@ namespace Neutral
 			if (lantern.gameObject.activeSelf)
 			{
 				lantern.Rotate(Vector3.up * 50f * Time.deltaTime);
+			}
+
+			if (!isSolved)
+			{
+				rotateAllWheels();
 			}
 		}
 	}

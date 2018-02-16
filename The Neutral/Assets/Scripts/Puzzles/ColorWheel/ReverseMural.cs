@@ -13,10 +13,13 @@ namespace Neutral
 		private Lite lite;
 		private CombatColor combatColor;
 
-        private static ReverseMural muralInContactWithPlayer;
-
 		void Start () {
-			combatColor = CombatColor.liteLookupTable[Lite.BLACK];
+			combatColor = CombatColor.liteLookupTable[lite];
+		}
+
+		public CombatColor getCombatColor()
+		{
+			return combatColor;
 		}
 
 		#region Collision Handling
@@ -25,7 +28,7 @@ namespace Neutral
 			if (col.CompareTag ("Player-Sphere"))
 			{
 				var pState = col.GetComponentInParent<PlayerState>();
-                //TODO: Immediately grant color to player rather than using a coroutine
+				pState.setCurrentCombatColor(combatColor);
 			}
 		}
 		#endregion
