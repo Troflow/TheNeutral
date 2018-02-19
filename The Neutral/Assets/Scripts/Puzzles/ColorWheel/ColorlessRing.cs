@@ -10,9 +10,8 @@ namespace Neutral
     /// The Player's color changes to match the color of the Ring
 	/// </summary>
 	public class ColorlessRing : MonoBehaviour {
-        public Lite testLite;
-        private CombatColor combatColor;
-        private List<CombatColor> colorBook;
+        CombatColor combatColor;
+         List<CombatColor> colorBook;
 
         void Start()
         {
@@ -23,21 +22,17 @@ namespace Neutral
             };
         }
 
-        public void addColorToColorBook(CombatColor color)
+        public void addColorToColorBook(CombatColor pCombatColor)
         {
-            colorBook.Add(color);
-            combatColor = computeColoringBookColor();
-            testLite = combatColor.color.Key;
-            transform.root.GetComponent<ReverseCarousel>().addNewlyColoredWheel(transform.parent);
+            var wheelAdded = transform.root.GetComponent<ReverseCarousel>().addNewlyColoredWheel(transform.parent);
 
-            changeRingColor();
-        }
+            if (wheelAdded)
+            {
+                colorBook.Add(pCombatColor);
+                combatColor = computeColoringBookColor();
 
-        private void changeRingColor()
-        {
-            // For Debugging purposes
-            MeshRenderer ring = transform.GetComponent<MeshRenderer>();
-            ring.material.color = combatColor.color.Value;
+                changeRingColor();
+            }
         }
 
         private CombatColor computeColoringBookColor()
@@ -51,20 +46,41 @@ namespace Neutral
 			return mixedColor;
 		}
 
+        public void clearColoringBook()
+        {
+            combatColor = CombatColor.liteLookupTable[Lite.BLACK];
+            colorBook.Clear();
+            clearRingColor();
+        }
+
         public CombatColor getCombatColor()
         {
             return combatColor;
         }
 
-		#region COLLISION HANDLING
-		public void OnTriggerEnter(Collider col)
-		{
-			if (col.CompareTag("Player-Sphere"))
-			{
-                var pState = col.GetComponentInParent<PlayerState>();
+        void clearRingColor()
+        {
+            // For Debugging purposes
+            var ring = transform.GetComponent<MeshRenderer>();
+            ring.material.color = new Color(0.74f, 0.74f, 0.71f, 1f);
+        }
 
-                // If Player isAttacking:
-                addColorToColorBook(pState.getCurrentCombatColor());
+        void changeRingColor()
+        {
+            // For Debugging purposes
+            var ring = transform.GetComponent<MeshRenderer>();
+            ring.material.color = combatColor.color.Value;
+        }
+
+		#region COLLISION HANDLING
+		public void OnTriggerEnter(Collider pCollider)
+		{
+			if (pCollider.CompareTag("Player-Sphere"))
+			{
+                var playerState = pCollider.GetComponentInParent<PlayerState>();
+
+                // TODO: Only if Player isAttacking:
+                addColorToColorBook(playerState.getCurrentCombatColor());
 			}
 		}
 		#endregion

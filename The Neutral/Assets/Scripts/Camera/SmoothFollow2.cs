@@ -15,7 +15,7 @@ namespace Neutral
         {
             startCamPos = this.transform.localPosition;
             startCamRot = this.transform.localRotation;
-            colorWheel = GameObject.Find("ColorWheel");
+            // colorWheel = GameObject.Find("ColorWheel");
         }
 
         void Update()
@@ -28,8 +28,8 @@ namespace Neutral
 
             if (Input.GetKey(KeyCode.LeftControl))
             {
-                colorWheel.SetActive(true);
-                colorWheel.transform.SetPositionAndRotation(transform.position, transform.rotation);
+                // colorWheel.SetActive(true);
+                // colorWheel.transform.SetPositionAndRotation(transform.position, transform.rotation);
             }
         }
     }

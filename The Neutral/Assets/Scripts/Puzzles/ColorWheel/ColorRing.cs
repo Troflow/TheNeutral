@@ -7,47 +7,49 @@ namespace Neutral
 	/// <summary>
 	/// Color Ring class.
     /// After the Player has stood on the Ring's surface for a period of time
-    /// The Player's color changes to match the color of the Ring
+    /// the Player's color changes to match the color of the Ring
 	/// </summary>
 	public class ColorRing : MonoBehaviour {
 
 		[SerializeField]
-		private Lite lite;
-        private CombatColor combatColor;
+		Lite lite;
+        CombatColor combatColor;
+        bool willGrantColor = false;
 
-        private static ColorRing ringInContactWithPlayer;
+        static ColorRing ringInContactWithPlayer;
 
         void Start()
         {
             combatColor = CombatColor.liteLookupTable[lite];
         }
 
-		#region COLLISION HANDLING
-        // NOTE: It must always be the case that the Player-ColorWheel-Collider
-        // enters the successive color ring BEFORE it completely leaves a previous ring
+        public void setWillGrantColor(bool pNewState)
+        {
+            willGrantColor = pNewState;
+        }
 
-		public void OnTriggerEnter(Collider col)
+		#region COLLISION HANDLING
+		public void OnTriggerEnter(Collider pCollider)
 		{
-			if (col.CompareTag("Player-Sphere"))
+			if (willGrantColor && pCollider.CompareTag("Player-Sphere"))
 			{
                 ringInContactWithPlayer = this;
-                PlayerState pState = col.GetComponentInParent<PlayerState>();
+                var playerState = pCollider.GetComponentInParent<PlayerState>();
 
-                pState.stopGrantingColor();
-                pState.startGrantingColor(combatColor);
+                playerState.stopGrantingColor();
+                playerState.startGrantingColor(combatColor);
 			}
 		}
 
-		public void OnTriggerExit(Collider col)
+		public void OnTriggerExit(Collider pCollider)
 		{
-			if (col.CompareTag ("Player-Sphere"))
+			if (willGrantColor && pCollider.CompareTag ("Player-Sphere"))
 			{
-                PlayerState pState = col.GetComponentInParent<PlayerState>();
-                if (pState.getIsBeingGrantedNewColor() != null && ringInContactWithPlayer == this)
+                var playerState = pCollider.GetComponentInParent<PlayerState>();
+                if (playerState.getIsBeingGrantedNewColor() != null && ringInContactWithPlayer == this)
                 {
-                    pState.stopGrantingColor();
+                    playerState.stopGrantingColor();
                 }
-
             }
 
 		}

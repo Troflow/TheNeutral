@@ -6,13 +6,12 @@ namespace Neutral
 {
 	/// <summary>
 	/// ColorlessWheel class.
-	/// Responsible for rotating, and is the parent object of the ColorRing and Mural
+	/// Responsible for rotating, and is the parent object of the ColorlessRing and ReverseMural
 	/// </summary>
 	public class ColorlessWheel : MonoBehaviour
 	{
-
-		private ReverseCarousel carousel;
-		private Vector3 rotateVector;
+		ReverseCarousel carousel;
+		Vector3 rotateVector;
 
 		void Start ()
 		{
@@ -29,14 +28,23 @@ namespace Neutral
 			return transform.Find("ReverseMural").GetComponent<ReverseMural>().getCombatColor();
 		}
 
-		public void setRotateVector(float rotateSpeed)
+		public void setRotateVector(float pRotateSpeed)
 		{
-			rotateVector = new Vector3 (0, rotateSpeed, 0);
+			rotateVector = new Vector3 (0, pRotateSpeed, 0);
 		}
 
-		public void setMuralState(bool newState)
+		public void setMuralState(bool pNewState)
 		{
-			transform.Find("ReverseMural").gameObject.SetActive(newState);
+			var muralObject = transform.Find("ReverseMural").gameObject;
+			muralObject.SetActive(pNewState);
+
+			if (pNewState) muralObject.GetComponent<ReverseMural>().Activate();
+			else muralObject.GetComponent<ReverseMural>().Deactivate();
+		}
+
+		public void clearColorlessRingColor()
+		{
+			transform.Find("ColorlessRing").GetComponent<ColorlessRing>().clearColoringBook();
 		}
 
 		public void rotate()

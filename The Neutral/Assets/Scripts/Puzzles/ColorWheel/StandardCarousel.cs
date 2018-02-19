@@ -10,10 +10,10 @@ namespace Neutral
 	/// and keeps track of puzzle completion
 	/// </summary>
 	public abstract class StandardCarousel : MonoBehaviour {
-
 		protected List<ColorWheel> allColorWheels;
 		protected List<ColorWheel> haltedColorWheels;
 		protected bool isSolved = false;
+		protected bool isActivated = false;
 		public abstract void addWheelToHaltedWheels(ColorWheel pColorWheel);
 
 		public bool getIsSolved()
@@ -29,6 +29,15 @@ namespace Neutral
 			}
 
 			haltedColorWheels.Clear();
+		}
+
+		public void changeAllMuralAndRingStatesTo(bool newState)
+		{
+			foreach (ColorWheel wheel in allColorWheels)
+			{
+				wheel.setWillGrantColor(newState);
+				wheel.setMuralState(newState);
+			}
 		}
 	}
 }

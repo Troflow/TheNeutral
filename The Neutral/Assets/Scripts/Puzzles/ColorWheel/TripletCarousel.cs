@@ -10,8 +10,8 @@ namespace Neutral
 	/// and keeps track of puzzle completion
 	/// </summary>
 	public class TripletCarousel : StandardCarousel {
-		private TripletCarouselManager tripletCarouselManager;
-        private Transform lantern;
+		TripletCarouselManager tripletCarouselManager;
+        Transform lantern;
 
 		void Start()
 		{
@@ -27,7 +27,7 @@ namespace Neutral
 				return;
 			}
 
-			// Else, systemType is Local, then each Carousel does its halt ColorWheel check separately
+			// Else, systemType is Local, and each Carousel does its halt ColorWheel check separately
 			if (!haltedColorWheels.Contains(pColorWheel))
 			{
 				haltedColorWheels.Add(pColorWheel);
@@ -46,24 +46,18 @@ namespace Neutral
 				// Else, halt the newly added wheel's rotation
 				pColorWheel.setIsHalted(true);
 
-				// If the number of halted wheels is the same number as all wheels in the system
-				// set the puzzle as completed.
-				if (haltedColorWheels.Count == allColorWheels.Count)
-				{
-					completed();
-				}
+				if (haltedColorWheels.Count == allColorWheels.Count) completed();
 			}
 		}
 
 		/// <summary>
 		/// Sets the rotation and halt order of all child ColorWheels.
 		/// Must localise the halt orders to be capped by the number of Wheels within the Carousel
-		/// In order to conform with how halt order is verified
+		/// in order to conform with how halt order will be verified
 		/// </summary>
 		public void initialiseAllColorWheels()
 		{
 			haltedColorWheels = new List<ColorWheel>();
-			allColorWheels = new List<ColorWheel>();
 
 			var rotationDirection = 1f;
 			var wheelsToLocalize = new List<ColorWheel>();
@@ -75,7 +69,6 @@ namespace Neutral
 
 				colorWheel.setHaltOrder(colorWheelMural.getHeight());
 				colorWheel.setRotateVector(GameManager.colorWheelRotateSpeed * rotationDirection);
-				allColorWheels.Add(colorWheel);
 			}
 
 			localiseWheelHaltOrders();
@@ -92,14 +85,52 @@ namespace Neutral
             }
 		}
 
-		private void completed()
+
+		public void Activate()
 		{
-			//isSolved = true;
-			tripletCarouselManager.addCompletedCarousel(this);
+			isActivated = true;
+			allColorWheels = new List<ColorWheel>();
+			foreach (Transform child in transform)
+			{
+				allColorWheels.Add(child.GetComponent<ColorWheel>());
+			}
+			changeAllMuralAndRingStatesTo(true);
+			if (tripletCarouselManager.getSystemType() == ColorWheelSystemType.Global) return;
+
+			// If TripletCarouselManager is Local System, then the carousel will further intialise its properties
+			initialiseAllColorWheels();
+		}
+
+		public void Deactivate()
+		{
+			changeAllMuralAndRingStatesTo(false);
+			foreach(ColorWheel wheel in allColorWheels)
+			{
+				wheel.setIsHalted(false);
+			}
+			haltedColorWheels = null;
+			allColorWheels = null;
+			isActivated = false;
+		}
+
+		void rotateAllWheels()
+		{
 			foreach (ColorWheel wheel in allColorWheels)
 			{
-				wheel.setMuralState(false);
+				wheel.rotate();
 			}
+		}
+
+		void completed()
+		{
+			isSolved = true;
+			tripletCarouselManager.addCompletedCarousel(this);
+			Deactivate();
+		}
+
+		void Update()
+		{
+			if (!isSolved && isActivated) rotateAllWheels();
 		}
 	}
 }

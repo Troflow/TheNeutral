@@ -5,38 +5,71 @@ using UnityEngine;
 namespace Neutral
 {
 	/// <summary>
-	/// SingleSystemCarousel class.
+	/// ReverseCarousel class.
 	/// Manages initialisation of ordering, rotation speed,
 	/// and keeps track of puzzle completion
 	/// </summary>
-	public class ReverseCarousel : MonoBehaviour {
-		private bool isSolved = false;
-        private Transform lantern;
-        private List<ColorlessWheel> allColorlessWheels;
-		private List<ColorlessWheel> nowColoredWheels;
+	public class ReverseCarousel : MonoBehaviour, IInteractable {
+		bool isSolved = false;
+		bool isActivated = false;
+        Transform lantern;
+        List<ColorlessWheel> allColorlessWheels;
+		List<ColorlessWheel> nowColoredWheels;
 
-		void Start()
+		public bool IsBeingInteractedWith { get; set; }
+
+		public void Interact()
+		{
+			if (isSolved) return;
+
+			if (isActivated) Deactivate();
+			else Activate();
+		}
+
+		void Activate()
 		{
 			allColorlessWheels = new List<ColorlessWheel>();
             nowColoredWheels = new List<ColorlessWheel>();
             setLantern();
 			initialiseAllChildren();
+			changeAllMuralStatesTo(true);
+
+			isActivated = true;
 		}
 
-        public void addNewlyColoredWheel(Transform wheel)
+		void Deactivate()
+		{
+			changeAllMuralStatesTo(false);
+			clearAllColorlessRings();
+			allColorlessWheels = null;
+            nowColoredWheels = null;
+
+			isActivated = false;
+		}
+
+        public bool addNewlyColoredWheel(Transform pWheel)
         {
-            nowColoredWheels.Add(wheel.GetComponent<ColorlessWheel>());
+			// Ignore all events if Deactivated or not yet solved
+			if (!isActivated || isSolved) return false;
+
+            nowColoredWheels.Add(pWheel.GetComponent<ColorlessWheel>());
 
             if (allColorlessWheels.Count == nowColoredWheels.Count)
             {
                 validateAllWheelColorations();
             }
+
+			return true;
         }
 
-		private void validateAllWheelColorations()
+		/// <summary>
+		/// Makes sure each ColorWheel in the ReverseCarousel is colored such that the puzzle may be solved.
+		/// If a single check fails, the remaining validation will cease immediately.
+		/// </summary>
+		void validateAllWheelColorations()
 		{
 			// Loop through Wheels until the penultimate ColorWheel in allColorWheels
-			List<CombatColor> allColorsInSystem = new List<CombatColor>();
+			var allColorsInSystem = new List<CombatColor>();
 			for (int x = 0; x < allColorlessWheels.Count-1; x++)
 			{
 				var index = x;
@@ -48,6 +81,7 @@ namespace Neutral
 					allColorsInSystem.Add(currentWheel.getRingColor());
 				}
 
+				// TODO: Make the CombatColor Comparison deterministic. It doesn't work properly all the time
 				var currentRingMatchesMural = currentWheel.getRingColor() == currentWheel.getMuralColor();
 				var nextRingMatchesMural = nextWheel.getRingColor().color.Key == nextWheel.getMuralColor().color.Key;
 				var currentRingMatchesNextRing = currentWheel.getRingColor() == nextWheel.getRingColor();
@@ -55,20 +89,19 @@ namespace Neutral
 
 				if (currentRingMatchesMural || nextRingMatchesMural || currentRingMatchesNextRing || nextRingColorAlreadyUsed)
 				{
-					// TODO: Make the CombatColor Comparison deterministic. It doesn't work properly all the time
 					return;
 				}
 			}
 			puzzleCompleted();
 		}
 
-        private void setLantern()
+        void setLantern()
         {
             lantern = transform.Find("Centre").Find("Lantern");
             lantern.gameObject.SetActive(false);
         }
 
-        private void initialiseAllChildren()
+        void initialiseAllChildren()
 		{
 			var rotationDirection = 1f;
 			foreach (Transform child in transform)
@@ -82,7 +115,23 @@ namespace Neutral
 			}
 		}
 
-		private void rotateAllWheels()
+		void changeAllMuralStatesTo(bool pNewState)
+		{
+			foreach (ColorlessWheel wheel in allColorlessWheels)
+			{
+				wheel.setMuralState(pNewState);
+			}
+		}
+
+		void clearAllColorlessRings()
+		{
+			foreach (ColorlessWheel wheel in allColorlessWheels)
+			{
+				wheel.clearColorlessRingColor();
+			}
+		}
+
+		void rotateAllWheels()
 		{
 			foreach (ColorlessWheel wheel in allColorlessWheels)
 			{
@@ -90,29 +139,22 @@ namespace Neutral
 			}
 		}
 
-		private void puzzleCompleted()
+		void puzzleCompleted()
 		{
 			isSolved = true;
 			lantern.gameObject.SetActive(true);
-
-			foreach (ColorlessWheel wheel in allColorlessWheels)
-			{
-				wheel.setMuralState(false);
-			}
+			changeAllMuralStatesTo(false);
 		}
 
 		void Update()
 		{
 			// For Debugging
-			if (lantern.gameObject.activeSelf)
+			if (isActivated && lantern.gameObject.activeSelf)
 			{
 				lantern.Rotate(Vector3.up * 50f * Time.deltaTime);
 			}
 
-			if (!isSolved)
-			{
-				rotateAllWheels();
-			}
+			if (!isSolved && isActivated) rotateAllWheels();
 		}
 	}
 }

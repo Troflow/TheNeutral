@@ -6,21 +6,22 @@ namespace Neutral
 {
 	/// <summary>
 	/// Mural class.
-	/// The objective is to get either the Mural's combatColor.color.Key
-	/// or the Player's currentCombatColor.color.Key to match
+	/// The objective is to get either the Mural's combatColor
+	/// or the Player's currentCombatColor to match
 	/// with the Mural's Lite
 	/// </summary>
 	public class Mural : MonoBehaviour {
 
-		private ColorWheel colorWheel;
+		ColorWheel colorWheel;
 
 		[SerializeField]
-		private int height;
+		int height;
 		[SerializeField]
-		private Lite lite;
+		Lite lite;
+		List<CombatColor> colorBook;
+		CombatColor combatColor;
+
 		public bool isColoredCorrectly;
-		private List<CombatColor> colorBook;
-		private CombatColor combatColor;
 
 		void Start () {
 			colorWheel = transform.parent.GetComponent<ColorWheel>();
@@ -31,7 +32,7 @@ namespace Neutral
 			};
 		}
 
-		private void checkColorMatchesLite(CombatColor pCombatColor)
+		void checkColorMatchesLite(CombatColor pCombatColor)
 		{
 			if (pCombatColor.color.Key == lite)
 			{
@@ -40,9 +41,9 @@ namespace Neutral
 			}
 		}
 
-		private void addColorToColorBookAndCheck(CombatColor color)
+		private void addColorToColorBookAndCheck(CombatColor pCombatColor)
 		{
-			colorBook.Add(color);
+			colorBook.Add(pCombatColor);
 			combatColor = computeColoringBookColor();
 			checkColorMatchesLite(combatColor);
 		}
@@ -54,7 +55,6 @@ namespace Neutral
 			{
 				mixedColor += colorBook[x];
 			}
-
 			return mixedColor;
 		}
 
@@ -64,20 +64,21 @@ namespace Neutral
 		}
 
 		#region Collision Handling
-		public void OnTriggerEnter(Collider col)
+		public void OnTriggerEnter(Collider pCollider)
 		{
-			if (col.CompareTag ("Player-Sphere"))
+			if (pCollider.CompareTag ("Player-Sphere"))
 			{
-				var pState = col.GetComponentInParent<PlayerState>();
+				var playerState = pCollider.GetComponentInParent<PlayerState>();
 
+				// TODO:
 				// If Player isDashing, simply check if Player's currentCombatColor matches the mural's combatColor
 				// if (playerState.isDashing):
-				checkColorMatchesLite(pState.getCurrentCombatColor());
+				checkColorMatchesLite(playerState.getCurrentCombatColor());
 
+				// TODO:
 				// Else, if Player isAttacking, add the Player's currentCombatColor to the mural's combatColor,
 				// then check if the Mural's combatColor.color.Key matches its lite
-				// if (playerState.isAttacking):
-				addColorToColorBookAndCheck(pState.getCurrentCombatColor());
+				addColorToColorBookAndCheck(playerState.getCurrentCombatColor());
 			}
 		}
 		#endregion

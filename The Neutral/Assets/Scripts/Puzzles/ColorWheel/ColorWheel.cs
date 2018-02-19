@@ -10,24 +10,18 @@ namespace Neutral
 	/// </summary>
 	public class ColorWheel : MonoBehaviour
 	{
-		private StandardCarousel carousel;
-		private int haltOrder;
-		private Vector3 rotateVector;
-		private bool isHalted = false;
+		int haltOrder;
+		Vector3 rotateVector;
+		bool isHalted = false;
 
-		void Start ()
+		public void setRotateVector(float pRotateSpeed)
 		{
-			carousel = transform.parent.GetComponent<StandardCarousel>();
+			rotateVector = new Vector3 (0, pRotateSpeed, 0);
 		}
 
-		public void setRotateVector(float rotateSpeed)
+		public void setHaltOrder(int pNewHaltOrder)
 		{
-			rotateVector = new Vector3 (0, rotateSpeed, 0);
-		}
-
-		public void setHaltOrder(int newHaltOrder)
-		{
-			haltOrder = newHaltOrder;
+			haltOrder = pNewHaltOrder;
 		}
 
 		public int getHaltOrder()
@@ -35,14 +29,19 @@ namespace Neutral
 			return haltOrder;
 		}
 
-		public void setIsHalted(bool newState)
+		public void setIsHalted(bool pNewState)
 		{
-			isHalted = newState;
+			isHalted = pNewState;
 		}
 
-		public void setMuralState(bool newState)
+		public void setWillGrantColor(bool pNewState)
 		{
-			transform.Find("Mural").gameObject.SetActive(newState);
+			transform.Find("Ring").GetComponent<ColorRing>().setWillGrantColor(pNewState);
+		}
+
+		public void setMuralState(bool pNewState)
+		{
+			transform.Find("Mural").gameObject.SetActive(pNewState);
 		}
 
 		/// <summary>
@@ -50,15 +49,13 @@ namespace Neutral
 		/// </summary>
 		public void halt()
 		{
+			var carousel = transform.parent.GetComponent<StandardCarousel>();
 			carousel.addWheelToHaltedWheels(this);
 		}
 
-		void Update ()
+		public void rotate()
 		{
-			if (!isHalted)
-			{
-				transform.Rotate(rotateVector * Time.deltaTime);
-			}
+			if (!isHalted) transform.Rotate(rotateVector * Time.deltaTime);
 		}
 	}
 }
