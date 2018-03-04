@@ -34,7 +34,7 @@ namespace Neutral
 
             else newColor = c1.color.Value;
 
-            Debug.Log("From adding " + c1.color.Value + " and " + c2.color.Value + " we get: " + newColor);
+            //Debug.Log("From adding " + c1.color.Value + " and " + c2.color.Value + " we get: " + newColor);
 
             if (!colorLookupTable.ContainsKey(newColor)) {
                 newColor.a = 1f;
@@ -59,7 +59,7 @@ namespace Neutral
                 randInd = UnityEngine.Random.Range(0, colorLookupTable.Count());
                 randomColorFromDict = colorLookupTable[keys[randInd]];
             }
-            Debug.Log("adding colors: " + currentColor + " and " + randomColorFromDict);
+            //Debug.Log("adding colors: " + currentColor + " and " + randomColorFromDict);
 
             return (currentColor + randomColorFromDict);
         }

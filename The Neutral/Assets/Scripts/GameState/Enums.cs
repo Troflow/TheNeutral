@@ -19,7 +19,6 @@ namespace Neutral
         MIXED
     };
 
-
     public enum EnemyType
     {
         Minor,
@@ -27,7 +26,5 @@ namespace Neutral
         Remy,
         Mojo
     };
-
-
 
 }

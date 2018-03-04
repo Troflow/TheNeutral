@@ -33,7 +33,7 @@ namespace Neutral
 		{
             if (!isGrantingColor)
             {
-                Debug.Log("STARTING COROUTINE");
+                //Debug.Log("STARTING COROUTINE");
                 currentCoroutineRunning = StartCoroutine(grantColor(pState));
             }
 		}
@@ -83,7 +83,7 @@ namespace Neutral
                     StopCoroutine(currentCoroutineRunning);
                     // StopAllCoroutines();
                     isGrantingColor = false;
-                    Debug.Log("STOPPING COROUTINES");
+                    //Debug.Log("STOPPING COROUTINES");
                 }
 
             }

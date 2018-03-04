@@ -3,6 +3,7 @@ using System.Collections;
 
 
 namespace Neutral {
+
 	public class RemyNavMeshController : MonoBehaviour {
 		
         CombatUtilities combatController;
@@ -23,10 +24,6 @@ namespace Neutral {
         int isDefeated = Animator.StringToHash("isDefeated");
         int isExploit = Animator.StringToHash("isExploit");
 		int speed = Animator.StringToHash("speed");
-
-        private int dashSpeed;
-
-        
 
         private void initializeCombatController()
         {
@@ -75,7 +72,7 @@ namespace Neutral {
             var startTime = Time.time;
             while (Time.time - startTime < 0.7)
             {
-                PlayerMovement.agent.Move(transform.forward * Time.deltaTime * dashSpeed);
+                PlayerMovement.agent.Move(transform.forward * Time.deltaTime * PlayerState.getDashSpeed());
                 yield return new WaitForEndOfFrame();
             }
 
@@ -87,8 +84,6 @@ namespace Neutral {
 			anim = GetComponent<Animator>();
             
 			AnimHelper = new AnimationUtilities();
-
-            dashSpeed = 25;
 
             initializeCombatController();
         }

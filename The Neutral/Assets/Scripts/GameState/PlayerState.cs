@@ -39,7 +39,7 @@ namespace Neutral
         public List<Memory> collectedMemories;
 
         private bool isFlagPulsing;
-        
+        private const int dashSpeed = 25;
 
         void Awake()
 		{
@@ -60,6 +60,10 @@ namespace Neutral
 
         }
 
+        public static int getDashSpeed()
+        {
+            return dashSpeed;
+    }
 
         public CombatColor getCurrentCombatColor()
         {
