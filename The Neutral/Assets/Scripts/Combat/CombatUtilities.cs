@@ -212,13 +212,6 @@ namespace Neutral {
             return false;
         }
 
-
-        //IEnumerator TransitionCorotuines()
-        //{
-        //    StopCoroutine(lastRunningRoutine);
-        //    StartCoroutine(ReduceSphereFromCurrent(currentTierPlaying.ExpansionRate));
-        //}
-
         public void resetSphere()
         {
             StopCoroutine(lastRunningRoutine);
@@ -233,6 +226,11 @@ namespace Neutral {
         public float getDefaultSphereSize()
         {
             return defaultSphereScale;
+        }
+
+        public float getCurrentSphereSize()
+        {
+            return sphere.transform.localScale.x;
         }
 
         // Use this for initialization

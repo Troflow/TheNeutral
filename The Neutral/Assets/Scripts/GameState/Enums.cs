@@ -19,7 +19,6 @@ namespace Neutral
         MIXED
     };
 
-
     public enum ColorWheelSystemType {
         Local,
         Global
@@ -32,7 +31,5 @@ namespace Neutral
         Remy,
         Mojo
     };
-
-
 
 }
