@@ -5,7 +5,9 @@ using UnityEngine.UI;
 
 namespace Neutral
 {
-	public class StaminaRing : HUDElement, IObserver<PlayerState> 
+	// All HUDElements must be added to the Script Execution Order to prevent
+	// NullReferenceExeption Errors
+	public class StaminaRing : HUDElement, IObserver<PlayerState>
 	{
 		private Image staminaRing;
 
@@ -14,12 +16,12 @@ namespace Neutral
 			staminaRing = GetComponent<Image> ();
 			HUDManager.Subscribe (this);
 		}
-			
-		void OnDisable () 
+
+		void OnDisable ()
 		{
 			HUDManager.Dispose (this);
 		}
-			
+
 		/// <summary>
 		/// Update this instance of HUD observer
 		/// </summary>

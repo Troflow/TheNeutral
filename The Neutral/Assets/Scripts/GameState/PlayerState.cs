@@ -1,34 +1,52 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace Neutral
 {
-	public class PlayerState : MonoBehaviour 
+	public class PlayerState : MonoBehaviour
 	{
 
 		[SerializeField]
 		private HUDManager HUD;
 
 		#region Player Attributes
+
 		public int stamina;
 		public bool isExhausted;
 		public Lite heldColor;
         public MeshRenderer flag;
 
-        private CombatColorRed currentCombatColor;
+        #endregion
+
+        #region CombatColors
+
+        [SerializeField]
+        public List<CombatColor> colorBook;
+        public CombatColor exposedColor;
+        private CombatColor currentCombatColor;
+        private CombatColor incomingTransferColor;
+        private float colorTransferValue;
+        private bool isBeingGrantedNewColor;
+        private Coroutine grantingColorCoroutine;
+
         private Color randomColor;
+
+        #endregion
+
 
         public List<Lite> appliedStacks;
 		public List<Lite> colorSchema;
-       
+
 
 		public Dictionary<Lite, int> completedPuzzles;
 		public Dictionary<Lite, int> defeatedEnemies;
         public Dictionary<Lite, Color> flagColor;
         public List<Memory> collectedMemories;
+
         private bool isFlagPulsing;
-        #endregion
+        private const int dashSpeed = 25;
 
         void Awake()
 		{
@@ -36,14 +54,62 @@ namespace Neutral
 			populateCompletedPuzzles ();
             initializeFlagColors();
 			HUD.setPlayerState (this);
-			HUD.setPlayerTransform (this.transform);
-            flag = GameObject.FindGameObjectWithTag("Flag").GetComponent<MeshRenderer>();
+            flag = GameObject.FindGameObjectWithTag("PlayerFlag").GetComponent<MeshRenderer>();
             isFlagPulsing = false;
 
-            currentCombatColor = new CombatColorRed();
-            randomColor = currentCombatColor.TestSubtractColor().color.Value;
+            colorTransferValue = 0f;
+            incomingTransferColor = CombatColor.colorLookupTable[Color.black];
+            currentCombatColor = new CombatColorGreen();
+            colorBook = new List<CombatColor>();
+            colorBook.Add(currentCombatColor.TestSubtractColor(currentCombatColor));
+            randomColor = colorBook[0].color.Value;
+
             print(randomColor);
 
+        }
+
+        public static int getDashSpeed()
+        {
+            return dashSpeed;
+    }
+
+        public CombatColor getCurrentCombatColor()
+        {
+            return currentCombatColor;
+        }
+
+        public void setCurrentCombatColor(CombatColor newCombatColor)
+        {
+            currentCombatColor = newCombatColor;
+            onStateChange();
+        }
+
+        public float getColorTransferValue()
+        {
+            return colorTransferValue;
+        }
+
+        public void setColorTransferValue(float newValue)
+        {
+            colorTransferValue = newValue;
+            onStateChange();
+        }
+
+        public CombatColor getIncomingTransferColor()
+        {
+            return incomingTransferColor;
+        }
+
+        public void setIncomingTransferColor(CombatColor incomingColor)
+        {
+            incomingTransferColor = incomingColor;
+            onStateChange();
+        }
+
+
+        public bool getIsBeingGrantedNewColor()
+        {
+            return isBeingGrantedNewColor;
         }
 
 		private void populateCompletedPuzzles()
@@ -78,67 +144,70 @@ namespace Neutral
 			HUD.NotifyAllObservers ();
 		}
 
-        private IEnumerator PulseFlag(Lite newColor, float pulseTime)
-        {
-            isFlagPulsing = true;
-            float startPulseTime = Time.time;
-            List<int> speedFactors = new List<int> { 2, 3, 4, 5 };
-            int inverseSpeedFactorIndex = speedFactors.Count - 1;
-            int currSpeedFactorIndex = 0;
-            float defaultWaitTime = 0.5f;
-            while (isFlagPulsing)
+
+        private IEnumerator grantColor(CombatColor newColor)
+		{
+            isBeingGrantedNewColor = true;
+
+            // If PlayerState's color already matches incoming color, don't try transferring
+            if (currentCombatColor.color.Key == newColor.color.Key)
             {
-                float currentPulseTime = Time.time - startPulseTime;
-
-                Color color = flag.material.color;
-                flag.material.color = flagColor[newColor];
-
-                if (currentPulseTime > pulseTime / speedFactors[inverseSpeedFactorIndex])
-                {
-                    if (inverseSpeedFactorIndex > 0) inverseSpeedFactorIndex -= 1;
-                    if (currSpeedFactorIndex < speedFactors.Count-1) currSpeedFactorIndex += 1;
-                }
-
-                yield return new WaitForSeconds(defaultWaitTime / speedFactors[currSpeedFactorIndex]);
-
-                color.a = 1f;
-                flag.material.color = flagColor[heldColor];
-                if (currentPulseTime > pulseTime / speedFactors[inverseSpeedFactorIndex])
-                {
-                    if (inverseSpeedFactorIndex > 0) inverseSpeedFactorIndex -= 1;
-                    if (currSpeedFactorIndex < speedFactors.Count-1) currSpeedFactorIndex += 1;
-                }
-
-                yield return new WaitForSeconds(defaultWaitTime / speedFactors[currSpeedFactorIndex]);
+                isBeingGrantedNewColor = false;
+                yield return null;
             }
-            
-        }
-
-        public void pulseFlag(Lite newColor, float colorTransferTime)
-        {
-            if (!isFlagPulsing)
+            else
             {
-                StartCoroutine(PulseFlag(newColor, colorTransferTime));
+                // Update so incomingTransferColor so UI knows which icon to display
+                setIncomingTransferColor(newColor);
+
+                // Once colorTransferValue reaches above 1f, set PlayerState's color to the incoming color
+                for (float transferVal = 0f; transferVal <= 1.1f; transferVal += Time.deltaTime/GameManager.colorTransferTimeStep)
+                {
+                    setColorTransferValue(transferVal);
+
+                    if (transferVal > 1f)
+                    {
+                        // Do this in for-loop to prevent the delay after yield return null
+                        setCurrentCombatColor(newColor);
+                        isBeingGrantedNewColor = false;
+                    }
+
+                    yield return null;
+                }
+            }
+
+		}
+
+        public void startGrantingColor(CombatColor newColor)
+        {
+            if (!isBeingGrantedNewColor)
+            {
+                grantingColorCoroutine = StartCoroutine(grantColor(newColor));
             }
         }
 
-        public void stopPulseFlag()
+        public void stopGrantingColor()
         {
-            StopAllCoroutines();
-            isFlagPulsing = false;
+            setColorTransferValue(0f);
+            isBeingGrantedNewColor = false;
+
+            if (grantingColorCoroutine != null)
+            {
+                StopCoroutine(grantingColorCoroutine);
+            }
         }
 
         // For Debugging purposes.
         private void handleInput()
 		{
-			if (Input.GetKey (KeyCode.DownArrow)) 
+			if (Input.GetKey (KeyCode.DownArrow))
 			{
 				stamina -= 1;
 				stamina = Mathf.Clamp (stamina, 0, 100);
 				onStateChange ();
 			}
 
-			if (Input.GetKey (KeyCode.UpArrow)) 
+			if (Input.GetKey (KeyCode.UpArrow))
 			{
 				stamina += 1;
 				stamina = Mathf.Clamp (stamina, 0, 100);
@@ -146,19 +215,41 @@ namespace Neutral
 			}
 
 		}
-		
+
 		// Update is called once per frame
 		void Update () {
 			handleInput ();
             if (!isFlagPulsing)
             {
+                #region TEST ADD COLOR WITH RANDOM COLOR
+                //if (Input.GetKeyDown(KeyCode.Y))
+                //{
+                //    colorBook.Add(currentCombatColor.TestSubtractColor(currentCombatColor));
+                //    randomColor = colorBook[colorBook.Count - 1].color.Value;
+                //}
+                //flag.material.color = randomColor;
+                #endregion
+
+                #region ColorWheel puzzle
+                //flag.material.color = flagColor[heldColor];
+                #endregion
+
+
+                #region TEST COMBAT COLOR
                 if (Input.GetKeyDown(KeyCode.Y))
                 {
-                    randomColor = currentCombatColor.TestSubtractColor().color.Value;
+                    List<Color> keys = CombatColor.colorLookupTable.Keys.ToList();
+                    int randInd = UnityEngine.Random.Range(0, CombatColor.colorLookupTable.Count);
+                    CombatColor randomColorFromDict = CombatColor.colorLookupTable[keys[randInd]];
+                    currentCombatColor = randomColorFromDict;
                 }
-                flag.material.color = randomColor;
+
+                flag.material.color = currentCombatColor.color.Value;
+                onStateChange();
+                #endregion
+
             }
-            
+
         }
     }
 }

@@ -1,14 +1,12 @@
-﻿<Properties StartupItem="Assembly-CSharp.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/UI/HUDManager.cs">
+﻿<Properties StartupItem="The Neutral.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\UI\Stamina\StaminaText.cs">
     <Files>
-      <File FileName="Assets/Scripts/UI/HUDManager.cs" Line="74" Column="5" />
-      <File FileName="Assets/Scripts/UI/Stamina/StaminaText.cs" Line="35" Column="45" />
-      <File FileName="Assets/Scripts/UI/BillboardBehaviour.cs" Line="16" Column="19" />
-      <File FileName="Assets/Scripts/UI/Stamina/StaminaRing.cs" Line="19" Column="2" />
-      <File FileName="Assets/Scripts/UI/PlayerState.cs" Line="18" Column="29" />
-      <File FileName="Assets/Scripts/UI/IHUDObservable.cs" Line="11" Column="47" />
-      <File FileName="Assets/Scripts/UI/IHUDObserver.cs" Line="11" Column="27" />
+      <File FileName="Assets\Scripts\UI\HUDManager.cs" Line="74" Column="5" />
+      <File FileName="Assets\Scripts\UI\Stamina\StaminaText.cs" Line="35" Column="43" />
+      <File FileName="Assets\Scripts\UI\BillboardBehaviour.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\UI\Stamina\StaminaRing.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\GameState\PlayerState.cs" Line="13" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

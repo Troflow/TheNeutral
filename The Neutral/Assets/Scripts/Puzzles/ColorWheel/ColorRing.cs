@@ -5,87 +5,51 @@ using UnityEngine;
 namespace Neutral
 {
 	/// <summary>
-	/// Color Ring class, responsible for granting the player
-	/// the designated ringColorgame after staying in contact with
-	/// the player for a given amount of time.
+	/// Color Ring class.
+    /// After the Player has stood on the Ring's surface for a period of time
+    /// the Player's color changes to match the color of the Ring
 	/// </summary>
 	public class ColorRing : MonoBehaviour {
 
-        [SerializeField]
-		private float colorTransferTime;
 		[SerializeField]
-		private Lite ringColor;
+		Lite lite;
+        CombatColor combatColor;
+        bool willGrantColor = false;
 
-        private Coroutine currentCoroutineRunning;
-        private bool isGrantingColor;
+        static ColorRing ringInContactWithPlayer;
 
         void Start()
         {
-            isGrantingColor = false;
+            combatColor = CombatColor.liteLookupTable[lite];
         }
 
-        public void setTransferTime(float pTransferTime)
+        public void setWillGrantColor(bool pNewState)
+        {
+            willGrantColor = pNewState;
+        }
+
+		#region COLLISION HANDLING
+		public void OnTriggerEnter(Collider pCollider)
 		{
-			colorTransferTime = pTransferTime;
-		}
-
-		private void startGrantingColor(PlayerState pState)
-		{
-            if (!isGrantingColor)
-            {
-                Debug.Log("STARTING COROUTINE");
-                currentCoroutineRunning = StartCoroutine(grantColor(pState));
-            }
-		}
-
-		//TODO: Hussain: timing isn't working correctly. Method isn't always waiting the
-		// given amount
-		private IEnumerator grantColor(PlayerState pState)
-		{
-            isGrantingColor = true;
-            if (ringColor == pState.heldColor)
-            {
-                pState.stopPulseFlag();
-                isGrantingColor = false;
-                yield return null;
-            }
-            else
-            {
-                pState.pulseFlag(ringColor, colorTransferTime);
-
-                yield return new WaitForSeconds(colorTransferTime);
-                Debug.Log("FINISHED WAITFORTIME!");
-                pState.heldColor = ringColor;
-                pState.stopPulseFlag();
-                isGrantingColor = false;
-            }
-
-		}
-
-		#region Collision Handling
-		public void OnTriggerEnter(Collider col)
-		{
-			if (col.CompareTag("Player-Sphere")) 
+			if (willGrantColor && pCollider.CompareTag("Player-Sphere"))
 			{
-                PlayerState pState = col.GetComponentInParent<PlayerState>();
-                pState.stopPulseFlag();
-                startGrantingColor(pState);
+                ringInContactWithPlayer = this;
+                var playerState = pCollider.GetComponentInParent<PlayerState>();
+
+                playerState.stopGrantingColor();
+                playerState.startGrantingColor(combatColor);
 			}
 		}
 
-		public void OnTriggerExit(Collider col)
+		public void OnTriggerExit(Collider pCollider)
 		{
-			if (col.CompareTag ("Player-Sphere")) 
+			if (willGrantColor && pCollider.CompareTag ("Player-Sphere"))
 			{
-                //Debug.Log("exited ring color: "+ringColor);
-                if (currentCoroutineRunning != null)
+                var playerState = pCollider.GetComponentInParent<PlayerState>();
+                if (playerState.getIsBeingGrantedNewColor() != null && ringInContactWithPlayer == this)
                 {
-                    StopCoroutine(currentCoroutineRunning);
-                    // StopAllCoroutines();
-                    isGrantingColor = false;
-                    Debug.Log("STOPPING COROUTINES");
+                    playerState.stopGrantingColor();
                 }
-
             }
 
 		}

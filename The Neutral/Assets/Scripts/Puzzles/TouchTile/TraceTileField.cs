@@ -32,19 +32,19 @@ namespace Neutral
 		/// </summary>
 		private void handleInput()
 		{
-			if (Input.GetKeyDown (KeyCode.Comma)) 
+			if (Input.GetKeyDown (KeyCode.Comma))
 			{
 				Debug.Log ("Comma Pressed");
 				activateTileField ();
 			}
 
-			if (Input.GetKeyDown (KeyCode.Slash)) 
+			if (Input.GetKeyDown (KeyCode.Slash))
 			{
 				Debug.Log ("Slash Pressed");
 				deactivateTileField ();
 			}
 
-			if (Input.GetKeyDown (KeyCode.RightShift)) 
+			if (Input.GetKeyDown (KeyCode.RightShift))
 			{
 				Debug.Log ("Right Shift Pressed");
 				removeTracedTile ();
@@ -56,7 +56,7 @@ namespace Neutral
 			tracedLineObject.gameObject.SetActive (true);
 			isActivated = true;
 		}
-			
+
 		private void deactivateTileField()
 		{
 			isActivated = false;
@@ -77,16 +77,16 @@ namespace Neutral
 				//activateTileField ();
 				return;
 
-			if (!firstPointPlaced) 
+			if (!firstPointPlaced)
 			{
 				placeFirstPoint (pTile);
 			}
-			else 
+			else
 			{
 				addTracedTile (pTile);
 				updateTracedLinePositions ();
 			}
-				
+
 		}
 
 		private void placeFirstPoint(Transform pTile)
@@ -103,7 +103,7 @@ namespace Neutral
 		private void addTracedTile(Transform pTile)
 		{
 			var tempPos = new Vector3 ();;
-			if (!touchedTiles.Contains (pTile.position)) 
+			if (!touchedTiles.Contains (pTile.position))
 			{
 				tempPos = pTile.position;
 				tempPos.y += tracedLineOffset;
@@ -114,7 +114,7 @@ namespace Neutral
 		private void removeTracedTile()
 		{
 			var tempPos = new Vector3();
-			if (touchedTiles.Count > 1) 
+			if (touchedTiles.Count > 1)
 			{
 				touchedTiles.RemoveAt (touchedTiles.Count - 1);
 				updateTracedLinePositions ();
@@ -127,11 +127,6 @@ namespace Neutral
 
 			var positionsArray = touchedTiles.ToArray ();
 			tracedLine.SetPositions (positionsArray);
-		}
-
-		protected override void puzzleCompleted ()
-		{
-			throw new System.NotImplementedException ();
 		}
 
 		// Remove after debugging

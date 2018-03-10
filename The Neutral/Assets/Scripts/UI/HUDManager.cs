@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Neutral
 {
-	public class HUDManager : MonoBehaviour, IObservable<PlayerState> 
+	public class HUDManager : MonoBehaviour, IObservable<PlayerState>
 	{
 
 		/// <summary>
@@ -13,10 +13,6 @@ namespace Neutral
 		private List<IObserver<PlayerState>> observers;
 
 		private PlayerState playerState;
-		private Transform player;
-		private Vector3 offset;
-		private float smoothing = 5f;
-		private float lockPos = 0f;
 
 
 		void Awake () {
@@ -24,19 +20,9 @@ namespace Neutral
 			observers = new List<IObserver<PlayerState>> ();
 		}
 
-		void Start()
-		{
-			offset = transform.position - player.position;
-		}
-
 		public void setPlayerState(PlayerState pPlayerState)
 		{
 			playerState = pPlayerState;
-		}
-
-		public void setPlayerTransform(Transform pPlayerTransform)
-		{
-			player = pPlayerTransform;
 		}
 
 		#region Observor Methods
@@ -47,7 +33,7 @@ namespace Neutral
 		/// <param name="observer">Observer.</param>
 		public void Subscribe(IObserver<PlayerState> observer)
 		{
-			if (!observers.Contains (observer)) 
+			if (!observers.Contains (observer))
 			{
 				observers.Add (observer);
 			}
@@ -69,18 +55,11 @@ namespace Neutral
 		/// <param name="observer">Observer.</param>
 		public void Dispose(IObserver<PlayerState> observer)
 		{
-			if (observers.Contains (observer)) 
+			if (observers.Contains (observer))
 			{
 				observers.Remove (observer);
 			}
 		}
 		#endregion
-
-		void FixedUpdate () 
-		{
-			var targetPos = player.position + offset;
-			transform.position = targetPos;
-            transform.rotation = player.rotation;
-		}
 	}
 }

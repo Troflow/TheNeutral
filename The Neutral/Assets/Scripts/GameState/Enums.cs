@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Neutral
 {
-	
+
 	public enum Lite {
         RED,
         BLUE,
@@ -18,6 +18,18 @@ namespace Neutral
         PURPLE,
         MIXED
     };
-    
+
+    public enum ColorWheelSystemType {
+        Local,
+        Global
+    };
+
+    public enum EnemyType
+    {
+        Minor,
+        Major,
+        Remy,
+        Mojo
+    };
 
 }

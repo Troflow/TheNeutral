@@ -4,6 +4,7 @@ using System.Collections;
 
 namespace Neutral
 {
+
     public class CombatColorMixed : CombatColor
     {
 
@@ -12,17 +13,12 @@ namespace Neutral
             color = new System.Collections.Generic.KeyValuePair<Lite, Color>(Lite.MIXED, _color);
         }
 
-        // Use this for initialization
-        void Start()
-        {
 
+        public override void ExposedColorLogic()
+        {
+            Debug.Log("This is custom logic for the mixed color!");
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
     }
 
 }

@@ -31,6 +31,7 @@ namespace Neutral
         private Tier currentTierPlaying;
         public List<Tier> tierList;
 
+
         void InitializeDefaultTierList()
         {
             tierList = new List<Tier>();
@@ -68,7 +69,7 @@ namespace Neutral
         {
             
             anim = GetComponent<Animator>();
-
+        
             AnimHelper = new AnimationUtilities();
 
 

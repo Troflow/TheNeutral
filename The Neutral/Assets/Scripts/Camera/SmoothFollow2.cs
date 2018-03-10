@@ -9,27 +9,28 @@ namespace Neutral
 
         private Vector3 startCamPos = new Vector3();
         private Quaternion startCamRot = Quaternion.identity;
+        GameObject colorWheel;
 
         private void Start()
         {
             startCamPos = this.transform.localPosition;
             startCamRot = this.transform.localRotation;
+            // colorWheel = GameObject.Find("ColorWheel");
         }
 
         void Update()
-        {
-                        
-            if (Input.GetMouseButton(1))
-            {
-                transform.RotateAround(target.position, Vector3.up, Input.GetAxis("Mouse X") * 5f);
-            }
-            
+         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 transform.localPosition = startCamPos;
                 transform.localRotation = startCamRot;
             }
 
+            if (Input.GetKey(KeyCode.LeftControl))
+            {
+                // colorWheel.SetActive(true);
+                // colorWheel.transform.SetPositionAndRotation(transform.position, transform.rotation);
+            }
         }
     }
 }

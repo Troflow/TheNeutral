@@ -21,8 +21,6 @@ namespace Neutral
             recentControlCharacters.Add("Player", agent);
             isPlayerControl = true;
             indicator = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-
-            //agent.updateRotation = false;
         }
 
         public static bool inControl(bool isPlayer)
@@ -36,7 +34,7 @@ namespace Neutral
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             Debug.DrawLine(ray.origin, ray.GetPoint(500), Color.red);
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(1))
             {
 				if (Physics.Raycast(ray, out hit, 500, LayerMask.GetMask("Ground"), QueryTriggerInteraction.Ignore))
                 {
@@ -52,9 +50,9 @@ namespace Neutral
                             recentControlCharacters.Add("Player", GameObject.FindGameObjectWithTag("Player").GetComponent<UnityEngine.AI.NavMeshAgent>());
                             agent = recentControlCharacters["Player"];
                         }
-                            
+
                     }
-                    else if (hit.collider.CompareTag("Enemy-Sphere"))
+                    else if (hit.collider.CompareTag("Enemy"))
                     {
                         isPlayerControl = false;
                         if (recentControlCharacters.ContainsKey("Enemy"))
@@ -66,10 +64,10 @@ namespace Neutral
                             recentControlCharacters.Add("Enemy", GameObject.FindGameObjectWithTag("Enemy").GetComponent<UnityEngine.AI.NavMeshAgent>());
                             agent = recentControlCharacters["Enemy"];
                         }
-                            
+
                     }
-                    
-                    else 
+
+                    else
                     {
                         indicator.transform.position = hit.point;
 
@@ -96,7 +94,7 @@ namespace Neutral
                                 return (int)UnityEngine.AI.NavMeshPathStatus.PathInvalid;
                         }
                     }
-                    
+
                 } //end raycast
 
                 else

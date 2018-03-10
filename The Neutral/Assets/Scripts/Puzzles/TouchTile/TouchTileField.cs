@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Neutral
 {
-	public abstract class TouchTileField : Puzzle {
+	public abstract class TouchTileField : MonoBehaviour {
 
 		/// <summary>
 		/// Array of tiles for this TouchTile instance
@@ -22,7 +22,7 @@ namespace Neutral
 
 		protected virtual void populateTiles ()
 		{
-			foreach (Transform child in transform) 
+			foreach (Transform child in transform)
 			{
 				child.gameObject.AddComponent<TouchTile>();
 				child.gameObject.GetComponent<TouchTile> ().isAware = defaultTileAwareState;
