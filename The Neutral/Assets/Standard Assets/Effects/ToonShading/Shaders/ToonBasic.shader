@@ -9,11 +9,11 @@ Shader "Toon/Basic" {
 
 
 	SubShader {
-		Tags { "RenderType"="Opaque" }
+		Tags { "RenderType"="Opaque" "Queue"="Transparent" }
 		Pass {
 			Name "BASE"
-			Cull Off
-			
+			Blend SrcAlpha OneMinusSrcAlpha
+
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
@@ -31,7 +31,7 @@ Shader "Toon/Basic" {
 				float2 texcoord : TEXCOORD0;
 				float3 normal : NORMAL;
 			};
-			
+
 			struct v2f {
 				float4 pos : SV_POSITION;
 				float2 texcoord : TEXCOORD0;
@@ -57,9 +57,23 @@ Shader "Toon/Basic" {
 				UNITY_APPLY_FOG(i.fogCoord, c);
 				return c;
 			}
-			ENDCG			
+			ENDCG
 		}
-	} 
+	}
+
+	SubShader {
+		Tags { "RenderType"="Opaque" "Queue"="Transparent"}
+		Pass {
+			Name "BASE"
+			SetTexture [_MainTex] {
+				constantColor [_Color]
+				Combine texture * constant
+			}
+			SetTexture [_ToonShade] {
+				combine texture * previous DOUBLE, previous
+			}
+		}
+ 	}
 
 	Fallback "VertexLit"
 }
