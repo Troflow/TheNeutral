@@ -56,7 +56,7 @@ namespace Neutral
             while (Time.time - startTime < 0.35)
             {
 
-                PlayerMovement.agent.Move(2* direction.normalized * Time.deltaTime * Mathf.Abs(PlayerState.getDashSpeed() + knockbackNormalization ));
+                Player.agent.Move(2* direction.normalized * Time.deltaTime * Mathf.Abs(PlayerState.getDashSpeed() + knockbackNormalization ));
                 yield return new WaitForEndOfFrame();
             }
 
@@ -92,7 +92,7 @@ namespace Neutral
             // will give us our extra knockback value
             var knockbackNormalization = 0;
 
-            // if the current sphere size at the time of the collision was roughly the maximum, it means it hit on the edge 
+            // if the current sphere size at the time of the collision was roughly the maximum, it means it hit on the edge
             if (Mathf.RoundToInt(remySphereSize) >= Mathf.RoundToInt(combatUtilities.getMaxSphereSize()))
             {
                 print("sphere collided at edge, no extra knockback distance");
@@ -112,7 +112,7 @@ namespace Neutral
 
         public void OnTriggerEnter(Collider col)
         {
-            
+
             // collision occured on a generic enemy that has a sphere
             if (col.gameObject.tag == "Enemy-Sphere")
             {
@@ -139,7 +139,7 @@ namespace Neutral
                 GameObject minorHit = minorController.gameObject;
                 if (!aggregatedCollisions.Contains(minorHit))
                 {
-                   
+
                     aggregatedCollisions.Add(minorHit);
 
                     // start the death animation and stop pathing
@@ -161,7 +161,7 @@ namespace Neutral
             isZoneCheck = true;
 
             // while remy's animation is currently going, it means the collisions have not finished aggregating yet
-            // so we wait until we are not in a combat state before we compute the total amount of minors hit 
+            // so we wait until we are not in a combat state before we compute the total amount of minors hit
             AnimatorStateInfo stateInfo = remyAnimator.GetCurrentAnimatorStateInfo(0);
             while (combatUtilities.isCombatAnimationPlaying(stateInfo))
             {
@@ -215,9 +215,9 @@ namespace Neutral
                 }
 
             }
-            
+
             isZoneCheck = false;
-            aggregatedCollisions.Clear();           
+            aggregatedCollisions.Clear();
         }
     }
 }

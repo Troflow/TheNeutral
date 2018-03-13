@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace Neutral
 {
     /// <summary>
-    /// Class containing helper methods to for In-Game/Navigation Menus function
+    /// Class containing static attributes all throughout the game
     /// </summary>
 	public static class GameManager
 	{
@@ -14,6 +14,13 @@ namespace Neutral
 
         public static float colorTransferTimeStep = 2f;
         public static float colorWheelRotateSpeed = 25f;
+
+        #endregion
+
+        #region BLINKABLE
+
+        public static float shaderFadeValue = 1f;
+        public static bool playerEyesOpen = true;
 
         #endregion
 	}

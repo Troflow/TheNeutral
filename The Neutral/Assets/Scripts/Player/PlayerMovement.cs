@@ -4,7 +4,11 @@ using System.Collections.Generic;
 
 namespace Neutral
 {
-    public static class PlayerMovement
+    /// <summary>
+    /// Partial Class responsible for handling all operations
+    /// with regards to PlayerMovement
+    /// </summary>
+    public static partial class Player
     {
         private static Dictionary<string, UnityEngine.AI.NavMeshAgent> recentControlCharacters;
         public static UnityEngine.AI.NavMeshAgent agent { get; set; }

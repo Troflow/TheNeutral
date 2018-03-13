@@ -32,4 +32,11 @@ namespace Neutral
         Mojo
     };
 
+    public enum BlinkableType
+    {
+        Triggerable,
+        NonTriggerable,
+        Enemy
+    };
+
 }
