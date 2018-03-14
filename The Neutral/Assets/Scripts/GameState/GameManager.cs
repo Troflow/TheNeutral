@@ -20,7 +20,7 @@ namespace Neutral
         #region BLINKABLE
 
         public static float shaderFadeValue = 1f;
-        public static bool playerEyesOpen = true;
+        public static BlinkState playerBlinkState = BlinkState.EyesOpen;
 
         #endregion
 	}

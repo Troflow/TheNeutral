@@ -39,4 +39,19 @@ namespace Neutral
         Enemy
     };
 
+    public enum BlinkState
+    {
+        EyesClosed,
+        EyesOpen,
+    };
+
+    public enum PlayerActionState
+    {
+        NonActing,
+        Dashing,
+        CounterState,
+        Exploiting,
+        Attacking,
+    }
+
 }

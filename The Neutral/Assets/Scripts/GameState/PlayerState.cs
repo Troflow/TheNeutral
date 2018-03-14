@@ -71,7 +71,7 @@ namespace Neutral
         public static int getDashSpeed()
         {
             return dashSpeed;
-    }
+        }
 
         public CombatColor getCurrentCombatColor()
         {
@@ -157,7 +157,7 @@ namespace Neutral
             }
             else
             {
-                // Update so incomingTransferColor so UI knows which icon to display
+                // Update incomingTransferColor so UI knows which icon to display
                 setIncomingTransferColor(newColor);
 
                 // Once colorTransferValue reaches above 1f, set PlayerState's color to the incoming color
@@ -167,7 +167,7 @@ namespace Neutral
 
                     if (transferVal > 1f)
                     {
-                        // Do this in for-loop to prevent the delay after yield return null
+                        // Do this in the for-loop to prevent the delay after yield return null
                         setCurrentCombatColor(newColor);
                         isBeingGrantedNewColor = false;
                     }

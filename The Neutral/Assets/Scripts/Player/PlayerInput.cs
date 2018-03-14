@@ -14,12 +14,12 @@ namespace Neutral
         {
             if (Input.GetButtonDown("Blink"))
             {
-                GameManager.playerEyesOpen = false;
+                GameManager.playerBlinkState = BlinkState.EyesClosed;
             }
 
             if (Input.GetButtonUp("Blink"))
             {
-                GameManager.playerEyesOpen = true;
+                GameManager.playerBlinkState = BlinkState.EyesOpen;
             }
 
         }

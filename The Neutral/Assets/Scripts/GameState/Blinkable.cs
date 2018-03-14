@@ -6,6 +6,8 @@ using UnityEngine.AI;
 namespace Neutral
 {
 	/// <summary>
+    /// Attachable script that dynamically hides objects based on their BlinkableType,
+    /// when the player's eyes are closed.
 	/// </summary>
 	public class Blinkable : MonoBehaviour {
 
@@ -13,7 +15,6 @@ namespace Neutral
         MeshRenderer renderer;
         public BlinkableType type;
 
-        // Use this for initialization
 		void Start () {
             obstacle = GetComponent<NavMeshObstacle>();
             renderer = GetComponent<MeshRenderer>();
@@ -26,15 +27,19 @@ namespace Neutral
             renderer.enabled = pPlayerEyesOpen;
         }
 
-        void handlePlayerEyesState(bool pPlayerEyesOpen)
+        void handlePlayerEyesState(BlinkState pPlayerBlinkState)
         {
+            var playerEyesOpen = true;
+            if (pPlayerBlinkState == BlinkState.EyesOpen) playerEyesOpen = true;
+            else if (pPlayerBlinkState == BlinkState.EyesClosed) playerEyesOpen = false;
+
             switch(type)
             {
                 case BlinkableType.Triggerable:
                     break;
 
                 case BlinkableType.NonTriggerable:
-                    standardHandle(pPlayerEyesOpen);
+                    standardHandle(playerEyesOpen);
                     break;
 
                 case BlinkableType.Enemy:
@@ -42,9 +47,8 @@ namespace Neutral
             }
         }
 
-		// Update is called once per frame
 		void Update () {
-            handlePlayerEyesState(GameManager.playerEyesOpen);
+            handlePlayerEyesState(GameManager.playerBlinkState);
 		}
 	}
 }
