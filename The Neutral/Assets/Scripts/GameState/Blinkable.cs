@@ -13,7 +13,8 @@ namespace Neutral
 
         UnityEngine.AI.NavMeshObstacle obstacle;
         MeshRenderer renderer;
-        public BlinkableType type;
+        [SerializeField]
+        private BlinkableType type;
 
 		void Start () {
             obstacle = GetComponent<NavMeshObstacle>();

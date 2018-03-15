@@ -15,6 +15,8 @@ namespace Neutral
 		private float timerDuration = 10f;
 		private float markerOffset = 5f;
 
+		private bool isActivated = false;
+
 		void Start () {
 			// Set default state to false so only the marked
 			// tile will be chosen to listen for contact with player.
@@ -39,7 +41,7 @@ namespace Neutral
 		{
 			isActivated = true;
 			markedTile = tiles [Random.Range (0, tiles.Count)];
-			markedTile.GetComponent<TouchTile> ().isAware = true;
+			markedTile.GetComponent<SplineTile> ().isAware = true;
 			//StartCoroutine (startTimer);
 			placeInitialMarker ();
 		}
@@ -80,7 +82,7 @@ namespace Neutral
 		private void displaceMarker()
 		{
 			// set the current markedTile as no longer marked
-			markedTile.GetComponent<TouchTile>().isAware = false;
+			markedTile.GetComponent<SplineTile>().isAware = false;
 
 			// Duplicate tiles List, and remove the markedTile from duplicateList
 			var duplicateList = new List<Transform>(tiles);
@@ -88,7 +90,7 @@ namespace Neutral
 
 			// Pick a tile from from duplicateList. At random. Set it as isMarkedTile
 			markedTile = duplicateList[Random.Range(0, duplicateList.Count)];
-			markedTile.GetComponent<TouchTile> ().isAware = true;
+			markedTile.GetComponent<SplineTile> ().isAware = true;
 
 			// Place the tileMarker at the position of the markedTile. Offset upwards
 			Vector3 markerPosition = markedTile.position;

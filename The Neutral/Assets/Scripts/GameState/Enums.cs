@@ -54,4 +54,10 @@ namespace Neutral
         Attacking,
     }
 
+    public enum SplineBoxType
+    {
+        Standard,
+        Blockade
+    };
+
 }
