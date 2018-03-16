@@ -4,21 +4,22 @@ using UnityEngine;
 
 namespace Neutral
 {
+	/// <summary>
+	/// Class handling SplineTiles of the Spline puzzle.
+	/// SplineTiles can have at most one child - a SplineBox.
+	/// </summary>
 	public class SplineTile : MonoBehaviour {
-
-		public bool isAware;
-
 		[SerializeField]
-		private Spline spline;
+		Spline spline;
 		[SerializeField]
-		private SplineBox box;
+		SplineBox box;
 
-		private bool blinkLineOccupied;
-		private bool sightLineOccupied;
-		private bool persistentLineOccupied;
+		bool blinkLineOccupied;
+		bool sightLineOccupied;
+		bool persistentLineOccupied;
 
 		// For Debugging
-		private Transform linePrefab;
+		Transform linePrefab;
 
 		public void activate(Transform pLinePrefab)
 		{
@@ -44,16 +45,40 @@ namespace Neutral
 		{
 			if (pCollider.CompareTag("Player-Sphere"))
 			{
-				if (box != null && linePrefab != null)
+				// Nothing happens if !spline.isActivated, or spline.currentSplineLine is null
+				if (spline.getCurrentSplineLine() == null || !spline.getIsActivated()) return;
+
+				// If SplineTile has no SplineBox associated with it:
+				if (box == null) spline.addTileToCurrentLine(transform.position);
+
+				// If SplineTile does have a SplineBox associated with it:
+				else
 				{
+					// If box that is a Blockade, do nothing
+					if (box.getType() == SplineBoxType.Blockade) return;
 
-					box.activate(linePrefab);
-					var splineLine = box.getSplineLine();
-					spline.setCurrentLineObject(splineLine);
+					// If box is not the destination for spline.currentSplineLine, do nothing
+					if (!spline.checkIfIsDestination(box)) return;
+
+					var playerState = pCollider.GetComponentInParent<PlayerState>();
+					var playerActionState = playerState.getPlayerActionState();
+
+					// If box is the destination of spline.currentSplineLine,
+					// increment spline.completedSplineCount by one
+					if (spline.checkIfIsDestination(box))
+					{
+						spline.splineLineCompleted();
+					}
+
+					// If playerActionState is Attacking, instantiate SplineLine object and
+					// set spline.currentSplineLine to instantiated SplineLine
+					else if (playerActionState == PlayerActionState.Attacking)
+					{
+						box.activate(linePrefab);
+						spline.setCurrentSplineLine(box.getSplineLine());
+						spline.addTileToCurrentLine(transform.position);
+					}
 				}
-
-				spline.addTileToCurrentLine(transform.position);
-
 			}
 		}
 	}

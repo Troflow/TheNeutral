@@ -35,10 +35,10 @@ namespace Neutral
 
         #endregion
 
+        private PlayerActionState actionState;
 
         public List<Lite> appliedStacks;
 		public List<Lite> colorSchema;
-
 
 		public Dictionary<Lite, int> completedPuzzles;
 		public Dictionary<Lite, int> defeatedEnemies;
@@ -110,6 +110,11 @@ namespace Neutral
         public bool getIsBeingGrantedNewColor()
         {
             return isBeingGrantedNewColor;
+        }
+
+        public PlayerActionState getPlayerActionState()
+        {
+            return actionState;
         }
 
 		private void populateCompletedPuzzles()

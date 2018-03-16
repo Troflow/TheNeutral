@@ -19,20 +19,21 @@ namespace Neutral
             return lineRenderer;
         }
 
+        public SplineBox getDestination()
+        {
+            return destinationBox;
+        }
+
         public void setLineAttributes()
         {
             lineObject = transform;
             lineRenderer = transform.GetComponent<LineRenderer>();
         }
 
-        public void setOriginBox(SplineBox pSplineBox)
+        public void setOriginAndDestination(SplineBox pSplineBox, SplineBox pSplineBoxSibling)
         {
             originBox = pSplineBox;
-        }
-
-        public void setDestination(SplineBox pSplineBox)
-        {
-            destinationBox = pSplineBox;
+            destinationBox = pSplineBoxSibling;
         }
 
         public void removeAllPoints()

@@ -7,23 +7,26 @@ namespace Neutral
 {
 	public class Spline : MonoBehaviour {
 
-        // TODO: Remove all the private modifiers
+		[SerializeField]
+		bool isCompleted;
 
-		private List<Transform> tiles;
+		Transform tileField;
+		List<Transform> tiles;
 
-        private float splineLineOffset = 3.5f;
-		private bool isActivated = false;
-		private SplineLine currentSplineLine;
-		private List<Vector3> currentLinePoints;
+        float splineLineOffset = 3.5f;
+		bool isActivated = false;
+		SplineLine currentSplineLine;
+		List<Vector3> currentLinePoints;
 
-		private int splineLineCount;
-		private int completedSplineLineCount = 0;
+		[SerializeField]
+		int splineLineCount;
+		int completedSplineLineCount = 0;
 
 		// For Debugging
 		public Transform linePrefab;
 
 		void Start () {
-			tiles = new List<Transform>();
+			tileField = transform.Find("TileField");
 			populateTiles ();
 			currentLinePoints = new List<Vector3>();
 		}
@@ -39,25 +42,58 @@ namespace Neutral
 
 		void deactivateTileField()
 		{
+			throw new System.NotImplementedException("Spline Puzzle Deactivation Logic Needed");
 			isActivated = false;
+
+			if (!isCompleted) completedSplineLineCount = 0;
+			currentSplineLine = null;
+			currentLinePoints.Clear();
+
+			depopulateTiles();
 		}
 
-		public void setCurrentLineObject(SplineLine pLine)
+		public bool getIsActivated()
 		{
-			if (!isActivated)
-				return;
+			return isActivated;
+		}
 
+		public void setCurrentSplineLine(SplineLine pLine)
+		{
 			// Clear the previous SplineLine of all its points if it wasn't completed
 			if (!currentSplineLine == null) currentSplineLine.removeAllPoints();
 			currentSplineLine = pLine;
 		}
 
+		public SplineLine getCurrentSplineLine()
+		{
+			return currentSplineLine;
+		}
+
+		public bool checkIfIsDestination(SplineBox pSplineBox)
+		{
+			if (pSplineBox == currentSplineLine.getDestination()) return true;
+			else return false;
+		}
+
+		public void splineLineCompleted()
+		{
+			completedSplineLineCount++;
+			checkIsCompleted();
+		}
+
+		public void checkIsCompleted()
+		{
+			// TODO: Handle Puzzle completion
+			if (completedSplineLineCount == splineLineCount)
+			{
+				isCompleted = true;
+				// TODO: Uncomment after testing is finished
+				// throw new System.NotImplementedException("Spline Puzzle Completion Logic Needed");
+			}
+		}
+
 		public void addTileToCurrentLine(Vector3 pTilePos)
 		{
-			if (!isActivated || currentSplineLine == null)
-				return;
-
-
 			var tilePos = new Vector3();
 			if (!currentLinePoints.Contains(pTilePos))
 			{
@@ -75,9 +111,37 @@ namespace Neutral
 			pLineRenderer.SetPositions(currentLinePoints.ToArray());
 		}
 
+		void pairAllSplineBoxes(List<SplineBox> pAllSplineBoxes)
+		{
+			var splineBoxCount = pAllSplineBoxes.Count;
+
+			// If not 0, or an even number of SplineBoxes
+			if (splineBoxCount % 2 != 0)
+			{
+				throw new InvalidSplineBoxCountException("There should be an even number of SplineBoxes in this Spline.");
+			}
+
+			// SplineBoxes are sorted based on their naming scheme.
+			// Will cause problems if SplineBoxes are not all correctly named.
+			pAllSplineBoxes.Sort((x,y) => x.name.CompareTo(y.name));
+
+			for (int i=0; i<splineBoxCount-1; i++)
+			{
+				var box0 = pAllSplineBoxes[i];
+				var box1 = pAllSplineBoxes[++i];
+
+				box0.setSibling(box1);
+				box1.setSibling(box0);
+			}
+
+		}
+
         void populateTiles()
 		{
-			foreach (Transform tile in transform)
+			tiles = new List<Transform>();
+			var allSplineBoxes = new List<SplineBox>();
+
+			foreach (Transform tile in tileField)
 			{
 				tile.gameObject.AddComponent<SplineTile>();
 				tiles.Add(tile);
@@ -87,10 +151,17 @@ namespace Neutral
 
 				if (tile.childCount > 0)
 				{
-					var splineBox = tile.Find("SplineBox").GetComponent<SplineBox>();
+					// Add the SplineBox to allSplineBoxes. If no Component is found, don't add
+					var splineBox = tile.GetChild(0).GetComponent<SplineBox>();
 					splineTile.setSplineBox(splineBox);
+					if (splineBox != null)
+					{
+						allSplineBoxes.Add(splineBox);
+					}
 				}
 			}
+
+			pairAllSplineBoxes(allSplineBoxes);
 		}
 
         void depopulateTiles()
@@ -101,10 +172,11 @@ namespace Neutral
 			}
 
 			tiles.Clear();
+
 		}
 
 		/// <summary>
-		/// Handles the input. FOR DEBUGGING ONLY. remove afterwards.
+		/// FOR DEBUGGING ONLY.
 		/// </summary>
 		void handleInput()
 		{
@@ -121,7 +193,7 @@ namespace Neutral
 			}
 		}
 
-		// Remove after debugging
+		// For Debugging Only
 		void Update () {
 			handleInput ();
 		}

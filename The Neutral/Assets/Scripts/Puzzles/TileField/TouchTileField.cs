@@ -6,6 +6,7 @@ namespace Neutral
 {
 	public abstract class TouchTileField : MonoBehaviour {
 
+		/*
 		/// <summary>
 		/// Array of tiles for this TouchTile instance
 		/// </summary>
@@ -29,7 +30,7 @@ namespace Neutral
 
 				if (tile.childCount > 0)
 				{
-					print("Tile ChildCount greater than 0");
+					//TODO: Remove all references to SplineTile.
 					var splineTile = tile.GetComponent<SplineTile>();
 					var splineBox = tile.Find("SplineBox").GetComponent<SplineBox>();
 					splineTile.setSplineBox(splineBox);
@@ -47,5 +48,5 @@ namespace Neutral
 			tiles.Clear();
 		}
 
-	}
+	*/}
 }

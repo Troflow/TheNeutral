@@ -6,6 +6,7 @@ namespace Neutral
 {
 	public class TimedTileField : TouchTileField {
 
+		/*
 		[SerializeField]
 		private Transform tileMarker;
 		private Transform markedTile;
@@ -145,5 +146,5 @@ namespace Neutral
 			yield return new WaitForSeconds(timerDuration);
 			deactivateTileField ();
 		}
-	}
+	*/}
 }
