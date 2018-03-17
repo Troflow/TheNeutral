@@ -6,6 +6,7 @@ namespace Neutral {
 
 	public class RemyNavMeshController : MonoBehaviour {
 
+        PlayerState playerState;
         CombatUtilities combatController;
 		AnimationUtilities AnimHelper;
         System.Collections.Generic.List<Tier> tierList;
@@ -82,6 +83,7 @@ namespace Neutral {
         void Start () {
             Player.SetInitialMovement();
 			anim = GetComponent<Animator>();
+            playerState = GetComponent<PlayerState>();
 
 			AnimHelper = new AnimationUtilities();
 
@@ -151,7 +153,7 @@ namespace Neutral {
                 }
             }
 
-            Player.HandleInput();
+            Player.HandleInput(playerState);
 
             // TODO: Move to PlayerInput.cs
 			if (Input.GetKeyDown (KeyCode.E)) {

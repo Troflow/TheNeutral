@@ -117,6 +117,11 @@ namespace Neutral
             return actionState;
         }
 
+        public void setPlayerActionState(PlayerActionState pActionState)
+        {
+            actionState = pActionState;
+        }
+
 		private void populateCompletedPuzzles()
 		{
 			completedPuzzles = new Dictionary<Lite, int> ();

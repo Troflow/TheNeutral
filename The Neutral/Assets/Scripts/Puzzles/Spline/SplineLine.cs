@@ -38,7 +38,10 @@ namespace Neutral
 
         public void removeAllPoints()
         {
-            if (!lineRenderer == null) lineRenderer.positionCount = 0;
+            if (lineRenderer != null)
+            {
+                lineRenderer.positionCount = 0;
+            }
         }
 	}
 }

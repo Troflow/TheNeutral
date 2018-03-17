@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 namespace Neutral
 {
-	// All HUDElements must be added to the Script Execution Order to prevent
-	// NullReferenceExeption Errors
 	public class BlinkIcon : MonoBehaviour
 	{
 		private Image eyesOpenIcon;

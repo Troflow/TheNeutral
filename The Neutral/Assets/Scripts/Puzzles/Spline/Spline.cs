@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace Neutral
 {
@@ -13,13 +14,14 @@ namespace Neutral
 		Transform tileField;
 		List<Transform> tiles;
 
-        float splineLineOffset = 3.5f;
+        float splineLineOffset = 5;
 		bool isActivated = false;
 		SplineLine currentSplineLine;
-		List<Vector3> currentLinePoints;
+		IDictionary<string, Vector3> touchedTiles;
 
 		[SerializeField]
 		int splineLineCount;
+		[SerializeField]
 		int completedSplineLineCount = 0;
 
 		// For Debugging
@@ -28,7 +30,7 @@ namespace Neutral
 		void Start () {
 			tileField = transform.Find("TileField");
 			populateTiles ();
-			currentLinePoints = new List<Vector3>();
+			touchedTiles = new Dictionary<string, Vector3>();
 		}
 
 		void activateTileField ()
@@ -47,7 +49,6 @@ namespace Neutral
 
 			if (!isCompleted) completedSplineLineCount = 0;
 			currentSplineLine = null;
-			currentLinePoints.Clear();
 
 			depopulateTiles();
 		}
@@ -60,8 +61,22 @@ namespace Neutral
 		public void setCurrentSplineLine(SplineLine pLine)
 		{
 			// Clear the previous SplineLine of all its points if it wasn't completed
-			if (!currentSplineLine == null) currentSplineLine.removeAllPoints();
+			if (currentSplineLine != null)
+			{
+				currentSplineLine.removeAllPoints();
+				touchedTiles.Clear();
+			}
 			currentSplineLine = pLine;
+		}
+
+		public void clearCurrentSplineLine()
+		{
+			if (currentSplineLine != null)
+			{
+				currentSplineLine.removeAllPoints();
+				currentSplineLine = null;
+				touchedTiles.Clear();
+			}
 		}
 
 		public SplineLine getCurrentSplineLine()
@@ -77,6 +92,9 @@ namespace Neutral
 
 		public void splineLineCompleted()
 		{
+			currentSplineLine = null;
+			touchedTiles.Clear();
+
 			completedSplineLineCount++;
 			checkIsCompleted();
 		}
@@ -92,14 +110,14 @@ namespace Neutral
 			}
 		}
 
-		public void addTileToCurrentLine(Vector3 pTilePos)
+		public void addTileToCurrentLine(string pSplineTileName, Vector3 pTilePos)
 		{
 			var tilePos = new Vector3();
-			if (!currentLinePoints.Contains(pTilePos))
+			if (!touchedTiles.ContainsKey(pSplineTileName))
 			{
 				tilePos = pTilePos;
 				tilePos.y += splineLineOffset;
-				currentLinePoints.Add(tilePos);
+				touchedTiles.Add(pSplineTileName, tilePos);
 
 				updateLineRendererPositions(currentSplineLine.getLineRenderer());
 			}
@@ -107,8 +125,10 @@ namespace Neutral
 
 		public void updateLineRendererPositions(LineRenderer pLineRenderer)
 		{
-			pLineRenderer.positionCount = currentLinePoints.Count;
-			pLineRenderer.SetPositions(currentLinePoints.ToArray());
+			pLineRenderer.positionCount = touchedTiles.Count;
+
+			// TODO: Convert the list of SplineTile to list of Vector3
+			pLineRenderer.SetPositions(touchedTiles.Values.ToArray());
 		}
 
 		void pairAllSplineBoxes(List<SplineBox> pAllSplineBoxes)
@@ -121,6 +141,7 @@ namespace Neutral
 				throw new InvalidSplineBoxCountException("There should be an even number of SplineBoxes in this Spline.");
 			}
 
+			splineLineCount = splineBoxCount / 2;
 			// SplineBoxes are sorted based on their naming scheme.
 			// Will cause problems if SplineBoxes are not all correctly named.
 			pAllSplineBoxes.Sort((x,y) => x.name.CompareTo(y.name));

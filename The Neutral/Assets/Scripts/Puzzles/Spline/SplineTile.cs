@@ -9,6 +9,9 @@ namespace Neutral
 	/// SplineTiles can have at most one child - a SplineBox.
 	/// </summary>
 	public class SplineTile : MonoBehaviour {
+
+		static SplineTile tileMostRecentlyActivated;
+
 		[SerializeField]
 		Spline spline;
 		[SerializeField]
@@ -49,7 +52,7 @@ namespace Neutral
 				if (spline.getCurrentSplineLine() == null || !spline.getIsActivated()) return;
 
 				// If SplineTile has no SplineBox associated with it:
-				if (box == null) spline.addTileToCurrentLine(transform.position);
+				if (box == null) spline.addTileToCurrentLine(this.name, transform.position);
 
 				// If SplineTile does have a SplineBox associated with it:
 				else
@@ -60,24 +63,35 @@ namespace Neutral
 					// If box is not the destination for spline.currentSplineLine, do nothing
 					if (!spline.checkIfIsDestination(box)) return;
 
-					var playerState = pCollider.GetComponentInParent<PlayerState>();
-					var playerActionState = playerState.getPlayerActionState();
-
 					// If box is the destination of spline.currentSplineLine,
 					// increment spline.completedSplineCount by one
 					if (spline.checkIfIsDestination(box))
 					{
+						spline.addTileToCurrentLine(this.name, transform.position);
 						spline.splineLineCompleted();
 					}
+				}
+			}
+		}
 
-					// If playerActionState is Attacking, instantiate SplineLine object and
-					// set spline.currentSplineLine to instantiated SplineLine
-					else if (playerActionState == PlayerActionState.Attacking)
-					{
-						box.activate(linePrefab);
-						spline.setCurrentSplineLine(box.getSplineLine());
-						spline.addTileToCurrentLine(transform.position);
-					}
+		public void OnTriggerStay(Collider pCollider)
+		{
+			if (pCollider.CompareTag("Player-Sphere"))
+			{
+				// Nothing happens if !spline.isActivated, or spline.currentSplineLine is null
+				if (!spline.getIsActivated()) return;
+
+				var playerState = pCollider.GetComponentInParent<PlayerState>();
+				var playerActionState = playerState.getPlayerActionState();
+
+				// If playerActionState is Attacking, instantiate SplineLine object and
+				// set spline.currentSplineLine to instantiated SplineLine
+				if (box != null && playerActionState == PlayerActionState.Attacking && tileMostRecentlyActivated != this)
+				{
+					box.activate(linePrefab);
+					spline.setCurrentSplineLine(box.getSplineLine());
+					spline.addTileToCurrentLine(this.name, transform.position);
+					tileMostRecentlyActivated = this;
 				}
 			}
 		}

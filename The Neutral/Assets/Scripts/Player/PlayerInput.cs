@@ -10,7 +10,7 @@ namespace Neutral
     /// </summary>
     public static partial class Player
     {
-        public static void HandleInput()
+        public static void HandleInput(PlayerState pPlayerState)
         {
             if (Input.GetButtonDown("Blink"))
             {
@@ -20,6 +20,18 @@ namespace Neutral
             if (Input.GetButtonUp("Blink"))
             {
                 GameManager.playerBlinkState = BlinkState.EyesOpen;
+            }
+
+            // For Debugging
+            if (Input.GetKeyDown(KeyCode.LeftBracket))
+            {
+                pPlayerState.setPlayerActionState(PlayerActionState.Attacking);
+            }
+
+            // For Debugging
+            if (Input.GetKeyUp(KeyCode.LeftBracket))
+            {
+                pPlayerState.setPlayerActionState(PlayerActionState.NonActing);
             }
 
         }

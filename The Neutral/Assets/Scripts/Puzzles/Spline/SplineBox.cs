@@ -16,7 +16,10 @@ namespace Neutral
     /// </summary>
 	public class SplineBox : MonoBehaviour {
 
+        [SerializeField]
+        bool hasBeenActivatedBefore = false;
         Lite lite;
+        [SerializeField]
         SplineLine splineLine;
         [SerializeField]
         SplineBox sibling;
@@ -25,9 +28,28 @@ namespace Neutral
 
         public void activate(Transform pLinePrefab)
         {
-            splineLine = Instantiate(pLinePrefab, transform.position, Quaternion.identity, transform).GetComponent<SplineLine>();
-            splineLine.setOriginAndDestination(this, sibling);
-            splineLine.setLineAttributes();
+            if (!hasBeenActivatedBefore)
+            {
+                splineLine = Instantiate(pLinePrefab, transform.position, Quaternion.identity, transform).GetComponent<SplineLine>();
+                splineLine.setOriginAndDestination(this, sibling);
+                splineLine.setLineAttributes();
+
+                sibling.setSplineLine(splineLine);
+                sibling.setHasBeenActivatedBefore(true);
+
+                hasBeenActivatedBefore = true;
+            }
+            else
+            {
+                splineLine.removeAllPoints();
+                splineLine.setOriginAndDestination(this, sibling);
+            }
+
+        }
+
+        public void setHasBeenActivatedBefore(bool pNewState)
+        {
+            hasBeenActivatedBefore = pNewState;
         }
 
         public SplineBoxType getType()
@@ -38,6 +60,11 @@ namespace Neutral
         public SplineLine getSplineLine()
         {
             return splineLine;
+        }
+
+        public void setSplineLine(SplineLine pSplineLine)
+        {
+            splineLine = pSplineLine;
         }
 
         public void setSibling(SplineBox pSibling)
