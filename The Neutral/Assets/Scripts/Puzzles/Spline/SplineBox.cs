@@ -18,6 +18,8 @@ namespace Neutral
 
         [SerializeField]
         bool hasBeenActivatedBefore = false;
+        bool splineLineConnected = false;
+
         Lite lite;
         [SerializeField]
         SplineLine splineLine;
@@ -26,13 +28,12 @@ namespace Neutral
         [SerializeField]
         SplineBoxType type;
 
-        public void activate(Transform pLinePrefab)
+        public void activate(Transform pLinePrefab, Spline pSpline)
         {
             if (!hasBeenActivatedBefore)
             {
                 splineLine = Instantiate(pLinePrefab, transform.position, Quaternion.identity, transform).GetComponent<SplineLine>();
-                splineLine.setOriginAndDestination(this, sibling);
-                splineLine.setLineAttributes();
+                splineLine.activate(this);
 
                 sibling.setSplineLine(splineLine);
                 sibling.setHasBeenActivatedBefore(true);
@@ -43,8 +44,21 @@ namespace Neutral
             {
                 splineLine.removeAllPoints();
                 splineLine.setOriginAndDestination(this, sibling);
+
+                if (splineLineConnected)
+                {
+                    pSpline.reduceCompletedSplineCountBy(1);
+
+                    splineLineConnected = false;
+                    sibling.setSplineLineConnected(false);
+                }
             }
 
+        }
+
+        public void setSplineLineConnected(bool pNewState)
+        {
+            splineLineConnected = pNewState;
         }
 
         public void setHasBeenActivatedBefore(bool pNewState)
@@ -70,6 +84,11 @@ namespace Neutral
         public void setSibling(SplineBox pSibling)
         {
             sibling = pSibling;
+        }
+
+        public SplineBox getSibling()
+        {
+            return sibling;
         }
 	}
 }

@@ -34,8 +34,10 @@ namespace Neutral
 
     public enum BlinkableType
     {
-        Triggerable,
-        NonTriggerable,
+        TriggerableObstacle,
+        NonTriggerableObstacle,
+        BlinkSplineLine,
+        SightSplineLine,
         Enemy
     };
 
@@ -60,4 +62,10 @@ namespace Neutral
         Blockade
     };
 
+    public enum SplineLineType
+    {
+        Sight,
+        Blinkable,
+        Persistent
+    };
 }

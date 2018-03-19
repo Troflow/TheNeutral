@@ -16,6 +16,7 @@ namespace Neutral
 
         float splineLineOffset = 5;
 		bool isActivated = false;
+		[SerializeField]
 		SplineLine currentSplineLine;
 		IDictionary<string, Vector3> touchedTiles;
 
@@ -63,18 +64,24 @@ namespace Neutral
 			// Clear the previous SplineLine of all its points if it wasn't completed
 			if (currentSplineLine != null)
 			{
+				currentSplineLine.clearAllTileOccupations();
 				currentSplineLine.removeAllPoints();
+
 				touchedTiles.Clear();
 			}
+
 			currentSplineLine = pLine;
+			currentSplineLine.clearAllTileOccupations();
 		}
 
 		public void clearCurrentSplineLine()
 		{
 			if (currentSplineLine != null)
 			{
+				currentSplineLine.clearAllTileOccupations();
 				currentSplineLine.removeAllPoints();
 				currentSplineLine = null;
+
 				touchedTiles.Clear();
 			}
 		}
@@ -84,14 +91,27 @@ namespace Neutral
 			return currentSplineLine;
 		}
 
+		public SplineLineType getCurrentSplineLineType()
+		{
+			return currentSplineLine.getType();
+		}
+
 		public bool checkIfIsDestination(SplineBox pSplineBox)
 		{
 			if (pSplineBox == currentSplineLine.getDestination()) return true;
 			else return false;
 		}
 
-		public void splineLineCompleted()
+		public void reduceCompletedSplineCountBy(int pDecrementValue)
 		{
+			completedSplineLineCount = completedSplineLineCount - pDecrementValue;
+		}
+
+		public void splineLineCompleted(SplineBox pSplineBox)
+		{
+			pSplineBox.setSplineLineConnected(true);
+			pSplineBox.getSibling().setSplineLineConnected(true);
+
 			currentSplineLine = null;
 			touchedTiles.Clear();
 
@@ -117,6 +137,7 @@ namespace Neutral
 			{
 				tilePos = pTilePos;
 				tilePos.y += splineLineOffset;
+
 				touchedTiles.Add(pSplineTileName, tilePos);
 
 				updateLineRendererPositions(currentSplineLine.getLineRenderer());

@@ -9,7 +9,7 @@ namespace Neutral
     /// Attachable script that dynamically hides objects based on their BlinkableType,
     /// when the player's eyes are closed.
 	/// </summary>
-	public class Blinkable : MonoBehaviour {
+	public class BlinkableObstacle : MonoBehaviour {
 
         UnityEngine.AI.NavMeshObstacle obstacle;
         MeshRenderer renderer;
@@ -36,10 +36,10 @@ namespace Neutral
 
             switch(type)
             {
-                case BlinkableType.Triggerable:
+                case BlinkableType.TriggerableObstacle:
                     break;
 
-                case BlinkableType.NonTriggerable:
+                case BlinkableType.NonTriggerableObstacle:
                     standardHandle(playerEyesOpen);
                     break;
 
