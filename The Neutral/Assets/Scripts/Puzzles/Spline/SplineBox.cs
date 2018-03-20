@@ -10,24 +10,30 @@ namespace Neutral
     /// A standard SplineBox is one end of a SplineLine and has the naming convention:
     /// "SplineBox_[Color]_[Index]
     /// e.g. SplineBox_Yellow_0
-    /// On Start(), the SplineClass will pair SplineBox's according to their name. If an error is
-    /// caught, the entire process is stopped and an exception raised.
+    /// On activate(), the SplineClass will pair SplineBox's according to their name.
     /// A blockade SplineBox does not allow any type of SplineLine whatsoever to pass through it.
     /// </summary>
 	public class SplineBox : MonoBehaviour {
 
-        [SerializeField]
+        // Handles if a SplineLine prefab should be instantiated, or simply cleared for redrawing
         bool hasBeenActivatedBefore = false;
+
+        // Bool allowing Spline to increment - or decrement - its completedSplineCount
         bool splineLineConnected = false;
 
-        Lite lite;
-        [SerializeField]
         SplineLine splineLine;
-        [SerializeField]
         SplineBox sibling;
-        [SerializeField]
         SplineBoxType type;
 
+        /// <summary>
+        /// This method is called by SplineTile when the player is in contact with
+        /// the tile and performs a Tier.
+        /// If never been activated, it will create the SplineLine object. Else,
+        /// it will wipe the splineLine of all its points. If the line had been
+        /// completed, the Spline will have its completedSplineCount decremented
+        /// </summary>
+        /// <param name="pLinePrefab"></param>
+        /// <param name="pSpline"></param>
         public void activate(Transform pLinePrefab, Spline pSpline)
         {
             if (!hasBeenActivatedBefore)
@@ -54,6 +60,19 @@ namespace Neutral
                 }
             }
 
+        }
+
+        /// <summary>
+        /// Called by the SplineTile when the entire Spline puzzle is deactivated
+        /// </summary>
+        public void deactivate()
+        {
+            if (splineLine != null) Destroy(splineLine.gameObject);
+
+            splineLine = null;
+            hasBeenActivatedBefore = false;
+            splineLineConnected = false;
+            sibling = null;
         }
 
         public void setSplineLineConnected(bool pNewState)

@@ -18,28 +18,43 @@ namespace Neutral
 	/// </summary>
 	public class SplineTile : MonoBehaviour {
 
+		// For Debugging
+		// Find a way to have that when a Player activates a SplineTile
+		// with a Standard SplineBox - the activation is only called once
+		//(rather than every frame while the key is pressed). And also, ensure
+		// that the Player isn't locked out from interacting with
+		// the most recently activated tile (as is the case now)
 		static SplineTile tileMostRecentlyActivated;
 
-		[SerializeField]
 		Spline spline;
-		[SerializeField]
 		SplineBox box;
 		SplineLine occupyingSplineLine;
 
-		[SerializeField]
 		bool sightLineOccupied;
-		[SerializeField]
 		bool blinkLineOccupied;
-		[SerializeField]
 		bool persistentLineOccupied;
 
 
-		// For Debugging
+		// For Debugging. See Spline class for explanation.
 		Transform linePrefab;
 
 		public void activate(Transform pLinePrefab)
 		{
+			// For Debugging. See Spline class for explanation.
 			if (box != null) linePrefab = pLinePrefab;
+		}
+
+		public void deactivate()
+		{
+			// To be called when Spline is deactivated. Set everything to null (recursively)
+			if (box != null && box.getType() != SplineBoxType.Blockade) box.deactivate();
+
+			occupyingSplineLine = null;
+			sightLineOccupied = false;
+			blinkLineOccupied = false;
+			persistentLineOccupied = false;
+			linePrefab = null;
+			box = null;
 		}
 
 		public void setSpline(Spline pSpline)
@@ -52,11 +67,12 @@ namespace Neutral
 			box = pBox;
 		}
 
-		public void clearAllAttributes()
-		{
-			// To be called when Spline is deactivated. Set everything to null (recursively)
-		}
-
+		/// <summary>
+		/// SplineLine 'collisiion' is done by checking if a SplineTile
+		/// has been previously occupied before allowing a SplineLine to
+		/// draw over it.
+		/// </summary>
+		/// <param name="pSplineLine"></param>
 		void handleOccupation(SplineLine pSplineLine)
 		{
 			clearOccupations();
@@ -79,6 +95,12 @@ namespace Neutral
 			}
 		}
 
+		/// <summary>
+		/// Returns whether or not a SplineTile should be considered 'occupied' with
+		/// regards to the type of the SplineLine that is asking to be drawn over it
+		/// </summary>
+		/// <param name="pSplineLineType"></param>
+		/// <returns></returns>
 		bool isVacantSplineTile(SplineLineType pSplineLineType)
 		{
 			// If SplineTile already has a persistentLine drawn on it - it is occupied
@@ -95,6 +117,14 @@ namespace Neutral
 			return true;
 		}
 
+		/// <summary>
+		/// Ensures that the next point in a SplineLine is a neighbouring SplineTile.
+		/// This is necessary for occupation checks, else a SplineLine can be drawn over
+		/// a tile - without actually occupying that tile - causing problems.
+		/// Neighbours are found using the name scheme of '[Row_Index],[Col_Index]'
+		/// Failure to adhere to the name scheme will cause problems with neighbour checking
+		/// </summary>
+		/// <returns></returns>
 		bool tileTooFarToAdd()
 		{
 			// A tile is too far to add if its coords (discenred by its name) are greater
@@ -158,7 +188,7 @@ namespace Neutral
 				// If SplineTile does have a SplineBox associated with it:
 				else
 				{
-					// If box that is a Blockade, do nothing
+					// If box is a Blockade, do nothing
 					if (box.getType() == SplineBoxType.Blockade) return;
 
 					// If box is not the destination for spline.currentSplineLine, do nothing
@@ -181,8 +211,13 @@ namespace Neutral
 		{
 			if (pCollider.CompareTag("Player-Sphere"))
 			{
+				if (spline == null) Debug.Break();
+
 				// Nothing happens if !spline.isActivated
 				if (!spline.getIsActivated()) return;
+
+				// If box is a Blockade, do nothing
+				if (box != null && box.getType() == SplineBoxType.Blockade) return;
 
 				var playerState = pCollider.GetComponentInParent<PlayerState>();
 				var playerActionState = playerState.getPlayerActionState();
@@ -198,10 +233,6 @@ namespace Neutral
 					handleOccupation(spline.getCurrentSplineLine());
 
 					tileMostRecentlyActivated = this;
-				}
-				else if (box != null && playerActionState == PlayerActionState.Attacking && tileMostRecentlyActivated == this)
-				{
-					// print("Currently impossible to interact with the last activated SplineBox.");
 				}
 			}
 		}

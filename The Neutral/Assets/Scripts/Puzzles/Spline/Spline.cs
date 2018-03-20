@@ -6,52 +6,72 @@ using System.Linq;
 
 namespace Neutral
 {
+	/// <summary>
+	/// Class handling the Spline puzzle. Splines are based on Numberlinks:
+	/// https://en.wikipedia.org/wiki/Numberlink
+	/// There is a given number of SplineLines to connect from origin to destination,
+	/// and once all lines are connected the puzzle is completed.
+	/// SplineLines of the same type cannot collide with each other. No SplineLine
+	/// can collide with a Persistent SplineLineType.
+	/// </summary>
 	public class Spline : MonoBehaviour {
 
-		[SerializeField]
 		bool isCompleted;
 
 		Transform tileField;
-		List<Transform> tiles;
 
         float splineLineOffset = 5;
 		bool isActivated = false;
-		[SerializeField]
+
+		// The SplineLine currently being drawn by the player
 		SplineLine currentSplineLine;
+
+		// Those SplineTiles which the currentSplineLine has been drawn over
 		IDictionary<string, Vector3> touchedTiles;
 
-		[SerializeField]
+		// The number of SplineLines to connect to complete the puzzle
 		int splineLineCount;
-		[SerializeField]
+
+		// The number of SplineLines currently connected by the player
 		int completedSplineLineCount = 0;
 
 		// For Debugging
-		public Transform linePrefab;
+		// TODO: Find a way to dynamically set the linePrefab for the SplineTiles
+		// Current means is to pass this linePrefab to the activate() call of the SplineTile
+		[SerializeField]
+		Transform linePrefab;
 
-		void Start () {
-			tileField = transform.Find("TileField");
-			populateTiles ();
-			touchedTiles = new Dictionary<string, Vector3>();
-		}
-
-		void activateTileField ()
+		void activateSpline()
 		{
+			if (isActivated) return;
+
+			tileField = transform.Find("TileField");
+			touchedTiles = new Dictionary<string, Vector3>();
+
+			activateTilesAndBoxes();
+
 			isActivated = true;
-			foreach (Transform tile in tiles)
+
+			// For Debugging. Find a way to dynamically set the linePrefab, rather than
+			// doing it this way
+			foreach (Transform tile in tileField)
 			{
 				tile.GetComponent<SplineTile>().activate(linePrefab);
 			}
 		}
 
-		void deactivateTileField()
+		void deactivateSpline()
 		{
-			throw new System.NotImplementedException("Spline Puzzle Deactivation Logic Needed");
+			if (!isActivated) return;
+
+			deactivateTilesAndBoxes();
+
+			touchedTiles = null;
+			currentSplineLine = null;
+			tileField = null;
 			isActivated = false;
 
 			if (!isCompleted) completedSplineLineCount = 0;
-			currentSplineLine = null;
-
-			depopulateTiles();
 		}
 
 		public bool getIsActivated()
@@ -59,19 +79,28 @@ namespace Neutral
 			return isActivated;
 		}
 
+		/// <summary>
+		/// Called by a SplineTile that has a Standard SplineBox to update which
+		/// line is currently being drawn by the player.
+		/// </summary>
+		/// <param name="pLine"></param>
 		public void setCurrentSplineLine(SplineLine pLine)
 		{
-			// Clear the previous SplineLine of all its points if it wasn't completed
+			// Clear the previous SplineLine of all its points if it isn't null
+			// i.e. it hasn't been completed
 			if (currentSplineLine != null)
 			{
-				currentSplineLine.clearAllTileOccupations();
 				currentSplineLine.removeAllPoints();
-
 				touchedTiles.Clear();
 			}
 
 			currentSplineLine = pLine;
 			currentSplineLine.clearAllTileOccupations();
+		}
+
+		public SplineLine getCurrentSplineLine()
+		{
+			return currentSplineLine;
 		}
 
 		public void clearCurrentSplineLine()
@@ -84,11 +113,6 @@ namespace Neutral
 
 				touchedTiles.Clear();
 			}
-		}
-
-		public SplineLine getCurrentSplineLine()
-		{
-			return currentSplineLine;
 		}
 
 		public SplineLineType getCurrentSplineLineType()
@@ -121,7 +145,7 @@ namespace Neutral
 
 		public void checkIsCompleted()
 		{
-			// TODO: Handle Puzzle completion
+			// TODO: Handle Puzzle completion properly
 			if (completedSplineLineCount == splineLineCount)
 			{
 				isCompleted = true;
@@ -132,6 +156,8 @@ namespace Neutral
 
 		public void addTileToCurrentLine(string pSplineTileName, Vector3 pTilePos)
 		{
+			// Use a dict to store touched tiles, because comparing on float values
+			// of the Vector3 positions is non-deterministic
 			var tilePos = new Vector3();
 			if (!touchedTiles.ContainsKey(pSplineTileName))
 			{
@@ -152,11 +178,18 @@ namespace Neutral
 			pLineRenderer.SetPositions(touchedTiles.Values.ToArray());
 		}
 
+		/// <summary>
+		/// Connects Standard SplineBoxes with their siblings. There must be an even
+		/// number (or 0) of SplineBoxes or else an exception is thrown
+		/// All SplineBoxes must follow the given format: SplineBox_[Color]_[Index]
+		/// to be sorted correctly.
+		/// </summary>
+		/// <param name="pAllSplineBoxes"></param>
 		void pairAllSplineBoxes(List<SplineBox> pAllSplineBoxes)
 		{
 			var splineBoxCount = pAllSplineBoxes.Count;
 
-			// If not 0, or an even number of SplineBoxes
+			// If not 0, or an even number of SplineBoxes in pAllSplineBoxes
 			if (splineBoxCount % 2 != 0)
 			{
 				throw new InvalidSplineBoxCountException("There should be an even number of SplineBoxes in this Spline.");
@@ -178,25 +211,23 @@ namespace Neutral
 
 		}
 
-        void populateTiles()
+        void activateTilesAndBoxes()
 		{
-			tiles = new List<Transform>();
 			var allSplineBoxes = new List<SplineBox>();
 
 			foreach (Transform tile in tileField)
 			{
 				tile.gameObject.AddComponent<SplineTile>();
-				tiles.Add(tile);
 
                 var splineTile = tile.GetComponent<SplineTile>();
                 splineTile.setSpline(this);
 
 				if (tile.childCount > 0)
 				{
-					// Add the SplineBox to allSplineBoxes. If no Component is found, don't add
+					// Add the splineBox to allSplineBoxes. If no Component is found, don't add
 					var splineBox = tile.GetChild(0).GetComponent<SplineBox>();
 					splineTile.setSplineBox(splineBox);
-					if (splineBox != null)
+					if (splineBox != null && splineBox.getType() != SplineBoxType.Blockade)
 					{
 						allSplineBoxes.Add(splineBox);
 					}
@@ -206,36 +237,37 @@ namespace Neutral
 			pairAllSplineBoxes(allSplineBoxes);
 		}
 
-        void depopulateTiles()
+        void deactivateTilesAndBoxes()
 		{
-			foreach (Transform tile in transform)
+			if (tileField == null) return;
+
+			foreach (Transform tile in tileField)
 			{
-				tile.GetComponent<SplineTile>().clearAllAttributes();
+				tile.GetComponent<SplineTile>().deactivate();
+				Destroy(tile.GetComponent<SplineTile>());
+				print(tile.name);
 			}
-
-			tiles.Clear();
-
 		}
 
 		/// <summary>
-		/// FOR DEBUGGING ONLY.
+		/// For Debugging
 		/// </summary>
 		void handleInput()
 		{
 			if (Input.GetKeyDown (KeyCode.Comma))
 			{
 				Debug.Log ("Comma Pressed");
-				activateTileField ();
+				activateSpline ();
 			}
 
 			if (Input.GetKeyDown (KeyCode.Period))
 			{
 				Debug.Log ("Slash Pressed");
-				deactivateTileField ();
+				deactivateSpline ();
 			}
 		}
 
-		// For Debugging Only
+		// For Debugging
 		void Update () {
 			handleInput ();
 		}

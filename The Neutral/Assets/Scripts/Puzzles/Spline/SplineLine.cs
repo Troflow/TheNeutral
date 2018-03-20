@@ -6,24 +6,26 @@ namespace Neutral
 {
 	public class SplineLine : MonoBehaviour {
 
-        private bool isCompleted = false;
         private SplineBox originBox;
         private SplineBox destinationBox;
         [SerializeField]
         private SplineLineType type;
         private List<Transform> occupiedTiles;
 
-        // private Lite lite;
-
-        private Transform lineObject;
         private LineRenderer lineRenderer;
 
+        /// <summary>
+        /// Called by the SplineBox when Player is in contact with a SplineTile
+        /// with a Standard SplineBox and performs a Tier
+        /// </summary>
+        /// <param name="pSplineBox"></param>
         public void activate(SplineBox pSplineBox)
         {
             occupiedTiles = new List<Transform>();
             setOriginAndDestination(pSplineBox, pSplineBox.getSibling());
             setLineAttributes();
         }
+
         public SplineLineType getType()
         {
             return type;
@@ -39,6 +41,10 @@ namespace Neutral
             return destinationBox;
         }
 
+        /// <summary>
+        /// Used by SplineTile to check if the next tile to add is too far away
+        /// </summary>
+        /// <returns></returns>
         public Transform getLastOccupiedTile()
         {
             if (occupiedTiles != null)
@@ -51,7 +57,6 @@ namespace Neutral
 
         public void setLineAttributes()
         {
-            lineObject = transform;
             lineRenderer = transform.GetComponent<LineRenderer>();
         }
 
@@ -60,6 +65,9 @@ namespace Neutral
             occupiedTiles.Add(pTileTransform);
         }
 
+        /// <summary>
+        /// Called by Spline when currentSplineLine is cleared
+        /// </summary>
         public void clearAllTileOccupations()
         {
             foreach (Transform tile in occupiedTiles)
@@ -69,12 +77,23 @@ namespace Neutral
             occupiedTiles.Clear();
         }
 
+        /// <summary>
+        /// Called by SplineBox when it is activted. This is because either sibling
+        /// can be the origin - depending on which SplineBox's tile that the player
+        /// is in contact with when they perform the Tier
+        /// </summary>
+        /// <param name="pSplineBox"></param>
+        /// <param name="pSplineBoxSibling"></param>
         public void setOriginAndDestination(SplineBox pSplineBox, SplineBox pSplineBoxSibling)
         {
             originBox = pSplineBox;
             destinationBox = pSplineBoxSibling;
         }
 
+        /// <summary>
+        /// Called by Spline and SplineBox for when currentSplineLine is cleared,
+        /// or when the SplineBox is activated, respectively
+        /// </summary>
         public void removeAllPoints()
         {
             if (lineRenderer != null)
