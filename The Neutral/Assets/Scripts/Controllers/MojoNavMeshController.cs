@@ -6,13 +6,13 @@ namespace Neutral
 {
     public class MojoNavMeshController : MonoBehaviour
     {
-        
+
         CombatUtilities combatController;
         AnimationUtilities AnimHelper;
 
         private Animator anim;
         Rigidbody rb;
-        
+
 
         int isIdleReady = Animator.StringToHash("isIdleReady");
         int isIdleReadyToIdleCalm = Animator.StringToHash("isIdleReadyToIdleCalm");
@@ -67,9 +67,9 @@ namespace Neutral
         // Use this for initialization
         void Start()
         {
-            
+
             anim = GetComponent<Animator>();
-        
+
             AnimHelper = new AnimationUtilities();
 
 
@@ -120,7 +120,7 @@ namespace Neutral
             //            Debug.DrawLine(edgeOfSphereWithGunabiDirection, GunbaiCollision.collider.transform.position, Color.green);
             #endregion
 
-            int pathStatus = PlayerMovement.Move();
+            int pathStatus = Player.Move();
             if (pathStatus == 0)
             {
                 //print("The agent can reach the destionation");
@@ -140,10 +140,10 @@ namespace Neutral
             }
 
             //rotations and animations
-            
-            if (PlayerMovement.inControl(false))
+
+            if (Player.inControl(false))
             {
-                if (PlayerMovement.agent.hasPath)
+                if (Player.agent.hasPath)
                 {
                     if (stateInfo.IsName("IdleReady"))
                     {
@@ -151,14 +151,14 @@ namespace Neutral
                         anim.SetBool(isIdleReady, false);
                     }
 
-                    anim.SetFloat(speed, Mathf.Abs(PlayerMovement.agent.velocity.magnitude));
+                    anim.SetFloat(speed, Mathf.Abs(Player.agent.velocity.magnitude));
 
                     //check if difference between destination and current position is above a certain threshold to apply rotation
-                    if (Mathf.Abs((PlayerMovement.agent.steeringTarget - transform.position).x) > 1.0)
+                    if (Mathf.Abs((Player.agent.steeringTarget - transform.position).x) > 1.0)
                     {
 
                         //create a new rotation from our transform, to the difference of position of the destination and ourselves with standard time
-                        var new_rot = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(PlayerMovement.agent.steeringTarget - transform.position), Time.deltaTime);
+                        var new_rot = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Player.agent.steeringTarget - transform.position), Time.deltaTime);
                         //no x or z rotation to stop tilts
                         new_rot = new Quaternion(0, new_rot.y, 0, new_rot.w);
                         transform.rotation = new_rot;
@@ -166,11 +166,11 @@ namespace Neutral
 
                 }
 
-                if (PlayerMovement.agent.remainingDistance <= PlayerMovement.agent.stoppingDistance)
+                if (Player.agent.remainingDistance <= Player.agent.stoppingDistance)
                 {
-                    if (PlayerMovement.agent.velocity.sqrMagnitude == 0f)
+                    if (Player.agent.velocity.sqrMagnitude == 0f)
                     {
-                        PlayerMovement.agent.ResetPath();
+                        Player.agent.ResetPath();
                         anim.SetBool(isRunning, false);
                         anim.SetBool(isIdleReady, true);
                     }
@@ -179,19 +179,19 @@ namespace Neutral
 
             if (Input.GetKeyDown(KeyCode.L))
             {
-                PlayerMovement.agent.ResetPath();
+                Player.agent.ResetPath();
                 anim.SetBool(isCombat, true);
                 anim.SetTrigger(isCounterState);
             }
             if (Input.GetKeyDown(KeyCode.V))
             {
-                PlayerMovement.agent.ResetPath();
+                Player.agent.ResetPath();
                 anim.SetBool(isCombat, true);
                 anim.SetTrigger(isCounterStateSuccess);
             }
             if (Input.GetKeyDown(KeyCode.B))
             {
-                PlayerMovement.agent.ResetPath();
+                Player.agent.ResetPath();
                 anim.SetBool(isCombat, true);
                 anim.SetTrigger(isCounterStateSuccess);
                 anim.SetBool(isDead, true);
@@ -205,7 +205,7 @@ namespace Neutral
             {
                 ResetAllCombatTriggers();
             }
-            
+
 
             //if (stateInfo.IsName("IdleReady") && !idleStateHasChanged)
             //{
@@ -258,7 +258,7 @@ namespace Neutral
             //}
 
             //iterates through all of the moves if there is no combat animation playing
-            
+
 
         }//Update func
 

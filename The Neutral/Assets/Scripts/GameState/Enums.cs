@@ -32,4 +32,40 @@ namespace Neutral
         Mojo
     };
 
+    public enum BlinkableType
+    {
+        TriggerableObstacle,
+        NonTriggerableObstacle,
+        BlinkSplineLine,
+        SightSplineLine,
+        Enemy
+    };
+
+    public enum BlinkState
+    {
+        EyesClosed,
+        EyesOpen,
+    };
+
+    public enum PlayerActionState
+    {
+        NonActing,
+        Dashing,
+        CounterState,
+        Exploiting,
+        Attacking,
+    }
+
+    public enum SplineBoxType
+    {
+        Standard,
+        Blockade
+    };
+
+    public enum SplineLineType
+    {
+        Sight,
+        Blinkable,
+        Persistent
+    };
 }

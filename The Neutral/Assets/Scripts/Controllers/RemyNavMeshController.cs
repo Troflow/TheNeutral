@@ -6,6 +6,7 @@ namespace Neutral {
 
 	public class RemyNavMeshController : MonoBehaviour {
 
+        PlayerState playerState;
         CombatUtilities combatController;
 		AnimationUtilities AnimHelper;
         System.Collections.Generic.List<Tier> tierList;
@@ -61,7 +62,7 @@ namespace Neutral {
         private void setTriggerAndCancelMovement(int animationId)
         {
             anim.SetTrigger(animationId);
-            PlayerMovement.agent.ResetPath();
+            Player.agent.ResetPath();
             anim.SetBool(isRunning, false);
             anim.SetBool(isIdleReady, true);
         }
@@ -72,7 +73,7 @@ namespace Neutral {
             var startTime = Time.time;
             while (Time.time - startTime < 0.7)
             {
-                PlayerMovement.agent.Move(transform.forward * Time.deltaTime * PlayerState.getDashSpeed());
+                Player.agent.Move(transform.forward * Time.deltaTime * PlayerState.getDashSpeed());
                 yield return new WaitForEndOfFrame();
             }
 
@@ -80,8 +81,9 @@ namespace Neutral {
 
         // Use this for initialization
         void Start () {
-            PlayerMovement.SetInitialMovement();
+            Player.SetInitialMovement();
 			anim = GetComponent<Animator>();
+            playerState = GetComponent<PlayerState>();
 
 			AnimHelper = new AnimationUtilities();
 
@@ -94,7 +96,7 @@ namespace Neutral {
             AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
             combatController.checkForMoveCombination(stateInfo);
 
-            int pathStatus = PlayerMovement.Move();
+            int pathStatus = Player.Move();
 			if (pathStatus == 0)
 			{
 				//print("The agent can reach the destionation");
@@ -113,10 +115,10 @@ namespace Neutral {
 				//no movement occured
 			}
 
-            if (PlayerMovement.inControl(true)) {
+            if (Player.inControl(true)) {
 
 
-                if (PlayerMovement.agent.hasPath)
+                if (Player.agent.hasPath)
                 {
                     if (anim.GetBool("isRunning") == false)
                     {
@@ -124,15 +126,15 @@ namespace Neutral {
                         anim.SetBool(isIdleReady, false);
                     }
 
-                    anim.SetFloat(speed, Mathf.Abs(PlayerMovement.agent.speed));
+                    anim.SetFloat(speed, Mathf.Abs(Player.agent.speed));
 
 
                     //check if difference between destination and current position is above a certain threshold to apply rotation
-                    //if (Mathf.Abs((PlayerMovement.agent.steeringTarget - transform.position).x) > 0.5)
+                    //if (Mathf.Abs((Player.agent.steeringTarget - transform.position).x) > 0.5)
                     //{
 
                     //    //create a new rotation from our transform, to the difference of position of the destination and ourselves with standard time
-                    //    var new_rot = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(PlayerMovement.agent.steeringTarget - transform.position), Time.deltaTime);
+                    //    var new_rot = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Player.agent.steeringTarget - transform.position), Time.deltaTime);
                     //    //no x or z rotation to stop tilts
                     //    new_rot = new Quaternion(0, new_rot.y, 0, new_rot.w);
                     //    transform.rotation = new_rot;
@@ -140,19 +142,22 @@ namespace Neutral {
 
                 }
 
-                if (PlayerMovement.agent.remainingDistance <= PlayerMovement.agent.stoppingDistance)
+                if (Player.agent.remainingDistance <= Player.agent.stoppingDistance)
                 {
-                    if (PlayerMovement.agent.velocity.sqrMagnitude == 0f)
+                    if (Player.agent.velocity.sqrMagnitude == 0f)
                     {
-                        PlayerMovement.agent.ResetPath();
+                        Player.agent.ResetPath();
                         anim.SetBool(isRunning, false);
                         anim.SetBool(isIdleReady, true);
                     }
                 }
             }
 
+            Player.HandleInput(playerState);
+
+            // TODO: Move to PlayerInput.cs
 			if (Input.GetKeyDown (KeyCode.E)) {
-                PlayerMovement.agent.ResetPath();
+                Player.agent.ResetPath();
 				anim.SetBool (isExhausted, true);
 			}
 

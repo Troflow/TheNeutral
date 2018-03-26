@@ -8,10 +8,10 @@ Shader "Toon/Basic Outline" {
 		_MainTex ("Base (RGB)", 2D) = "white" { }
 		_ToonShade ("ToonShader Cubemap(RGB)", CUBE) = "" { }
 	}
-	
+
 	CGINCLUDE
 	#include "UnityCG.cginc"
-	
+
 	struct appdata {
 		float4 vertex : POSITION;
 		float3 normal : NORMAL;
@@ -22,10 +22,10 @@ Shader "Toon/Basic Outline" {
 		UNITY_FOG_COORDS(0)
 		fixed4 color : COLOR;
 	};
-	
+
 	uniform float _Outline;
 	uniform float4 _OutlineColor;
-	
+
 	v2f vert(appdata v) {
 		v2f o;
 		o.pos = UnityObjectToClipPos(v.vertex);
@@ -45,7 +45,7 @@ Shader "Toon/Basic Outline" {
 	ENDCG
 
 	SubShader {
-		Tags { "RenderType"="Opaque" }
+		Tags { "RenderType"="Opaque" "Queue"="Transparent" }
 		UsePass "Toon/Basic/BASE"
 		Pass {
 			Name "OUTLINE"
@@ -67,6 +67,23 @@ Shader "Toon/Basic Outline" {
 			ENDCG
 		}
 	}
-	
+
+	SubShader {
+		Tags { "RenderType"="Opaque" "Queue"="Transparent"}
+		UsePass "Toon/Basic/BASE"
+		Pass {
+			Name "OUTLINE"
+			Tags { "LightMode" = "Always" }
+			Cull Front
+			ZWrite On
+			ColorMask RGB
+			Blend SrcAlpha OneMinusSrcAlpha
+			CGPROGRAM
+			#pragma vertex vert
+			#pragma exclude_renderers shaderonly
+			ENDCG
+			SetTexture [_MainTex] { combine primary }
+		}
+	}
 	Fallback "Toon/Basic"
 }
