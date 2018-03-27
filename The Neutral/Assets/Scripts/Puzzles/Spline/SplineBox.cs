@@ -23,6 +23,7 @@ namespace Neutral
 
         SplineLine splineLine;
         SplineBox sibling;
+        [SerializeField]
         SplineBoxType type;
 
         /// <summary>

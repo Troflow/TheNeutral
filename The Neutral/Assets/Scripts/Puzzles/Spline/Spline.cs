@@ -173,8 +173,6 @@ namespace Neutral
 		public void updateLineRendererPositions(LineRenderer pLineRenderer)
 		{
 			pLineRenderer.positionCount = touchedTiles.Count;
-
-			// TODO: Convert the list of SplineTile to list of Vector3
 			pLineRenderer.SetPositions(touchedTiles.Values.ToArray());
 		}
 
@@ -257,19 +255,19 @@ namespace Neutral
 			if (Input.GetKeyDown (KeyCode.Comma))
 			{
 				Debug.Log ("Comma Pressed");
-				activateSpline ();
+				activateSpline();
 			}
 
 			if (Input.GetKeyDown (KeyCode.Period))
 			{
-				Debug.Log ("Slash Pressed");
-				deactivateSpline ();
+				Debug.Log ("Period Pressed");
+				deactivateSpline();
 			}
 		}
 
 		// For Debugging
-		void Update () {
-			handleInput ();
+		void Update() {
+			handleInput();
 		}
 	}
 }

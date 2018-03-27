@@ -10,6 +10,13 @@ namespace Neutral
     /// </summary>
 	public static class GameManager
 	{
+        #region DAYDREAM
+
+        public static float pulseSpeed = 20f;
+        public static float pulseDistanceEpsilon = 0.5f;
+
+        #endregion
+
         #region COLOR WHEEL
 
         public static float colorTransferTimeStep = 2f;

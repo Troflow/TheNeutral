@@ -155,7 +155,7 @@ namespace Neutral
 		}
 
 
-        private IEnumerator grantColor(CombatColor newColor)
+        IEnumerator grantColor(CombatColor newColor)
 		{
             isBeingGrantedNewColor = true;
 
