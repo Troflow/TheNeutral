@@ -64,7 +64,7 @@ namespace Neutral
             colorBook.Add(currentCombatColor.TestSubtractColor(currentCombatColor));
             randomColor = colorBook[0].color.Value;
 
-            print(randomColor);
+            // print(randomColor);
 
         }
 

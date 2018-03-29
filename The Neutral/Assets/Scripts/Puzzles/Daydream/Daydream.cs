@@ -7,36 +7,59 @@ namespace Neutral
 {
 	public class Daydream : MonoBehaviour {
 
-        List<Transform> pulsePaths;
+        List<Transform> openPaths;
+        [SerializeField]
+        int pulsesInTransit;
         bool isActivated = false;
 
         void activateDaydream()
         {
             if (isActivated) return;
 
-            pulsePaths = new List<Transform>();
+            openPaths = new List<Transform>();
             populatePulsePaths();
-
-            foreach (Transform path in pulsePaths)
-            {
-                path.GetComponent<PulsePath>().activate();
-            }
         }
 
         void deactivateDaydream()
         {}
 
-        void populatePulsePaths()
+        public void handleClosedPath(PulsePath pPath)
         {
-            foreach (Transform child in transform)
+            if (openPaths.Contains(pPath.transform))
             {
-                pulsePaths.Add(child);
+                openPaths.Remove(pPath.transform);
             }
         }
 
+        public void updateTransitPulseCount(int pVal)
+        {
+            pulsesInTransit += pVal;
+            if (pulsesInTransit == 0) playBeat();
+        }
+
+        void populatePulsePaths()
+        {
+            foreach (Transform path in transform)
+            {
+                openPaths.Add(path);
+                path.GetComponent<PulsePath>().activate(this);
+            }
+        }
+
+        void completed()
+        {}
+
         void playBeat()
         {
-            foreach (Transform path in pulsePaths)
+            if (openPaths.Count == 0)
+            {
+                completed();
+                return;
+            }
+
+            pulsesInTransit = openPaths.Count;
+
+            foreach (Transform path in openPaths)
             {
                 path.GetComponent<PulsePath>().firePulse();
             }
@@ -49,7 +72,7 @@ namespace Neutral
 			{
 				Debug.Log("Comma Pressed");
 				activateDaydream();
-                InvokeRepeating("playBeat", 0, 4f);
+                playBeat();
 			}
 
 			if (Input.GetKeyDown (KeyCode.Period))

@@ -19,6 +19,11 @@ namespace Neutral
 		}
 
 
+        /// <summary>
+        /// Reveals a blinkLine when Player's eyes are closed. Hides
+        /// when eyes are open.
+        /// </summary>
+        /// <param name="pPlayerEyesOpen"></param>
         void handleBlinkLineVisibility(bool pPlayerEyesOpen)
         {
             var lineColor = lineRenderer.material.color;
@@ -29,9 +34,13 @@ namespace Neutral
             lineRenderer.material.color = lineColor;
         }
 
+        /// <summary>
+        /// Hides a sightLine when Player's eyes are closed. Reveals
+        /// when eyes are open
+        /// </summary>
+        /// <param name="pPlayerEyesOpen"></param>
         void handleSightLineVisibility(bool pPlayerEyesOpen)
         {
-
             var lineColor = lineRenderer.material.color;
 
             if (pPlayerEyesOpen) lineColor.a = 1;
@@ -40,11 +49,11 @@ namespace Neutral
             lineRenderer.material.color = lineColor;
         }
 
-        void handlePlayerEyesState(BlinkState pPlayerBlinkState)
+        void handlePlayerEyesState()
         {
             var playerEyesOpen = true;
-            if (pPlayerBlinkState == BlinkState.EyesOpen) playerEyesOpen = true;
-            else if (pPlayerBlinkState == BlinkState.EyesClosed) playerEyesOpen = false;
+            if (GameManager.playerBlinkState == BlinkState.EyesOpen) playerEyesOpen = true;
+            else if (GameManager.playerBlinkState == BlinkState.EyesClosed) playerEyesOpen = false;
 
             switch(type)
             {
@@ -59,7 +68,7 @@ namespace Neutral
         }
 
 		void Update () {
-            handlePlayerEyesState(GameManager.playerBlinkState);
+            handlePlayerEyesState();
 		}
 	}
 }

@@ -7,21 +7,37 @@ namespace Neutral
 {
 	public class PulsePath : MonoBehaviour {
 
+        Daydream daydream;
         LineRenderer lineRenderer;
         Pulse pulse;
 
         // For Debugging
         List<Vector3> points;
 
-        public void activate()
+        public void activate(Daydream pDaydream)
         {
+            daydream = pDaydream;
             pulse = transform.Find("Pulse").GetComponent<Pulse>();
+            pulse.setPath(this);
 
             points = new List<Vector3>();
             populatePoints();
 
             lineRenderer = GetComponent<LineRenderer>();
             updateLineRendererPositions();
+        }
+
+        public void deactivate()
+        {}
+
+        public void close()
+        {
+            daydream.handleClosedPath(this);
+        }
+
+        public void fullyTraversed()
+        {
+            daydream.updateTransitPulseCount(-1);
         }
 
         void populatePoints()
@@ -38,7 +54,7 @@ namespace Neutral
 
         public void firePulse()
         {
-            pulse.setIsFired(true, points);
+            pulse.fire(true, points);
         }
 
         void updateLineRendererPositions()

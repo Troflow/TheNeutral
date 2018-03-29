@@ -54,7 +54,7 @@ namespace Neutral
         CounterState,
         Exploiting,
         Attacking,
-    }
+    };
 
     public enum SplineBoxType
     {
@@ -67,5 +67,12 @@ namespace Neutral
         Sight,
         Blinkable,
         Persistent
+    };
+
+    public enum PulseState
+    {
+        MovingEyesOpen,
+        MovingEyesClosed,
+        StaticEyesClosed,
     };
 }
