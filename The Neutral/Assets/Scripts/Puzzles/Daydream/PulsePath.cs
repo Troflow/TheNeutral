@@ -19,6 +19,7 @@ namespace Neutral
             daydream = pDaydream;
             pulse = transform.Find("Pulse").GetComponent<Pulse>();
             pulse.setPath(this);
+            pulse.setColorProperties();
 
             points = new List<Vector3>();
             populatePoints();

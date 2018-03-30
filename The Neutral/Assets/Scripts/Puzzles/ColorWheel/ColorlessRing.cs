@@ -11,7 +11,7 @@ namespace Neutral
 	/// </summary>
 	public class ColorlessRing : MonoBehaviour {
         CombatColor combatColor;
-         List<CombatColor> colorBook;
+        List<CombatColor> colorBook;
 
         void Start()
         {

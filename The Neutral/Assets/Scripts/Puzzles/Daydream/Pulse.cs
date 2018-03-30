@@ -8,10 +8,15 @@ namespace Neutral
 	public class Pulse : MonoBehaviour {
 
         List<Vector3> trajectory;
+        [SerializeField]
         Lite lite;
         Vector3 originPos;
         PulsePath path;
+        [SerializeField]
         PulseState state;
+        [SerializeField]
+        CombatColor combatColor;
+        List<CombatColor> colorBook;
 
         bool isFired = false;
 
@@ -20,12 +25,32 @@ namespace Neutral
             isFired = pNewState;
             originPos = pTrajectory[0];
             trajectory = new List<Vector3>(pTrajectory);
+
             setState();
+        }
+
+        public void setColorProperties()
+        {
+            combatColor = CombatColor.liteLookupTable[lite];
+            updateColor();
+            colorBook = new List<CombatColor>(){
+                combatColor
+            };
         }
 
         public void setPath(PulsePath pPath)
         {
             path = pPath;
+        }
+
+        public PulseState getState()
+        {
+            return state;
+        }
+
+        public CombatColor getColorFromLite()
+        {
+            return CombatColor.liteLookupTable[lite];
         }
 
         void move()
@@ -57,6 +82,7 @@ namespace Neutral
 
         bool compareColor(Lite pLite)
         {
+            // TODO: Compare Pulse's lite to the given lite and return true if they match
             return false;
         }
 
@@ -70,9 +96,41 @@ namespace Neutral
 
         void resetPosition()
         {
+            resetColoringBook();
             isFired = false;
             transform.position = originPos;
             path.fullyTraversed();
+        }
+
+        void updateColor()
+        {
+            transform.GetComponent<MeshRenderer>().material.color = combatColor.color.Value;
+        }
+
+        void addColorToColorBook(CombatColor pCombatColor)
+        {
+            colorBook.Add(pCombatColor);
+            combatColor = computeColoringBookColor();
+            updateColor();
+        }
+
+        CombatColor computeColoringBookColor()
+        {
+            var mixedColor = colorBook[0];
+            for (int x = 1; x < colorBook.Count; x++)
+            {
+                mixedColor += colorBook[x];
+            }
+
+            return mixedColor;
+        }
+
+        void resetColoringBook()
+        {
+            combatColor = CombatColor.liteLookupTable[lite];
+            colorBook.Clear();
+            colorBook.Add(combatColor);
+            updateColor();
         }
 
         void handlePlayerEyesState()
@@ -99,6 +157,16 @@ namespace Neutral
                 if (compareColor(destinationColor))
                 {
                     path.close();
+                }
+            }
+
+            if (pCollider.CompareTag("Pulse"))
+            {
+                var otherPulse = pCollider.GetComponent<Pulse>();
+                if (state == PulseState.MovingEyesClosed &&
+                    otherPulse.getState() == PulseState.StaticEyesClosed)
+                {
+                    addColorToColorBook(otherPulse.getColorFromLite());
                 }
             }
         }
