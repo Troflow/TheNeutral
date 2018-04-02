@@ -11,7 +11,8 @@ namespace Neutral
 
         public CombatColorYellow()
         {
-            color = new System.Collections.Generic.KeyValuePair<Lite, Color>(Lite.YELLOW, Color.yellow);
+            var customYellow = new Color(1,1,0,1);
+            color = new System.Collections.Generic.KeyValuePair<Lite, Color>(Lite.YELLOW, customYellow);
         }
 
         public override void ExposedColorLogic()

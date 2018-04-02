@@ -8,11 +8,11 @@ namespace Neutral
     /// Attachable script that dynamically hides objects based on their BlinkableType,
     /// when the player's eyes are closed.
 	/// </summary>
-	public class BlinkableSplineLine: MonoBehaviour {
+	public class BlinkableSplineLine: MonoBehaviour, IBlinkable {
 
         LineRenderer lineRenderer;
         [SerializeField]
-        private BlinkableType type;
+        BlinkableType type;
 
 		void Start () {
             lineRenderer = GetComponent<LineRenderer>();
@@ -49,7 +49,7 @@ namespace Neutral
             lineRenderer.material.color = lineColor;
         }
 
-        void handlePlayerEyesState()
+        public void handlePlayerEyesState()
         {
             var playerEyesOpen = true;
             if (GameManager.playerBlinkState == BlinkState.EyesOpen) playerEyesOpen = true;

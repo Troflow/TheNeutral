@@ -6,8 +6,6 @@ using System.Linq;
 
 namespace Neutral
 {
-
-
     public abstract class CombatColor : ICombatColor
     {
 
@@ -24,11 +22,15 @@ namespace Neutral
 
         public static IDictionary<Lite, CombatColor> liteLookupTable = new Dictionary<Lite, CombatColor>()
         {
-            { Lite.GREEN, new CombatColorGreen() },
             { Lite.RED, new CombatColorRed() },
-            { Lite.BLUE, new CombatColorBlue() },
             { Lite.YELLOW, new CombatColorYellow() },
+            { Lite.GREEN, new CombatColorGreen() },
+            { Lite.CYAN, new CombatColorCyan() },
+            { Lite.BLUE, new CombatColorBlue() },
+            { Lite.MAGENTA, new CombatColorMagenta() },
+            { Lite.GREY, new CombatColorGrey() },
             { Lite.BLACK, new CombatColorBlack() },
+            { Lite.WHITE, new CombatColorWhite() },
         };
 
         public static CombatColor operator + (CombatColor c1, CombatColor c2)

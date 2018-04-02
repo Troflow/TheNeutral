@@ -130,7 +130,6 @@ namespace Neutral
 			completedPuzzles.Add (Lite.BLUE, 0);
 			completedPuzzles.Add (Lite.YELLOW, 0);
 			completedPuzzles.Add (Lite.RED, 0);
-			completedPuzzles.Add (Lite.GRAY, 0);
 		}
 
         private void initializeFlagColors()
@@ -139,9 +138,7 @@ namespace Neutral
             {
                 { Lite.BLACK, Color.black },
                 { Lite.BLUE, Color.blue },
-                { Lite.BROWN, new Color(102,51,0) },
-                { Lite.GOLD, new Color(255,223,0) },
-                { Lite.GRAY, Color.gray },
+                { Lite.GREY, Color.grey },
                 { Lite.GREEN, Color.green },
                 { Lite.RED, Color.red },
                 { Lite.WHITE, Color.white },

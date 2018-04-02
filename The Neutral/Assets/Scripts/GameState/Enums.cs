@@ -7,15 +7,14 @@ namespace Neutral
 
 	public enum Lite {
         RED,
-        BLUE,
         YELLOW,
         GREEN,
-        BROWN,
-        GOLD,
+        CYAN,
+        BLUE,
+        MAGENTA,
+        GREY,
         BLACK,
         WHITE,
-        GRAY,
-        PURPLE,
         MIXED
     };
 
@@ -38,6 +37,8 @@ namespace Neutral
         NonTriggerableObstacle,
         BlinkSplineLine,
         SightSplineLine,
+        BlinkPulseBar,
+        SightPulseBar,
         Enemy
     };
 

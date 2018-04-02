@@ -9,14 +9,15 @@ namespace Neutral
     /// Attachable script that dynamically hides objects based on their BlinkableType,
     /// when the player's eyes are closed.
 	/// </summary>
-	public class BlinkableObstacle : MonoBehaviour {
+	public class BlinkableObstacle : MonoBehaviour, IBlinkable {
 
         UnityEngine.AI.NavMeshObstacle obstacle;
         MeshRenderer renderer;
         [SerializeField]
-        private BlinkableType type;
+        BlinkableType type;
 
-		void Start () {
+		void Start()
+        {
             obstacle = GetComponent<NavMeshObstacle>();
             renderer = GetComponent<MeshRenderer>();
 		}
@@ -28,11 +29,11 @@ namespace Neutral
             renderer.enabled = pPlayerEyesOpen;
         }
 
-        void handlePlayerEyesState(BlinkState pPlayerBlinkState)
+        public void handlePlayerEyesState()
         {
             var playerEyesOpen = true;
-            if (pPlayerBlinkState == BlinkState.EyesOpen) playerEyesOpen = true;
-            else if (pPlayerBlinkState == BlinkState.EyesClosed) playerEyesOpen = false;
+            if (GameManager.playerBlinkState == BlinkState.EyesOpen) playerEyesOpen = true;
+            else if (GameManager.playerBlinkState == BlinkState.EyesClosed) playerEyesOpen = false;
 
             switch(type)
             {
@@ -48,8 +49,9 @@ namespace Neutral
             }
         }
 
-		void Update () {
-            handlePlayerEyesState(GameManager.playerBlinkState);
+		void Update()
+        {
+            handlePlayerEyesState();
 		}
 	}
 }

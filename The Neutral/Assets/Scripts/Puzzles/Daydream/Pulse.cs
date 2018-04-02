@@ -7,7 +7,11 @@ namespace Neutral
 {
 	public class Pulse : MonoBehaviour {
 
+        int trajectoryLength;
+        int passedPointsCount;
+        List<Vector3> originalTrajectory;
         List<Vector3> trajectory;
+
         [SerializeField]
         Lite lite;
         Vector3 originPos;
@@ -20,13 +24,16 @@ namespace Neutral
 
         bool isFired = false;
 
-        public void fire(bool pNewState, List<Vector3> pTrajectory)
-        {
-            isFired = pNewState;
-            originPos = pTrajectory[0];
-            trajectory = new List<Vector3>(pTrajectory);
+        #region ACTIVATION
 
-            setState();
+        public void activate(PulsePath pPath)
+        {
+            path = pPath;
+            originalTrajectory = new List<Vector3>(path.getPoints());
+            trajectory = new List<Vector3>(path.getPoints());
+            trajectoryLength = trajectory.Count;
+            originPos = trajectory[0];
+            passedPointsCount = 0;
         }
 
         public void setColorProperties()
@@ -38,9 +45,31 @@ namespace Neutral
             };
         }
 
-        public void setPath(PulsePath pPath)
+        #endregion
+
+        public void deactivate()
         {
-            path = pPath;
+            isFired = false;
+            transform.position = originPos;
+
+            combatColor = CombatColor.liteLookupTable[Lite.WHITE];
+            updateColor();
+
+            originalTrajectory = null;
+            trajectory = null;
+            trajectoryLength = 0;
+            passedPointsCount = 0;
+
+            colorBook = null;
+            combatColor = null;
+
+            path = null;
+        }
+
+        public void fire()
+        {
+            isFired = true;
+            setState();
         }
 
         public PulseState getState()
@@ -48,14 +77,14 @@ namespace Neutral
             return state;
         }
 
-        public CombatColor getColorFromLite()
+        public CombatColor getCombatColorFromLite()
         {
             return CombatColor.liteLookupTable[lite];
         }
 
         void move()
         {
-            if (trajectory.Count == 0)
+            if (passedPointsCount == trajectoryLength)
             {
                 resetPosition();
                 return;
@@ -82,15 +111,19 @@ namespace Neutral
 
         bool compareColor(Lite pLite)
         {
-            // TODO: Compare Pulse's lite to the given lite and return true if they match
-            return false;
+            var destinationCombatColor = CombatColor.liteLookupTable[pLite];
+            return combatColor.color.Value == destinationCombatColor.color.Value;
         }
 
         void checkDistanceToNextPoint(Vector3 pNextPoint)
         {
             if (Vector3.Distance(transform.position, pNextPoint) <= GameManager.pulseDistanceEpsilon)
             {
+                // Move the closestPoint to the back of the list, by removing then adding again
+                var closestPoint = trajectory[0];
                 trajectory.RemoveAt(0);
+                trajectory.Add(closestPoint);
+                passedPointsCount++;
             }
         }
 
@@ -99,6 +132,16 @@ namespace Neutral
             resetColoringBook();
             isFired = false;
             transform.position = originPos;
+
+            // Reset the points in the trajectory list to prevent
+            // undesired behaviour
+            trajectory.Clear();
+            foreach (Vector3 point in originalTrajectory)
+            {
+                trajectory.Add(point);
+            }
+
+            passedPointsCount = 0;
             path.fullyTraversed();
         }
 
@@ -151,13 +194,24 @@ namespace Neutral
         {
             if (pCollider.CompareTag("PulseDestination"))
             {
-                var destinationColor = pCollider.GetComponent<PulsePoint>().getLite();
+                var destination = pCollider.GetComponent<PulseDestination>();
 
                 // Close path only if pulse is colored same as its destination
-                if (compareColor(destinationColor))
+                if (compareColor(destination.getLite()))
                 {
+                    destination.setIsClosed(true);
                     path.close();
                 }
+                // Else, reset
+                else if (!destination.getIsClosed())
+                {
+                    resetPosition();
+                }
+            }
+
+            if (pCollider.CompareTag("PulseBar"))
+            {
+                resetPosition();
             }
 
             if (pCollider.CompareTag("Pulse"))
@@ -166,8 +220,13 @@ namespace Neutral
                 if (state == PulseState.MovingEyesClosed &&
                     otherPulse.getState() == PulseState.StaticEyesClosed)
                 {
-                    addColorToColorBook(otherPulse.getColorFromLite());
+                    addColorToColorBook(otherPulse.getCombatColorFromLite());
                 }
+            }
+
+            if (pCollider.CompareTag("ColorDepot"))
+            {
+                addColorToColorBook(pCollider.GetComponent<ColorDepot>().getCombatColor());
             }
         }
 
