@@ -6,16 +6,22 @@ namespace Neutral
 {
 	/// <summary>
 	/// ColorlessWheel class.
-	/// Responsible for rotating, and is the parent object of the ColorlessRing and ReverseMural
+	/// Responsible for rotating, and is the parent object of the ColorlessRing and ReverseMural.
+	/// Ensure all Murals and Rings have the correct Lite's associated to them in the Inspector
 	/// </summary>
 	public class ColorlessWheel : MonoBehaviour
 	{
-		ReverseCarousel carousel;
 		Vector3 rotateVector;
 
-		void Start ()
+		public void activate(float pRotationDirection)
 		{
-			carousel = transform.parent.GetComponent<ReverseCarousel>();
+			var rotateSpeed = GameManager.colorWheelRotateSpeed * pRotationDirection;
+			rotateVector = new Vector3(0, rotateSpeed, 0);
+		}
+
+		public void deactivate()
+		{
+			transform.Find("ColorlessRing").GetComponent<ColorlessRing>().clearColoringBook();
 		}
 
 		public CombatColor getRingColor()
@@ -28,23 +34,13 @@ namespace Neutral
 			return transform.Find("ReverseMural").GetComponent<ReverseMural>().getCombatColor();
 		}
 
-		public void setRotateVector(float pRotateSpeed)
-		{
-			rotateVector = new Vector3 (0, pRotateSpeed, 0);
-		}
-
 		public void setMuralState(bool pNewState)
 		{
 			var muralObject = transform.Find("ReverseMural").gameObject;
 			muralObject.SetActive(pNewState);
 
-			if (pNewState) muralObject.GetComponent<ReverseMural>().Activate();
-			else muralObject.GetComponent<ReverseMural>().Deactivate();
-		}
-
-		public void clearColorlessRingColor()
-		{
-			transform.Find("ColorlessRing").GetComponent<ColorlessRing>().clearColoringBook();
+			if (pNewState) muralObject.GetComponent<ReverseMural>().activate();
+			else muralObject.GetComponent<ReverseMural>().deactivate();
 		}
 
 		public void rotate()

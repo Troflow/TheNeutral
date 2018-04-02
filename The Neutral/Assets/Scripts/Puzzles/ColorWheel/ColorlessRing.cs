@@ -10,6 +10,11 @@ namespace Neutral
     /// The Player's color changes to match the color of the Ring
 	/// </summary>
 	public class ColorlessRing : MonoBehaviour {
+
+        // For Debugging
+        static ColorlessRing ringMostRecentlyActivated;
+        static ColorlessRing ringInContactWithPlayer;
+
         CombatColor combatColor;
         List<CombatColor> colorBook;
 
@@ -24,15 +29,14 @@ namespace Neutral
 
         public void addColorToColorBook(CombatColor pCombatColor)
         {
-            var wheelAdded = transform.root.GetComponent<ReverseCarousel>().addNewlyColoredWheel(transform.parent);
+            colorBook.Add(pCombatColor);
+            combatColor = computeColoringBookColor();
 
-            if (wheelAdded)
-            {
-                colorBook.Add(pCombatColor);
-                combatColor = computeColoringBookColor();
+            changeRingColor();
 
-                changeRingColor();
-            }
+            // TODO: Have the actual ColorWheel say when it's colored,
+            // rather than having the ColorRing do this
+            transform.root.GetComponent<ReverseCarousel>().addNewlyColoredWheel(transform.parent);
         }
 
         private CombatColor computeColoringBookColor()
@@ -77,12 +81,25 @@ namespace Neutral
 		{
 			if (pCollider.CompareTag("Player-Sphere"))
 			{
-                var playerState = pCollider.GetComponentInParent<PlayerState>();
-
-                // TODO: Only if Player isAttacking:
-                addColorToColorBook(playerState.getCurrentCombatColor());
+                ringInContactWithPlayer = this;
 			}
 		}
+
+        public void OnTriggerStay(Collider pCollider)
+        {
+            if (pCollider.CompareTag("Player-Sphere"))
+            {
+                var playerState = pCollider.GetComponentInParent<PlayerState>();
+                var playerActionState = playerState.getPlayerActionState();
+
+                if (playerActionState == PlayerActionState.Attacking && ringInContactWithPlayer == this &&
+                    ringMostRecentlyActivated != this)
+                {
+                    addColorToColorBook(playerState.getCurrentCombatColor());
+                    ringMostRecentlyActivated = this;
+                }
+            }
+        }
 		#endregion
 	}
 }

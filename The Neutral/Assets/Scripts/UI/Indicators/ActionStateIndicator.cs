@@ -34,6 +34,18 @@ namespace Neutral
             {
                 tierStateIndicator.gameObject.SetActive(true);
             }
+			else if (pActionState == PlayerActionState.CounterState)
+            {
+                counterStateIndicator.gameObject.SetActive(true);
+            }
+			else if (pActionState == PlayerActionState.Exploiting)
+            {
+                exploitStateIndicator.gameObject.SetActive(true);
+            }
+			else if (pActionState == PlayerActionState.Dashing)
+            {
+                dashStateIndicator.gameObject.SetActive(true);
+            }
 		}
 
 		void getChildren()

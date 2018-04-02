@@ -30,5 +30,13 @@ namespace Neutral
         public static BlinkState playerBlinkState = BlinkState.EyesOpen;
 
         #endregion
+
+        #region UI
+
+		// Use 0.4f because Grey is 0.5f at each
+        // TODO: Make a UI symbol for Grey
+        public static float colorSymbolDisplayThreshold = 0.4f;
+
+        #endregion
 	}
 }

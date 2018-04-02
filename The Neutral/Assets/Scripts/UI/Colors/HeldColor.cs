@@ -27,10 +27,11 @@ namespace Neutral
 
 		void updateHeldColorImage(Color heldColor)
 		{
-			// Can't use 0 as the check, because Yellow has >0f in each value
-			R.gameObject.SetActive(heldColor.r > 0.5f);
-			G.gameObject.SetActive(heldColor.g > 0.5f);
-			B.gameObject.SetActive(heldColor.b > 0.5f);
+			var threshold = GameManager.colorSymbolDisplayThreshold;
+
+			R.gameObject.SetActive(heldColor.r > threshold);
+			G.gameObject.SetActive(heldColor.g > threshold);
+			B.gameObject.SetActive(heldColor.b > threshold);
 		}
 
 		void getChildren()

@@ -12,14 +12,9 @@ namespace Neutral
 	public abstract class StandardCarousel : MonoBehaviour {
 		protected List<ColorWheel> allColorWheels;
 		protected List<ColorWheel> haltedColorWheels;
-		protected bool isSolved = false;
+		protected bool isCompleted = false;
 		protected bool isActivated = false;
 		public abstract void addWheelToHaltedWheels(ColorWheel pColorWheel);
-
-		public bool getIsSolved()
-		{
-			return isSolved;
-		}
 
 		protected void resumeAllWheelsRotation()
 		{
@@ -35,7 +30,7 @@ namespace Neutral
 		{
 			foreach (ColorWheel wheel in allColorWheels)
 			{
-				wheel.setWillGrantColor(newState);
+				wheel.setRingState(newState);
 				wheel.setMuralState(newState);
 			}
 		}

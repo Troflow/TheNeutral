@@ -37,10 +37,11 @@ namespace Neutral
             }
 
             var transferColor = incomingTransferColor.color.Value;
+			var threshold = GameManager.colorSymbolDisplayThreshold;
 
-            transferColorIcon.Find("R").gameObject.SetActive(transferColor.r > 0.5f);
-            transferColorIcon.Find("G").gameObject.SetActive(transferColor.g > 0.5f);
-            transferColorIcon.Find("B").gameObject.SetActive(transferColor.b > 0.5f);
+            transferColorIcon.Find("R").gameObject.SetActive(transferColor.r > threshold);
+            transferColorIcon.Find("G").gameObject.SetActive(transferColor.g > threshold);
+            transferColorIcon.Find("B").gameObject.SetActive(transferColor.b > threshold);
         }
 
 		void updateColorTransferBar(float colorTransferValue, CombatColor incomingTransferColor)

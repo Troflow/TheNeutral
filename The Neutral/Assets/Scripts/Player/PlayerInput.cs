@@ -12,6 +12,8 @@ namespace Neutral
     {
         public static void HandleInput(PlayerState pPlayerState)
         {
+            pPlayerState.setPlayerActionState(PlayerActionState.NonActing);
+
             if (Input.GetButtonDown("Blink"))
             {
                 GameManager.playerBlinkState = BlinkState.EyesClosed;
@@ -29,11 +31,10 @@ namespace Neutral
             }
 
             // For Debugging
-            if (Input.GetKeyUp(KeyCode.LeftBracket))
+            if (Input.GetKeyDown(KeyCode.LeftShift))
             {
-                pPlayerState.setPlayerActionState(PlayerActionState.NonActing);
+                pPlayerState.setPlayerActionState(PlayerActionState.Dashing);
             }
-
         }
     }
 

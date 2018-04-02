@@ -224,7 +224,8 @@ namespace Neutral
 
 				// If playerActionState is Attacking, instantiate SplineLine object and
 				// set spline.currentSplineLine to instantiated SplineLine
-				if (box != null && playerActionState == PlayerActionState.Attacking && tileMostRecentlyActivated != this)
+				if (box != null && playerActionState == PlayerActionState.Attacking &&
+					tileMostRecentlyActivated != this)
 				{
 					box.activate(linePrefab, spline);
 					spline.setCurrentSplineLine(box.getSplineLine());

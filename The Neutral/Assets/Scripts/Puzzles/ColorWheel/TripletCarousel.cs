@@ -6,21 +6,52 @@ namespace Neutral
 {
 	/// <summary>
 	/// TripletCarousel class.
-	/// Manages initialisation of ordering, rotation speed,
-	/// and keeps track of puzzle completion
+	/// Manages logic of one of the three carousels contained in this type
+	/// of ColorWheel.
 	/// </summary>
 	public class TripletCarousel : StandardCarousel {
 		TripletCarouselManager tripletCarouselManager;
-        Transform lantern;
 
-		void Start()
+
+		public void activate()
 		{
-            tripletCarouselManager = transform.parent.GetComponent<TripletCarouselManager>();
+			tripletCarouselManager = transform.parent.GetComponent<TripletCarouselManager>();
+			isActivated = true;
+			allColorWheels = new List<ColorWheel>();
+			foreach (Transform child in transform)
+			{
+				allColorWheels.Add(child.GetComponent<ColorWheel>());
+			}
+			changeAllMuralAndRingStatesTo(true);
+			if (tripletCarouselManager.getSystemType() == ColorWheelSystemType.Global) return;
+
+			// If the ColorWheelSystemType is Local,
+			// the carousel will further intialise its properties (rather than the
+			// TripletCarouselManager)
+			initialiseAllColorWheels();
 		}
 
-        public override void addWheelToHaltedWheels(ColorWheel pColorWheel)
+		public void deactivate()
 		{
-			// If systemType is Global, tripletCarouselManager is in charge of managing halted ColorWheels
+			changeAllMuralAndRingStatesTo(false);
+			foreach(ColorWheel wheel in allColorWheels)
+			{
+				wheel.setIsHalted(false);
+			}
+			haltedColorWheels = null;
+			allColorWheels = null;
+			isActivated = false;
+			tripletCarouselManager = null;
+		}
+
+        /// <summary>
+        /// Handles logic when a ColorWheel has been successfully halted.
+		/// Logic differs based on whether the ColorWheelSystemType is Global or Local.
+        /// </summary>
+        /// <param name="pColorWheel"></param>
+		public override void addWheelToHaltedWheels(ColorWheel pColorWheel)
+		{
+			// If systemType is Global, tripletCarouselManager will be in charge of managing halted ColorWheels instead
 			if (tripletCarouselManager.getSystemType() == ColorWheelSystemType.Global)
 			{
 				tripletCarouselManager.addWheelToHaltedWheels(pColorWheel);
@@ -55,7 +86,7 @@ namespace Neutral
 		/// Must localise the halt orders to be capped by the number of Wheels within the Carousel
 		/// in order to conform with how halt order will be verified
 		/// </summary>
-		public void initialiseAllColorWheels()
+		void initialiseAllColorWheels()
 		{
 			haltedColorWheels = new List<ColorWheel>();
 
@@ -74,8 +105,25 @@ namespace Neutral
 			localiseWheelHaltOrders();
 		}
 
+		/// <summary>
+		/// In a Triplet ColorWheel System, halt orders can be either global or local based,
+		/// on the ColorWheelSystemType.
+		/// e.g. 9 Murals, have halt orders 0 through 8. And in a Global ColorWheelSystemType,
+		/// these murals must be solved in that ordering in order to solve the puzzle.
+		/// In a Local ColorWheelSystemType however, each TripletCarousel, will have
+		/// its own halt ordering. Thus:
+		/// Carousel A will have Murals [0,4,8],
+		/// Carousel B will have Murals [2,6,7]
+		/// Carousel C will have Murals [1,3,5]
+		/// If we don't localise, then it will be impossible to solve any of the Carousel's locally
+		/// thus, localiseWheelHaltOrders() turns each of the above arrays to: [0,1,2]
+		/// for the respective carousel
+		/// </summary>
 		void localiseWheelHaltOrders()
 		{
+			// Sort all of this TripletCarousel's ColorWheels by their Global halt order
+			// and then set their halt order to their index in the list
+			// of ColorWheels for this TripletCarousel
 			allColorWheels.Sort((x,y) => x.getHaltOrder().CompareTo(y.getHaltOrder()));
             var localisedHeight = 0;
             foreach (ColorWheel wheel in allColorWheels)
@@ -83,34 +131,6 @@ namespace Neutral
                 wheel.setHaltOrder(localisedHeight);
                 localisedHeight ++;
             }
-		}
-
-
-		public void Activate()
-		{
-			isActivated = true;
-			allColorWheels = new List<ColorWheel>();
-			foreach (Transform child in transform)
-			{
-				allColorWheels.Add(child.GetComponent<ColorWheel>());
-			}
-			changeAllMuralAndRingStatesTo(true);
-			if (tripletCarouselManager.getSystemType() == ColorWheelSystemType.Global) return;
-
-			// If TripletCarouselManager is Local System, then the carousel will further intialise its properties
-			initialiseAllColorWheels();
-		}
-
-		public void Deactivate()
-		{
-			changeAllMuralAndRingStatesTo(false);
-			foreach(ColorWheel wheel in allColorWheels)
-			{
-				wheel.setIsHalted(false);
-			}
-			haltedColorWheels = null;
-			allColorWheels = null;
-			isActivated = false;
 		}
 
 		void rotateAllWheels()
@@ -123,14 +143,14 @@ namespace Neutral
 
 		void completed()
 		{
-			isSolved = true;
-			tripletCarouselManager.addCompletedCarousel(this);
-			Deactivate();
+			isCompleted = true;
+			tripletCarouselManager.addCompletedCarousel();
+			deactivate();
 		}
 
 		void Update()
 		{
-			if (!isSolved && isActivated) rotateAllWheels();
+			if (!isCompleted && isActivated) rotateAllWheels();
 		}
 	}
 }

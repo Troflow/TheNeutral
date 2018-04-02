@@ -15,13 +15,13 @@ namespace Neutral
 
 		public void Interact()
 		{
-			if (isSolved) return;
+			if (isCompleted) return;
 
-			if (isActivated) Deactivate();
-			else Activate();
+			if (isActivated) deactivate();
+			else activate();
 		}
 
-		void Activate()
+		void activate()
 		{
 			haltedColorWheels = new List<ColorWheel>();
 			allColorWheels = new List<ColorWheel>();
@@ -32,7 +32,7 @@ namespace Neutral
 			isActivated = true;
 		}
 
-		void Deactivate()
+		void deactivate()
 		{
 			changeAllMuralAndRingStatesTo(false);
 			haltedColorWheels = null;
@@ -78,16 +78,16 @@ namespace Neutral
 			var rotationDirection = 1f;
 			foreach (Transform child in transform)
 			{
-				rotationDirection *= -1f;
 				if (child.name == "Centre") continue;
 
+				rotationDirection *= -1f;
 				var colorWheel = child.GetComponent<ColorWheel>();
 				var colorWheelMural = child.Find("Mural").GetComponent<Mural>();
 				var colorWheelRing = child.Find("Ring").GetComponent<ColorRing>();
 
 				colorWheel.setHaltOrder(colorWheelMural.getHeight());
 				colorWheel.setRotateVector(GameManager.colorWheelRotateSpeed * rotationDirection);
-				colorWheel.setWillGrantColor(true);
+				colorWheel.setRingState(true);
 
 				allColorWheels.Add(colorWheel);
 			}
@@ -103,7 +103,7 @@ namespace Neutral
 
 		void puzzleCompleted()
 		{
-			isSolved = true;
+			isCompleted = true;
 			lantern.gameObject.SetActive(true);
 			changeAllMuralAndRingStatesTo(false);
 		}
@@ -116,7 +116,7 @@ namespace Neutral
 				lantern.Rotate(Vector3.up * 50f * Time.deltaTime);
 			}
 
-			if (!isSolved && isActivated) rotateAllWheels();
+			if (!isCompleted && isActivated) rotateAllWheels();
 		}
 	}
 }

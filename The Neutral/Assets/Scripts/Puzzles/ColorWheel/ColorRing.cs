@@ -14,18 +14,23 @@ namespace Neutral
 		[SerializeField]
 		Lite lite;
         CombatColor combatColor;
+
+        // State preventing color arithemtic being done unless
+        // the ColorRing is activated
         bool willGrantColor = false;
 
         static ColorRing ringInContactWithPlayer;
 
-        void Start()
+        public void activate()
         {
             combatColor = CombatColor.liteLookupTable[lite];
+            willGrantColor = true;
         }
 
-        public void setWillGrantColor(bool pNewState)
+        public void deactivate()
         {
-            willGrantColor = pNewState;
+            combatColor = null;
+            willGrantColor = false;
         }
 
 		#region COLLISION HANDLING

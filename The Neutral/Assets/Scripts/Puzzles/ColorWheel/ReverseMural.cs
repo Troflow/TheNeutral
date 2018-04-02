@@ -8,16 +8,19 @@ namespace Neutral
 	/// ReverseMural class.
 	/// </summary>
 	public class ReverseMural : MonoBehaviour {
-        [SerializeField]
+        // For Debugging
+		static ReverseMural muralMostRecentlyActivated;
+
+		[SerializeField]
 		Lite lite;
 		CombatColor combatColor;
 
-		public void Activate()
+		public void activate()
 		{
 			combatColor = CombatColor.liteLookupTable[lite];
 		}
 
-		public void Deactivate()
+		public void deactivate()
 		{
 			combatColor = null;
 		}
@@ -28,12 +31,19 @@ namespace Neutral
 		}
 
 		#region Collision Handling
-		public void OnTriggerEnter(Collider pCollider)
+		public void OnTriggerStay(Collider pCollider)
 		{
 			if (pCollider.CompareTag ("Player-Sphere"))
 			{
 				var playerState = pCollider.GetComponentInParent<PlayerState>();
-				playerState.setCurrentCombatColor(combatColor);
+				var playerActionState = playerState.getPlayerActionState();
+
+				if (playerActionState == PlayerActionState.Dashing &&
+					muralMostRecentlyActivated != this)
+				{
+					playerState.setCurrentCombatColor(combatColor);
+					muralMostRecentlyActivated = this;
+				}
 			}
 		}
 		#endregion

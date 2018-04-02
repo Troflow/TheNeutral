@@ -34,14 +34,20 @@ namespace Neutral
 			isHalted = pNewState;
 		}
 
-		public void setWillGrantColor(bool pNewState)
+		public void setRingState(bool pNewState)
 		{
-			transform.Find("Ring").GetComponent<ColorRing>().setWillGrantColor(pNewState);
+			if (pNewState) transform.Find("Ring").GetComponent<ColorRing>().activate();
+			else transform.Find("Ring").GetComponent<ColorRing>().deactivate();
 		}
 
 		public void setMuralState(bool pNewState)
 		{
-			transform.Find("Mural").gameObject.SetActive(pNewState);
+			var mural = transform.Find("Mural").gameObject;
+			mural.SetActive(pNewState);
+
+			if (pNewState) mural.GetComponent<Mural>().activate();
+			else mural.GetComponent<Mural>().deactivate();
+
 		}
 
 		/// <summary>

@@ -13,55 +13,48 @@ namespace Neutral
         [SerializeField]
         ColorWheelSystemType systemType;
 
-        bool isSolved = false;
+        bool isCompleted = false;
         bool isActivated = false;
 
         Transform lantern;
         List<ColorWheel> globalHaltedColorWheels;
         List<ColorWheel> globalAllColorWheels;
-        List<TripletCarousel> allCarouselsInSystem;
-        List<TripletCarousel> completedCarousels;
+
+        // Used by a Local ColorWheelSystem to know when all
+        // Carousels have been successfully completed
+        const int allCarouselsInSystemCount = 3;
+        int completedCarouselsCount;
 
         public bool IsBeingInteractedWith { get; set; }
 
         public void Interact()
 		{
-			if (isSolved) return;
+			if (isCompleted) return;
 
-			if (isActivated) Deactivate();
-			else Activate();
+			if (isActivated) deactivate();
+			else activate();
 		}
 
-		void Activate()
+		void activate()
 		{
-            if (systemType == ColorWheelSystemType.Local)
-            {
-                completedCarousels = new List<TripletCarousel>();
-                allCarouselsInSystem = new List<TripletCarousel>();
-            }
-            else if (systemType == ColorWheelSystemType.Global)
+            if (systemType == ColorWheelSystemType.Global)
             {
                 globalHaltedColorWheels = new List<ColorWheel>();
                 globalAllColorWheels = new List<ColorWheel>();
+                initialiseAllCarousels();
             }
 
             setLantern();
-			initialiseAllCarousels();
 			changeAllChildStatesInSystemTo(true);
 
 			isActivated = true;
 		}
 
-		void Deactivate()
+		void deactivate()
 		{
-			changeAllChildStatesInSystemTo(false);
+            changeAllChildStatesInSystemTo(false);
 
-            if (systemType == ColorWheelSystemType.Local)
-            {
-                completedCarousels = null;
-                allCarouselsInSystem = null;
-            }
-            else if (systemType == ColorWheelSystemType.Global)
+            if (systemType == ColorWheelSystemType.Global)
             {
                 globalHaltedColorWheels = null;
                 globalAllColorWheels = null;
@@ -70,29 +63,17 @@ namespace Neutral
 			isActivated = false;
 		}
 
+        /// <summary>
+        /// If systemType is Global, sets up halt order and rotation vector for
+        /// every wheel in every carousel of the system.
+        /// </summary>
         void initialiseAllCarousels()
         {
             foreach (Transform child in transform)
 			{
-				if (child.name == "Centre")
-				{
-					lantern = child.Find("Lantern");
-					lantern.gameObject.SetActive(false);
-					continue;
-				}
+				if (child.name == "Centre") continue;
 
-				var carousel = child.GetComponent<TripletCarousel>();
-
-                // If systemType is Global, TripleSystemManager will handle all initiliasations
-                if (systemType == ColorWheelSystemType.Global)
-                {
-                    initialiseColorWheelsForCarousel(carousel.transform);
-                }
-                // Else if systemType is Local, then each Carousel handles its own initialisation
-                else if (systemType == ColorWheelSystemType.Local)
-                {
-                    allCarouselsInSystem.Add(carousel);
-                }
+                initialiseColorWheelsForCarousel(child);
 			}
         }
 
@@ -115,10 +96,15 @@ namespace Neutral
             }
         }
 
-        public void addCompletedCarousel(TripletCarousel carousel)
+        /// <summary>
+        /// Called by a TripletCarousel of a Local ColorWheelSystemType when all its color
+        /// wheels have been successfully colored in the correct ordering
+        /// </summary>
+        /// <param name="carousel"></param>
+        public void addCompletedCarousel()
         {
-            completedCarousels.Add(carousel);
-            if (completedCarousels.Count == allCarouselsInSystem.Count)
+            completedCarouselsCount++;
+            if (completedCarouselsCount == allCarouselsInSystemCount)
             {
                 puzzleCompleted();
             }
@@ -126,7 +112,8 @@ namespace Neutral
         }
 
         /// <summary>
-        /// This method is called by a child TripletCarousel whenever one of its Murals is colored correctly
+        /// This method is called by a child TripletCarousel in a Global ColorWheelSystemType
+        ///  whenever one of its Murals is colored correctly
         /// </summary>
         /// <param name="pColorWheel"></param>
         public void addWheelToHaltedWheels(ColorWheel pColorWheel)
@@ -154,17 +141,16 @@ namespace Neutral
             return systemType;
         }
 
-        public bool getIsSolved()
-        {
-            return isSolved;
-        }
-
         void setLantern()
         {
             lantern = transform.Find("Centre").Find("Lantern");
             lantern.gameObject.SetActive(false);
         }
 
+        /// <summary>
+        /// In a Global ColorWheelSystem, if the ordering of any one halted wheel is incorrect,
+        /// then every wheel is told to start rotating again.
+        /// </summary>
         void globalResumeAllWheelsRotation()
         {
             foreach (ColorWheel wheel in globalAllColorWheels)
@@ -173,6 +159,10 @@ namespace Neutral
             }
         }
 
+        /// <summary>
+        /// Used to activate or deactivate all child TripletCarousels of this manager
+        /// </summary>
+        /// <param name="newState"></param>
         void changeAllChildStatesInSystemTo(bool newState)
         {
             foreach (Transform child in transform)
@@ -180,8 +170,8 @@ namespace Neutral
                 if (child.name == "Centre") continue;
 
                 var carousel = child.GetComponent<TripletCarousel>();
-                if (newState) carousel.Activate();
-                else carousel.Deactivate();
+                if (newState) carousel.activate();
+                else carousel.deactivate();
             }
         }
 
@@ -189,7 +179,7 @@ namespace Neutral
 		{
             if (systemType == ColorWheelSystemType.Global) changeAllChildStatesInSystemTo(false);
             lantern.gameObject.SetActive(true);
-            isSolved = true;
+            isCompleted = true;
 		}
 
         void Update()
